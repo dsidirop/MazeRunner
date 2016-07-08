@@ -1,0 +1,18 @@
+# This is the list with files that we want not to commit
+#
+# Run the AssumeFilesUnchanged.exe which use the command git update-index --assume-unchanged <file>
+#
+# To get the list with files marked assume-unchanged use the command "git ls-files -v | grep '^[[:lower:]]'"
+#
+# To unmarked files you can run NoAssumeFilesUnchanged.exe which use this list
+# or the command "git update-index --no-assume-unchanged <file>" for specific one
+#
+# more about git update-index at http://git-scm.com/docs/git-update-index
+#
+# Note: You may not use folders in here aka foo/bar.js will be ignored and will generate a warning
+
+*.DotSettings
+*.Minified.js
+ConnectionStrings.config
+app.configuration.js
+
