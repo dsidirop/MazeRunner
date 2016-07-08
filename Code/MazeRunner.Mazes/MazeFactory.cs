@@ -5,7 +5,7 @@ namespace MazeRunner.Mazes
 {
     public sealed class MazeFactory //singleton
     {
-        public IMazeMap FromFile(string path)
+        public IMaze FromFile(string path)
         {
             return null;
         }

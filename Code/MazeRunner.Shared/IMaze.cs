@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace MazeRunner.Shared
 {
-    public interface IMazeMap
+    public interface IMaze
     {
         Size Size { get; }
         Point Endpoint { get; }

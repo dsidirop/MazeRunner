@@ -6,7 +6,7 @@ using MazeRunner.Shared;
 
 namespace MazeRunner.Mazes
 {
-    public sealed class Maze : IMazeMap
+    public sealed class Maze : IMaze
     {
         public Size Size { get; }
         public Point Endpoint { get; }
