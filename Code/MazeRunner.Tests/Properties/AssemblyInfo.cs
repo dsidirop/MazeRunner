@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MazeRunner.Console")]
+[assembly: AssemblyTitle("MazeRunner.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MazeRunner.Console")]
+[assembly: AssemblyProduct("MazeRunner.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ff909708-3a9c-4df2-9c4f-f2e601da7957")]
+[assembly: Guid("ee3176e8-d6d3-4d59-9f91-d41ff0c388b8")]
 
 // Version information for an assembly consists of the following four values:
 //

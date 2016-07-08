@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("MazeRunner.Shared")]
+[assembly: AssemblyTitle("MazeRunner.Controller")]
 [assembly: AssemblyDescription("")]
 
 
@@ -17,4 +17,4 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("dfd6eb8c-9033-42ec-ae63-803d07deca2a")]
+[assembly: Guid("acda8e1e-d162-48bc-aa4f-66204cc7ae27")]

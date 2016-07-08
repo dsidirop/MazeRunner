@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MazeRunner.Console
+namespace MazeRunner.TestbedUI
 {
     static class Program
     {
@@ -16,7 +13,7 @@ namespace MazeRunner.Console
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormConsole());
+            Application.Run(new FormMazeRunnerTester());
         }
     }
 }

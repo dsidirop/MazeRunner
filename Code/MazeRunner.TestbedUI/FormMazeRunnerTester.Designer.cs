@@ -1,6 +1,6 @@
-﻿namespace MazeRunner.Console
+﻿namespace MazeRunner.TestbedUI
 {
-    partial class FormConsole
+    partial class FormMazeRunnerTester
     {
         /// <summary>
         /// Required designer variable.
