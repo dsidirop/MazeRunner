@@ -61,7 +61,7 @@ namespace MazeRunner.Shared
             foreach (var e in en) action(e, i++);
         }
 
-        static public void Imprint(this IMaze maze, StreamWriter sw)
+        static public string ToAsciiMap(this IMaze maze)
         {
             var sb = new StringBuilder();
             for (var y = 0; y < maze.Size.Height; y++)
@@ -86,9 +86,10 @@ namespace MazeRunner.Shared
                         sb.Append('X');
                     }
                 }
-                sw.WriteLine(sw.ToString()); //order
-                sb.Clear(); //order
+                sb.AppendLine();
             }
+
+            return sb.ToString().Trim();
         }
         // ReSharper restore LoopCanBeConvertedToQuery
     }

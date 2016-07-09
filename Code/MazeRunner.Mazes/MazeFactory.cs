@@ -43,7 +43,7 @@ namespace MazeRunner.Mazes
 
         static private Point ConvertLinearIndexToCoords(int linearIndex, int lineWidth) => new Point(x: linearIndex % lineWidth, y: linearIndex / lineWidth);
 
-        public IMaze FromFile(string path)
+        public IMaze FromFile(string path, bool suppressExceptions = true)
         {
             var result = (IMaze) null;
             try
@@ -55,7 +55,7 @@ namespace MazeRunner.Mazes
                 var mazeWidthBasedOnFirstLine = 0;
                 using (var reader = new StreamReader(File.OpenRead(path)))
                 {
-                    for (;reader.EndOfStream; lineIndex++)
+                    for (;!reader.EndOfStream; lineIndex++)
                     {
                         var line = reader.ReadLine();
                         if (string.IsNullOrEmpty(line))
@@ -100,6 +100,7 @@ namespace MazeRunner.Mazes
                     }
                 }
 
+                if (lineIndex == 0) throw new InvalidDataException("Empty");
                 if (exitpoint == null) throw new InvalidDataException("No exitpoint specified");
                 if (entrypoint == null) throw new InvalidDataException("No entrypoint specified");
                 
@@ -108,7 +109,9 @@ namespace MazeRunner.Mazes
             catch (Exception)
             {
                 //todo  log
-                return null;
+                if (suppressExceptions) return null;
+
+                throw;
             }
 
             return result;
