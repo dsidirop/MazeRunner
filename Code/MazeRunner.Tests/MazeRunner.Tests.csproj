@@ -61,6 +61,7 @@
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="MazeFactoryTests\MazeFactoryTests.cs" />
+    <Compile Include="MazeSquareTests\MazeSquare.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -111,6 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MazeFactoryTests\Artifacts\MFT_Valid_3x4.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MazeRunnerDepthFirstPolicyTests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

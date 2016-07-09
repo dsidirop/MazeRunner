@@ -21,10 +21,7 @@ namespace MazeRunner.Shared.Engine
 
         static public bool operator ==(MazeSquare left, MazeSquare right)
         {
-            if (left == right) return true;
-            if (left == null || right == null) return false;
-
-            return left.Equals(right);
+            return !ReferenceEquals(left, null) && left.Equals(right);
         }
 
         static public bool operator !=(MazeSquare left, MazeSquare right)
@@ -32,21 +29,9 @@ namespace MazeRunner.Shared.Engine
             return !(left == right); //dont turn this into left != right
         }
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as MazeSquare;
-            return other != null && Equals(other);
-        }
-
-        protected bool Equals(MazeSquare other)
-        {
-            return Coords.Equals(other.Coords); // && Equals(ReachedFrom, other.ReachedFrom)   we only care about coords
-        }
-
-        public override int GetHashCode()
-        {
-            return Coords.GetHashCode();
-        }
+        public override int GetHashCode() => Coords.GetHashCode();
+        public override bool Equals(object obj) => Equals(obj as MazeSquare);
+        protected bool Equals(MazeSquare other) => ReferenceEquals(this, other) || (!ReferenceEquals(other, null) && Coords.Equals(other.Coords));
 
         static private readonly List<Point> Offsets = new List<Point> {new Point(x: 0, y: -1), new Point(x: 1, y: 0), new Point(x: 0, y: 1), new Point(x: -1, y: 0)};
     }

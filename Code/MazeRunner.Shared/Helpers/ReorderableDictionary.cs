@@ -211,7 +211,7 @@ namespace MazeRunner.Shared.Helpers
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            return OrderedDictionaryAsIDictionary.Contains(item);
+            return OrderedDictionaryAsIDictionary.Contains(item.Key) && ((TValue)OrderedDictionaryAsIDictionary[item.Key]).Equals(item.Value);
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)

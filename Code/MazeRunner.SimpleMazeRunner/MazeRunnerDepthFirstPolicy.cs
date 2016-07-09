@@ -73,7 +73,7 @@ namespace MazeRunner.SimpleMazeRunner
                     var candidateSquare = new MazeSquare(x.Value);
                     return _maze.HitTest(candidateSquare.Coords) == MazeHitTestEnum.Roadblock //roadblock or out of maze
                            || _deadendSquares.Contains(candidateSquare) //already visited
-                           || candidateSquare.AdjacentSquares.Select(y => new MazeSquare(y.Value)).Any(z => z != _trajectoryTip && _currentTrajectorySquares.Contains(z)); //is next to previous square of the current trajectory other than the current trajectorytip
+                           || candidateSquare.AdjacentSquares.Select(y => new MazeSquare(y.Value)).Any(z => z != _trajectoryTip && _currentTrajectorySquares.Contains(z)); //check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
                 });
 
                 if (randomValidAdjacentSquare != null) //found an unvisited adjacent square that matches the criteria of our policy
