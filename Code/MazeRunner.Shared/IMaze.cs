@@ -6,9 +6,8 @@ namespace MazeRunner.Shared
     public interface IMaze
     {
         Size Size { get; }
-        Point Endpoint { get; }
-        Point Startpoint { get; }
-        HashSet<Point> Roadblocks { get; }
+        Point Exitpoint { get; }
+        Point Entrypoint { get; }
 
         MazeHitTestEnum HitTest(Point p);
     }

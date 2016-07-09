@@ -51,6 +51,7 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ReorderableDictionary.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

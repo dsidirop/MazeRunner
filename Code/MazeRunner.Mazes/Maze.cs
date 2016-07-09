@@ -8,36 +8,48 @@ namespace MazeRunner.Mazes
 {
     public sealed class Maze : IMaze
     {
-        public Size Size { get; }
-        public Point Endpoint { get; }
-        public Point Startpoint { get; }
-        public HashSet<Point> Roadblocks { get; }
+        public const int MinimumArea = 2;
+        public const int MaximumArea = int.MaxValue;
 
-        public Maze(Size size, HashSet<Point> roadblocks, Point startpoint, Point endpoint)
+        private readonly Rectangle _rectangle;
+        private readonly HashSet<Point> _roadblocks;
+
+        public Size Size { get; }
+        public Point Exitpoint { get; }
+        public Point Entrypoint { get; }
+
+        public Maze(Size size, Point entrypoint, Point exitpoint, HashSet<Point> roadblocks)
         {
-            if (roadblocks == null) throw new ArgumentException(nameof(roadblocks)); //0 order
-            if (size.Height <= 0 || size.Width <= 0 || size.Width * size.Height <= 1) throw new ArgumentException(nameof(size)); //order
-            if (!HealthCheckCoords(size, endpoint) || roadblocks.Contains(endpoint)) throw new ArgumentException(nameof(endpoint)); //order
-            if (!HealthCheckCoords(size, startpoint) || roadblocks.Contains(startpoint)) throw new ArgumentException(nameof(startpoint)); //order
-            if (roadblocks.Count >= size.Height * size.Width - (endpoint == startpoint ? 1 : 2) || roadblocks.Any(p => !HealthCheckCoords(size, p))) throw new ArgumentException(nameof(roadblocks)); //order
+            if (roadblocks == null) throw new ArgumentNullException(nameof(roadblocks)); //0 order
+
+            var mazeArea = ((double) size.Width)*size.Height;
+            if (size.Height <= 0 || size.Width <= 0 || mazeArea < MinimumArea || mazeArea > MaximumArea) throw new ArgumentException(nameof(size)); //order
+
+            var rectangle = new Rectangle(Point.Empty, size);
+            if (!rectangle.Contains(exitpoint) || roadblocks.Contains(exitpoint)) throw new ArgumentException(nameof(exitpoint)); //order
+            if (!rectangle.Contains(entrypoint) || roadblocks.Contains(entrypoint)) throw new ArgumentException(nameof(entrypoint)); //order
+            if (entrypoint == exitpoint) throw new ArgumentException("Entrypoint and exitpoint are the same");
+            if (roadblocks.Count > size.Height * size.Width - 2 || roadblocks.Any(p => !rectangle.Contains(p))) throw new ArgumentException(nameof(roadblocks)); //order
 
             Size = size;
-            Endpoint = endpoint;
-            Startpoint = startpoint;
-            Roadblocks = roadblocks;
+            Exitpoint = exitpoint;
+            Entrypoint = entrypoint;
+
+            _rectangle = rectangle; //1
+            _roadblocks = roadblocks;
         }
-        //0 the roadblocks cannot be more than the total number of squares in the map reduced by two squares one for the starting point and one for the endpoint
-        //  unless ofcourse these two points coincide in which case we reduce only by one
+        //0 the roadblocks cannot be more than the total number of squares in the map reduced by two squares for the entry point and the exitpoint
+        //1 the rectangle struct has build in support for the contains method which is neat since it saves us from the trouble of rolling out our own custom methods
 
         public MazeHitTestEnum HitTest(Point p)
         {
-            if (!HealthCheckCoords(Size, p)) throw new ArgumentException(nameof(p));
+            if (!_rectangle.Contains(p)) return MazeHitTestEnum.Roadblock; //0
 
-            return p == Endpoint
-                ? MazeHitTestEnum.Exitpoint
-                : (Roadblocks.Contains(p) ? MazeHitTestEnum.Roadblock : MazeHitTestEnum.Free);
+            if (p == Exitpoint) return MazeHitTestEnum.Exitpoint;
+            if (p == Entrypoint) return MazeHitTestEnum.Entrypoint;
+
+            return _roadblocks.Contains(p) ? MazeHitTestEnum.Roadblock : MazeHitTestEnum.Free;
         }
-
-        static private bool HealthCheckCoords(Size s, Point p) => p.X < 0 || p.X >= s.Width || p.Y < 0 || p.Y >= s.Height;
+        //0 its convenient to regard all points outside the confines of the maze as points comprised solely of roadblocks
     }
 }
