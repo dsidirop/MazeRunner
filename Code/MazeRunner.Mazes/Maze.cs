@@ -14,7 +14,7 @@ namespace MazeRunner.Mazes
         private readonly Rectangle _rectangle;
         private readonly HashSet<Point> _roadblocks;
 
-        public Size Size { get; }
+        public Size Size => _rectangle.Size;
         public Point Exitpoint { get; }
         public Point Entrypoint { get; }
 
@@ -31,7 +31,6 @@ namespace MazeRunner.Mazes
             if (entrypoint == exitpoint) throw new ArgumentException("Entrypoint and exitpoint are the same");
             if (roadblocks.Count > size.Height * size.Width - 2 || roadblocks.Any(p => !rectangle.Contains(p))) throw new ArgumentException(nameof(roadblocks)); //order
 
-            Size = size;
             Exitpoint = exitpoint;
             Entrypoint = entrypoint;
 

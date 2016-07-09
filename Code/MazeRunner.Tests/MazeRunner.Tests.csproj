@@ -54,8 +54,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MazeFactoryTests\MazeFactoryTests.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_InvalidChars.txt" />
     <Compile Include="MazeTests\MazeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -69,6 +81,30 @@
       <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
       <Name>MazeRunner.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_StrayNewLines.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_Empty.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_NoExitpoint.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_NoEntrypoint.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_JaggedMaze.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_MinValid_1x2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_MinValid_2x1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MazeFactoryTests\Artifacts\MFT_Valid_3x4.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
