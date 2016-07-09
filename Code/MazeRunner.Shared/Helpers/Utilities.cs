@@ -2,23 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Text;
+using MazeRunner.Shared.Maze;
 
-namespace MazeRunner.Shared
+namespace MazeRunner.Shared.Helpers
 {
     static public class Utilities
     {
+        static private readonly Random RandomIntegerEngine = new Random();
         static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive) //max is exclusive here
         {
             if (maxExclusive <= min || count < 0 || (count > maxExclusive - min && maxExclusive - min > 0)) throw new ArgumentOutOfRangeException($"Range {min} to {maxExclusive} ({maxExclusive - (long) min} values) or count {count} is illegal"); //need to use 64bit to support big ranges negative min positive max
-
-            var randomEngine = new Random();
-
+            
             var candidates = new ReorderableDictionary<int, int>(); //start count values before max and end at max
             for (var top = maxExclusive - count; top < maxExclusive; top++)
             {
-                var random = randomEngine.Next(min, top + 1);
+                var random = RandomIntegerEngine.Next(min, top + 1);
                 if (!candidates.Contains(random)) // May strike a duplicate  Need to add +1 to make inclusive generator  +1 is safe even for MaxVal max value because top < max
                 {
                     candidates.Add(random, random);
@@ -38,6 +37,21 @@ namespace MazeRunner.Shared
         //      insert J in S
         //
         // adapted for C# which does not have an inclusive Next(..) and to make it from configurable range not just 1
+
+        static public IList<T> Shuffle<T>(this IList<T> list)
+        {
+            var n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                var k = RandomIntegerEngine.Next(n + 1);
+                var value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+
+            return list;
+        }
 
         // ReSharper disable LoopCanBeConvertedToQuery
         static public IEnumerable<T> ConvertAll<T>(this IEnumerable en, Converter<object, T> converter)

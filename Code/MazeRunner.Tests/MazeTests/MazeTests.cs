@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Linq;
 using FluentAssertions;
 using MazeRunner.Mazes;
-using MazeRunner.Shared;
+using MazeRunner.Shared.Helpers;
+using MazeRunner.Shared.Maze;
 using NUnit.Framework;
 // ReSharper disable ObjectCreationAsStatement
 
@@ -143,6 +144,36 @@ namespace MazeRunner.Tests.MazeTests
 
         [Test]
         [Category("Unit.Maze")]
+        public void Maze_InvalidRoadblockEntryPointOutOfBounds_ThrowsArgumentException()
+        {
+            // Arrange
+            var entrypoint = new Point(-1, -1);
+            var roadblocks = new HashSet<Point>();
+
+            // Act
+            var action = new Action(() => { new Maze(new Size(2, 1), entrypoint, new Point(x: 1, y: 0), roadblocks); });
+
+            // Assert
+            action.ShouldThrow<ArgumentException>().WithMessage("entrypoint");
+        }
+
+        [Test]
+        [Category("Unit.Maze")]
+        public void Maze_InvalidRoadblockExitPointOutOfBounds_ThrowsArgumentException()
+        {
+            // Arrange
+            var exitpoint = new Point(-1, -1);
+            var roadblocks = new HashSet<Point>();
+
+            // Act
+            var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, exitpoint, roadblocks); });
+
+            // Assert
+            action.ShouldThrow<ArgumentException>().WithMessage("exitpoint");
+        }
+
+        [Test]
+        [Category("Unit.Maze")]
         public void Maze_InvalidRoadblockConflictWithEntryPoint_ThrowsArgumentException()
         {
             // Arrange
@@ -177,8 +208,8 @@ namespace MazeRunner.Tests.MazeTests
         {
             // Arrange
             var size = new Size(2, 1);
-            var entrypoint = Point.Empty;
             var exitpoint = new Point(x: 1, y: 0);
+            var entrypoint = Point.Empty;
 
             // Act
             var maze = new Maze(size, entrypoint, exitpoint, new HashSet<Point>()) as IMaze;
@@ -198,8 +229,8 @@ namespace MazeRunner.Tests.MazeTests
         {
             // Arrange
             var size = new Size(width: 6, height: 6);
-            var entrypoint = new Point(x: 2, y: 2);
             var exitpoint = new Point(x: 4, y: 4);
+            var entrypoint = new Point(x: 2, y: 2);
             var roadblocks = new HashSet<Point> { new Point(x: 0, y: 0), new Point(x: 1, y: 1), new Point(x: 3, y: 3) };
 
             // Act

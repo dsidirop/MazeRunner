@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace MazeRunner.Shared
+namespace MazeRunner.Shared.Helpers
 {
     [Serializable]
     public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISerializable, IDictionary
