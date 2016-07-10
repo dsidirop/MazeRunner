@@ -61,7 +61,7 @@
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="MazeFactoryTests\MazeFactoryTests.cs" />
-    <Compile Include="MazeSquareTests\MazeSquare.cs" />
+    <Compile Include="MazeSquareTests\MazeSquareTests.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

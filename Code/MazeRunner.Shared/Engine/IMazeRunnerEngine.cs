@@ -9,8 +9,8 @@ namespace MazeRunner.Shared.Engine
         event EventHandler EngineStateChanged; //progressed
         event EventHandler<ConcludedEventArgs> Concluded;
 
-        Point TrajectoryTip { get; }
-        IEnumerable<Point> TestedSquares { get; }
+        Point? TrajectoryTip { get; }
+        IEnumerable<Point> InvalidatedSquares { get; }
 
         void Run();
     }

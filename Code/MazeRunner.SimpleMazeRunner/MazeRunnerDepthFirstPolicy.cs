@@ -32,67 +32,60 @@ namespace MazeRunner.SimpleMazeRunner
             remove { _engineStateChanged -= value; }
         }
 
-        private MazeSquare _trajectoryTip;
-
         private readonly IMaze _maze;
-        private readonly HashSet<MazeSquare> _deadendSquares;
-        private readonly ReorderableDictionary<MazeSquare, MazeSquare> _currentTrajectorySquares;
+        private readonly HashSet<Point> _invalidatedSquares;
+        private readonly ReorderableDictionary<Point, Point> _currentTrajectorySquares;
 
-        public Point TrajectoryTip => _trajectoryTip.Coords;
-        public IEnumerable<Point> TestedSquares => _deadendSquares.Select(x => x.Coords);
-        public IEnumerable<Point> CurrentTrajectorySquares => _currentTrajectorySquares.Keys.Cast<MazeSquare>().Select(x => x.Coords);
+        public Point? TrajectoryTip
+        {
+            get { return _currentTrajectorySquares.Any() ? _currentTrajectorySquares[_currentTrajectorySquares.Count - 1] : (Point?) null; }
+            private set { _currentTrajectorySquares.Add(value.Value, value.Value); }
+        }
+
+        public IEnumerable<Point> InvalidatedSquares => _invalidatedSquares;
+        public IEnumerable<Point> CurrentTrajectorySquares => _currentTrajectorySquares.Keys.Cast<Point>();
 
         public MazeRunnerDepthFirstPolicy(IMaze maze)
         {
             if (maze == null) throw new ArgumentNullException(nameof(maze));
 
             _maze = maze;
-            _trajectoryTip = new MazeSquare(maze.Entrypoint, parent: null);
-            _deadendSquares = new HashSet<MazeSquare> {_trajectoryTip};
-            _currentTrajectorySquares = new ReorderableDictionary<MazeSquare, MazeSquare> {{_trajectoryTip, _trajectoryTip}}; //0
+            _invalidatedSquares = new HashSet<Point>();
+            _currentTrajectorySquares = new ReorderableDictionary<Point, Point> {{maze.Entrypoint, maze.Entrypoint}}; //0
         }
-        //0 currenttrajectorysquares is based on a reorderabledictionary so that the insertion order will be respected at all times
+        //0 Currenttrajectorysquares is based on a reorderabledictionary so that the insertion order will be available at all times
+        //  A simple dictionary wouldnt cut it because according to ms documentation the dictionary gives no guarantees in this regard
 
         public void Run()
         {
-            var success = false;
-            while (true)
+            for (var tip = TrajectoryTip; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back to square one and cant backtrack further
             {
-                var adjacentSquares = _trajectoryTip.AdjacentSquares; //nullable points
+                var adjacentSquares = tip.Value.GetAdjacentPoints(); //nullable points
                 var possibleExitpointFound = adjacentSquares.FirstOrDefault(x => _maze.HitTest(x.Value) == MazeHitTestEnum.Exitpoint); //lookahead one
                 if (possibleExitpointFound != null)
                 {
-                    success = true;
-                    _trajectoryTip = new MazeSquare(possibleExitpointFound.Value, parent: _trajectoryTip); //order
-                    _currentTrajectorySquares.Add(_trajectoryTip, _trajectoryTip); //order
+                    TrajectoryTip = possibleExitpointFound;
                     break;
                 }
 
-                var randomValidAdjacentSquare = adjacentSquares.Shuffle().FirstOrDefault(x => //enforce depthfirst-prone logic on random adjacent square
+                var randomValidAdjacentSquare = adjacentSquares.Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
                 {
-                    var candidateSquare = new MazeSquare(x.Value);
-                    return _maze.HitTest(candidateSquare.Coords) == MazeHitTestEnum.Roadblock //roadblock or out of maze
-                           || _deadendSquares.Contains(candidateSquare) //already visited
-                           || candidateSquare.AdjacentSquares.Select(y => new MazeSquare(y.Value)).Any(z => z != _trajectoryTip && _currentTrajectorySquares.Contains(z)); //check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
+                    return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
+                           && !_invalidatedSquares.Contains(candidateSquare.Value) //ReSharper disable once AssignNullToNotNullAttribute  already visited
+                           && candidateSquare.Value.GetAdjacentPoints().Except(new [] {tip}).All(z => !_currentTrajectorySquares.Contains(z)); //to avoid pathfolding check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
                 });
 
                 if (randomValidAdjacentSquare != null) //found an unvisited adjacent square that matches the criteria of our policy
                 {
-                    _trajectoryTip = new MazeSquare(randomValidAdjacentSquare.Value, parent: _trajectoryTip); //order
-                    _currentTrajectorySquares.Add(_trajectoryTip, _trajectoryTip); //order
+                    TrajectoryTip = randomValidAdjacentSquare;
                     continue;
                 }
 
-                //current trajectorytip has no unvisited adjacent squares that match our policy so we backtrack by one square in the current trajectory
-                _deadendSquares.Add(_trajectoryTip); //order
-                _currentTrajectorySquares.Remove(_trajectoryTip); //order
-                _trajectoryTip = _trajectoryTip.Parent; //order
-                if (_trajectoryTip == null) break; //backtracked all the way back to square one and cant backtrack further
-
-                OnEngineStateChanged(); //progress notification
+                _invalidatedSquares.Add(tip.Value); //current trajectorytip has no unvisited adjacent squares that match our
+                _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
             }
 
-            OnConcluded(new ConcludedEventArgs {Success = success, Trajectory = CurrentTrajectorySquares.ToArray()});
+            OnConcluded(new ConcludedEventArgs {Success = TrajectoryTip != null, Trajectory = CurrentTrajectorySquares.ToArray()});
         }
 
         protected virtual void OnConcluded(ConcludedEventArgs ea) => _concluded?.Invoke(this, ea);
