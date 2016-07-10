@@ -7,13 +7,10 @@ using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Maze;
 using NUnit.Framework;
+
 // ReSharper disable ObjectCreationAsStatement
 
-// notice that this testbed project runs in x86 mode  this was done in order to workaround an apparent shortcoming plaguing certain versions resharper
-// which causes unittest debugging to hang upon launching the debugger in order to debug any of the tests   you may switch this project back to anycpu
-// mode if your version of resharper doesnt suffer from the aforementioned glitch
-
-namespace MazeRunner.Tests.MazeTests
+namespace MazeRunner.Tests.UnitTests.MazeTests
 {
     [TestFixture]
     public class MazeTests

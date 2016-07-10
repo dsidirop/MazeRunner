@@ -1,0 +1,1 @@
+﻿If you use resharper with vs15 you need v2016.1.2+ for these tests to work

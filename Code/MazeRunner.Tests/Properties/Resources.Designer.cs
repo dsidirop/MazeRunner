@@ -61,6 +61,80 @@ namespace MazeRunner.Tests.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SXXX
+        ///__XX
+        ///X__X
+        ///XX_G.
+        /// </summary>
+        internal static string EIT_Maze001_Diagonal {
+            get {
+                return ResourceManager.GetString("EIT_Maze001_Diagonal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to S______
+        ///XXXXXX_
+        ///X____X_
+        ///X_XX_X_
+        ///X_XG_X_
+        ///X_XXXX_
+        ///X______
+        ///.
+        /// </summary>
+        internal static string EIT_Maze002_GTrap {
+            get {
+                return ResourceManager.GetString("EIT_Maze002_GTrap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to G______
+        ///XXXXXX_
+        ///X____X_
+        ///X_XX_X_
+        ///X_XS_X_
+        ///X_XXXX_
+        ///X______
+        ///.
+        /// </summary>
+        internal static string EIT_Maze003_GEscape {
+            get {
+                return ResourceManager.GetString("EIT_Maze003_GEscape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _______________S_____________X____
+        ///XX_XXX_XXXXXXXXXXXXXXXXXXXXXXX__X_
+        ///___X_X_X_______________________XX_
+        ///_X_X_____XXX_XX_XXXXXX_XXXXXXXX_X_
+        ///___X_X_X_X____X_X___GX____XXX___X_
+        ///_X_XXX_XXX_XX_X_X_XXXX_XX_XX__XXX_
+        ///XX_____XXX_____________XXXXX______.
+        /// </summary>
+        internal static string EIT_Maze004_LabyrinthSolvable {
+            get {
+                return ResourceManager.GetString("EIT_Maze004_LabyrinthSolvable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _______________S_____________X____
+        ///XX_XXX_XXXXXXXXXXXXXXXXXXXXXXX__X_
+        ///___X_X_X_______________________XX_
+        ///_X_X_____XXX_XX_XXXXXX_XXXXXXXX_X_
+        ///___X_X_X_X____X_X__XGX____XXX___X_
+        ///_X_XXX_XXX_XX_X_X_XXXX_XX_XX__XXX_
+        ///XX_____XXX_____________XXXXX______.
+        /// </summary>
+        internal static string EIT_Maze005_LabyrinthUnsolvable {
+            get {
+                return ResourceManager.GetString("EIT_Maze005_LabyrinthUnsolvable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string MFT_Empty {

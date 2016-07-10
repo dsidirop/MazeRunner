@@ -4,7 +4,6 @@ using System.Dynamic;
 using System.IO;
 using FluentAssertions;
 using MazeRunner.Mazes;
-using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Maze;
 using MazeRunner.Tests.Properties;
@@ -12,11 +11,7 @@ using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
 
-// notice that this testbed project runs in x86 mode  this was done in order to workaround an apparent shortcoming plaguing certain versions resharper
-// which causes unittest debugging to hang upon launching the debugger in order to debug any of the tests   you may switch this project back to anycpu
-// mode if your version of resharper doesnt suffer from the aforementioned glitch
-
-namespace MazeRunner.Tests.MazeFactoryTests
+namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
 {
     [TestFixture]
     public class MazeFactoryTests

@@ -57,17 +57,18 @@ namespace MazeRunner.Shared.Helpers
         static public List<Point?> GetAdjacentPoints(this Point p) => Offsets.Select(i => new Point(p.X - i.X, p.Y - i.Y)).Cast<Point?>().ToList();
         static private readonly List<Point> Offsets = new List<Point> {new Point(x: 0, y: -1), new Point(x: 1, y: 0), new Point(x: 0, y: 1), new Point(x: -1, y: 0)};
 
-        static public string ToAsciiMap(this IMaze maze)
+        static public string ToAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null)
         {
             var sb = new StringBuilder();
             for (var y = 0; y < maze.Size.Height; y++)
             {
                 for (var x = 0; x < maze.Size.Width; x++)
                 {
-                    var hittest = maze.HitTest(new Point(x, y));
+                    var p = new Point(x, y);
+                    var hittest = maze.HitTest(p);
                     if (hittest == MazeHitTestEnum.Free)
                     {
-                        sb.Append('_');
+                        sb.Append(freepointEvaluator?.Invoke(p) ?? '_');
                     }
                     else if (hittest == MazeHitTestEnum.Entrypoint)
                     {
@@ -110,5 +111,7 @@ namespace MazeRunner.Shared.Helpers
             foreach (var e in en) action(e, i++);
         }
         // ReSharper restore LoopCanBeConvertedToQuery
+
+        static public readonly string nl = Environment.NewLine;
     }
 }

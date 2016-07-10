@@ -8,7 +8,7 @@ using MazeRunner.Shared.Maze;
 
 namespace MazeRunner.SimpleMazeRunner
 {
-    public class MazeRunnerDepthFirstPolicy : IMazeRunnerEngine
+    public abstract class MazeRunnerEngineDepthFirstPolicyBase : IMazeRunnerEngine
     {
         private event EventHandler<ConcludedEventArgs> _concluded;
         public event EventHandler<ConcludedEventArgs> Concluded
@@ -21,18 +21,19 @@ namespace MazeRunner.SimpleMazeRunner
             remove { _concluded -= value; }
         }
 
-        private event EventHandler _engineStateChanged;
-        public event EventHandler EngineStateChanged
+        private event EventHandler _stateChanged;
+        public event EventHandler StateChanged
         {
             add
             {
-                _engineStateChanged -= value;
-                _engineStateChanged += value;
+                _stateChanged -= value;
+                _stateChanged += value;
             }
-            remove { _engineStateChanged -= value; }
+            remove { _stateChanged -= value; }
         }
 
         private readonly IMaze _maze;
+        private readonly bool _avoidPathfolding;
         private readonly HashSet<Point> _invalidatedSquares;
         private readonly ReorderableDictionary<Point, Point> _currentTrajectorySquares;
 
@@ -42,14 +43,15 @@ namespace MazeRunner.SimpleMazeRunner
             private set { _currentTrajectorySquares.Add(value.Value, value.Value); }
         }
 
+        public IEnumerable<Point> Trajectory => _currentTrajectorySquares.Keys.Cast<Point>();
         public IEnumerable<Point> InvalidatedSquares => _invalidatedSquares;
-        public IEnumerable<Point> CurrentTrajectorySquares => _currentTrajectorySquares.Keys.Cast<Point>();
 
-        public MazeRunnerDepthFirstPolicy(IMaze maze)
+        protected MazeRunnerEngineDepthFirstPolicyBase(IMaze maze, bool avoidPathfolding)
         {
             if (maze == null) throw new ArgumentNullException(nameof(maze));
 
             _maze = maze;
+            _avoidPathfolding = avoidPathfolding;
             _invalidatedSquares = new HashSet<Point>();
             _currentTrajectorySquares = new ReorderableDictionary<Point, Point> {{maze.Entrypoint, maze.Entrypoint}}; //0
         }
@@ -58,21 +60,23 @@ namespace MazeRunner.SimpleMazeRunner
 
         public void Run()
         {
-            for (var tip = TrajectoryTip; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back to square one and cant backtrack further
+            for (var tip = TrajectoryTip; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack further
             {
                 var adjacentSquares = tip.Value.GetAdjacentPoints(); //nullable points
                 var possibleExitpointFound = adjacentSquares.FirstOrDefault(x => _maze.HitTest(x.Value) == MazeHitTestEnum.Exitpoint); //lookahead one
                 if (possibleExitpointFound != null)
                 {
                     TrajectoryTip = possibleExitpointFound;
+                    OnEngineStateChanged();
                     break;
                 }
 
                 var randomValidAdjacentSquare = adjacentSquares.Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
                 {
                     return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
-                           && !_invalidatedSquares.Contains(candidateSquare.Value) //ReSharper disable once AssignNullToNotNullAttribute  already visited
-                           && candidateSquare.Value.GetAdjacentPoints().Except(new [] {tip}).All(z => !_currentTrajectorySquares.Contains(z)); //to avoid pathfolding check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
+                           && !_currentTrajectorySquares.Contains(candidateSquare) //already in trajectory
+                           && !_invalidatedSquares.Contains(candidateSquare.Value) //ReSharper disable once AssignNullToNotNullAttribute  already invalidated
+                           && (!_avoidPathfolding || candidateSquare.Value.GetAdjacentPoints().Except(new[] {tip}).All(z => !_currentTrajectorySquares.Contains(z))); //to avoid pathfolding we check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
                 });
 
                 if (randomValidAdjacentSquare != null) //found an unvisited adjacent square that matches the criteria of our policy
@@ -85,10 +89,10 @@ namespace MazeRunner.SimpleMazeRunner
                 _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
             }
 
-            OnConcluded(new ConcludedEventArgs {Success = TrajectoryTip != null, Trajectory = CurrentTrajectorySquares.ToArray()});
+            OnConcluded(new ConcludedEventArgs {Success = TrajectoryTip != null, Trajectory = Trajectory.ToArray()});
         }
 
         protected virtual void OnConcluded(ConcludedEventArgs ea) => _concluded?.Invoke(this, ea);
-        protected virtual void OnEngineStateChanged() => _engineStateChanged?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnEngineStateChanged() => _stateChanged?.Invoke(this, EventArgs.Empty);
     }
 }
