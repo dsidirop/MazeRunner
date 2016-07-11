@@ -13,8 +13,8 @@ using NUnit.Framework;
 
 namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
 {
-    [TestFixture(typeof(MazeRunnerEngineSimpleDepthFirstPolicy))]
-    [TestFixture(typeof(MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy))]
+    [TestFixture(typeof(MazeRunnerSimpleDepthFirstEngine))]
+    [TestFixture(typeof(MazeRunnerDepthFirstAvoidPathfoldingEngine))]
     public class MazeRunnerEnginesTests<TEngine> where TEngine : IMazeRunnerEngine
     {
         static private IMazeRunnerEngine SpawnEngine(IMaze maze) => (TEngine) Activator.CreateInstance(typeof (TEngine), maze);

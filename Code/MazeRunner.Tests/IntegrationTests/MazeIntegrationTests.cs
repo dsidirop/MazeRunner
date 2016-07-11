@@ -57,7 +57,7 @@ namespace MazeRunner.Tests.IntegrationTests
         {
             // Arrange
             var maze = MazeFactorySingleton.I.Random(4, 4, 0.1);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
 
             // Act
             var action = new Action(() =>
@@ -79,7 +79,7 @@ namespace MazeRunner.Tests.IntegrationTests
         {
             // Arrange
             var maze = MazeFactorySingleton.I.Random(10, 10, 0.1);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
 
             // Act
             var action = new Action(() =>

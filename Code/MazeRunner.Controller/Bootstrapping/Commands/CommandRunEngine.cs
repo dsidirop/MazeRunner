@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using MazeRunner.EnginesFactory;
 using MazeRunner.Mazes;
@@ -10,14 +11,15 @@ namespace MazeRunner.Controller.Bootstrapping.Commands
 {
     static internal partial class Command
     {
-        static internal void RunEngine(string[] args)
+        static internal int RunEngine(string[] args)
         {
-            var mazefile = args.FindParameter("mazefile=").TryGetParameterValueString();
-            var enginename = args.FindParameter("engine=").TryGetParameterValueString();
-            var repetitions = Math.Max(1, args.FindParameter("repeat=").TryGetParameterValueInt(isoptional: true));
-
+            var exitcode = 0;
             try
             {
+                var mazefile = args.FindParameter("mazefile=").TryGetParameterValueString();
+                var enginename = args.FindParameter("engine=").TryGetParameterValueString();
+                var repetitions = Math.Max(1, args.FindParameter("repeat=").TryGetParameterValueInt()); //optional
+
                 var maze = MazeFactorySingleton.I.FromFile(mazefile);
                 var engine = EnginesFactorySingleton.I.Spawn(enginename, maze);
 
@@ -47,9 +49,11 @@ namespace MazeRunner.Controller.Bootstrapping.Commands
             }
             catch (Exception ex)
             {
-                Environment.ExitCode = 2;
-                Console.Error.WriteLine($@"Failed to run engine '{enginename}' ({ex.Message})");
+                exitcode = ex is InvalidDataException ? 2 : 3; //mazefactory vs engine error
+                Console.Error.WriteLine($@"Failed to run engine: {ex.Message}");
             }
+
+            return exitcode;
         }
     }
 }

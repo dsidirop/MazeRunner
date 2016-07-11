@@ -1,4 +1,5 @@
-﻿using MazeRunner.Controller.Bootstrapping;
+﻿using System;
+using MazeRunner.Controller.Bootstrapping;
 
 namespace MazeRunner.Controller
 {
@@ -6,7 +7,7 @@ namespace MazeRunner.Controller
     {
         static public void Main(string[] args)
         {
-            new Bootstrapper().Run(args);
+            Environment.ExitCode = Bootstrapper.Run(args);
         }
     }
 }

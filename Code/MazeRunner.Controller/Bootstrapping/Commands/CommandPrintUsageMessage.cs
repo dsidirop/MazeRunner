@@ -1,20 +1,24 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Linq;
 using MazeRunner.Shared.Helpers;
 
 namespace MazeRunner.Controller.Bootstrapping.Commands
 {
     static internal partial class Command
     {
-        static internal void PrintUsageMessage()
+        static internal int PrintUsageMessage(string[] args)
         {
-            var processName = Process.GetCurrentProcess().ProcessName;
+            var exitcode = !args.Any() || args.Length == 1 && args.FindParameter("help") != null ? 0 : 1;
+
+            const string programname = "MazeRunner.Controller";
             Console.Out.WriteLine(
                 $@"Usage:{nl2}" +
-                $@"{processName} --help{nl}" +
-                $@"{processName} --listengines{nl}" +
-                $@"{processName} --engine=enginename   --mazefile=path  [--repeat=number]{nl}" +
-                $@"{processName} --generatemaze  --width=width  --height=height  --walldensity=walldensity  --output=path{nl}");
+                $@"{programname} --help{nl}" +
+                $@"{programname} --listengines{nl}" +
+                $@"{programname} --engine=enginename   --mazefile=path  [--repeat=number]{nl}" +
+                $@"{programname} --generatemaze  --width=width  --height=height  --walldensity=walldensity  --output=path{nl}");
+
+            return exitcode;
         }
         static private readonly string nl = Utilities.nl;
         static private readonly string nl2 = nl + nl;

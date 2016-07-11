@@ -8,7 +8,7 @@ using MazeRunner.Shared.Maze;
 
 namespace MazeRunner.Engine.SimpleMazeRunner
 {
-    public abstract class MazeRunnerEngineDepthFirstPolicyBase : IMazeRunnerEngine
+    public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
     {
         private event EventHandler<ConcludedEventArgs> _concluded;
         public event EventHandler<ConcludedEventArgs> Concluded
@@ -47,7 +47,7 @@ namespace MazeRunner.Engine.SimpleMazeRunner
         public IEnumerable<Point> Trajectory => _currentTrajectorySquares.Keys.Cast<Point>();
         public IEnumerable<Point> InvalidatedSquares => _invalidatedSquares;
 
-        protected MazeRunnerEngineDepthFirstPolicyBase(IMaze maze, bool avoidPathfolding)
+        protected MazeRunnerDepthFirstEngineBase(IMaze maze, bool avoidPathfolding)
         {
             if (maze == null) throw new ArgumentNullException(nameof(maze));
 
