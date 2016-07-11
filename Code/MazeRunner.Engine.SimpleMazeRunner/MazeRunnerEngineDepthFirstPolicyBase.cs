@@ -6,7 +6,7 @@ using MazeRunner.Shared.Engine;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Maze;
 
-namespace MazeRunner.SimpleMazeRunner
+namespace MazeRunner.Engine.SimpleMazeRunner
 {
     public abstract class MazeRunnerEngineDepthFirstPolicyBase : IMazeRunnerEngine
     {
@@ -43,6 +43,7 @@ namespace MazeRunner.SimpleMazeRunner
             private set { _currentTrajectorySquares.Add(value.Value, value.Value); }
         }
 
+        public int TrajectoryLength => _currentTrajectorySquares.Count;
         public IEnumerable<Point> Trajectory => _currentTrajectorySquares.Keys.Cast<Point>();
         public IEnumerable<Point> InvalidatedSquares => _invalidatedSquares;
 
@@ -53,14 +54,22 @@ namespace MazeRunner.SimpleMazeRunner
             _maze = maze;
             _avoidPathfolding = avoidPathfolding;
             _invalidatedSquares = new HashSet<Point>();
-            _currentTrajectorySquares = new ReorderableDictionary<Point, Point> {{maze.Entrypoint, maze.Entrypoint}}; //0
+            _currentTrajectorySquares = new ReorderableDictionary<Point, Point>(); //0
         }
-        //0 Currenttrajectorysquares is based on a reorderabledictionary so that the insertion order will be available at all times
-        //  A simple dictionary wouldnt cut it because according to ms documentation the dictionary gives no guarantees in this regard
+        //0 Currenttrajectorysquares is based on a reorderabledictionary so that the insertion order will be available at all times  A simple dictionary wouldnt
+        //  cut it because according to ms documentation plain old dictionaries give no guarantees in terms of reporting their items based on their insertion order
 
-        public void Run()
+        public IMazeRunnerEngine Reset()
         {
-            for (var tip = TrajectoryTip; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack further
+            _invalidatedSquares.Clear();
+            _currentTrajectorySquares.Clear();
+
+            return this;
+        }
+
+        public IMazeRunnerEngine Run()
+        {
+            for (var tip = TrajectoryTip = _maze.Entrypoint; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack any further
             {
                 var adjacentSquares = tip.Value.GetAdjacentPoints(); //nullable points
                 var possibleExitpointFound = adjacentSquares.FirstOrDefault(x => _maze.HitTest(x.Value) == MazeHitTestEnum.Exitpoint); //lookahead one
@@ -90,6 +99,7 @@ namespace MazeRunner.SimpleMazeRunner
             }
 
             OnConcluded(new ConcludedEventArgs {Success = TrajectoryTip != null, Trajectory = Trajectory.ToArray()});
+            return this;
         }
 
         protected virtual void OnConcluded(ConcludedEventArgs ea) => _concluded?.Invoke(this, ea);

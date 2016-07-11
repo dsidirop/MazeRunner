@@ -3,11 +3,10 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
+using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Shared.Engine;
-using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Maze;
-using MazeRunner.SimpleMazeRunner;
-using Moq;
+using MazeRunner.Tests.Artifacts;
 using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -42,7 +41,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
 
         [Test]
         [Category("Unit.MazeRunnerEnginesTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_NullArgument_ShouldThrowNullReferenceException()
+        public void MazeRunnerEnginesTests_NullArgument_ShouldThrowNullReferenceException()
         {
             // Arrange
 
@@ -55,25 +54,11 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
 
         [Test]
         [Category("Unit.MazeRunnerEnginesTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_Minimal1x2_ShouldFindPath() //SG
+        public void MazeRunnerEnginesTests_Minimal1x2_ShouldFindPath() //SG
         {
             // Arrange
-            var size = new Size(width: 1, height: 1);
-            var exitpoint = new Point(x: 1, y: 0);
-            var entrypoint = new Point(x: 0, y: 0);
-
-            var mazemock = new Mock<IMaze>();
-            mazemock.Setup(x => x.Size).Returns(size);
-            mazemock.Setup(c => c.HitTest(It.IsAny<Point>())).Returns<Point>(p =>
-            {
-                if (p == exitpoint) return MazeHitTestEnum.Exitpoint;
-                if (p == entrypoint) return MazeHitTestEnum.Entrypoint;
-                return MazeHitTestEnum.Roadblock;
-            });
-            mazemock.Setup(x => x.Exitpoint).Returns(exitpoint);
-            mazemock.Setup(x => x.Entrypoint).Returns(entrypoint);
-
-            var runner = SpawnEngine(mazemock.Object);
+            var maze = TestArtifacts.Minimal_1X2_SG;
+            var runner = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => runner.Run());
@@ -83,144 +68,123 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
             action.ShouldNotThrow();
             runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
             runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
-            runner.TrajectoryTip.Should().Be(exitpoint);
+
+            runner.Trajectory.ShouldAllBeEquivalentTo(new[] { maze.Entrypoint, maze.Exitpoint });
+            runner.TrajectoryTip.Should().Be(maze.Exitpoint);
+            runner.TrajectoryLength.Should().Be(2);
             runner.InvalidatedSquares.Any().Should().Be(false);
-            runner.Trajectory.ShouldAllBeEquivalentTo(new[] {entrypoint, exitpoint});
         }
 
         [Test]
         [Category("Unit.MazeRunnerEnginesTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_Minimal1x3Horizontal_ShouldFindPath() //S_G horizontal
+        public void MazeRunnerEnginesTests_ResetEngine_ShouldReset()
         {
             // Arrange
-            var size = new Size(width: 3, height: 1);
-            var exitpoint = new Point(x: 2, y: 0);
-            var freepoint = new Point(x: 1, y: 0);
-            var entrypoint = new Point(x: 0, y: 0);
-
-            var mazemock = new Mock<IMaze>();
-            mazemock.Setup(x => x.Size).Returns(size);
-            mazemock.Setup(c => c.HitTest(It.IsAny<Point>())).Returns<Point>(p =>
-            {
-                if (p == freepoint) return MazeHitTestEnum.Free;
-                if (p == exitpoint) return MazeHitTestEnum.Exitpoint;
-                if (p == entrypoint) return MazeHitTestEnum.Entrypoint;
-
-                return MazeHitTestEnum.Roadblock;
-            });
-            mazemock.Setup(x => x.Exitpoint).Returns(exitpoint);
-            mazemock.Setup(x => x.Entrypoint).Returns(entrypoint);
-
-            var runner = SpawnEngine(mazemock.Object);
+            var maze = TestArtifacts.Minimal_1X2_SG;
+            var runner = SpawnEngine(maze);
 
             // Act
-            var action = new Action(() => runner.Run());
+            var action = new Action(() => runner.Run().Reset());
 
             // Assert
+            runner.MonitorEvents();
             action.ShouldNotThrow();
-            runner.TrajectoryTip.Should().Be(exitpoint);
-            runner.InvalidatedSquares.Any().Should().Be(false);
-            runner.Trajectory.ShouldAllBeEquivalentTo(new[] {entrypoint, freepoint, exitpoint});
-        }
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
 
-        [Test]
-        [Category("Unit.MazeRunnerEnginesTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_Minimal1x3Horizontal_ShouldFailToFindPath() //SXG horizontal
-        {
-            // Arrange
-            var size = new Size(width: 3, height: 1);
-            var exitpoint = new Point(x: 2, y: 0);
-            var entrypoint = new Point(x: 0, y: 0);
-
-            var mazemock = new Mock<IMaze>();
-            mazemock.Setup(x => x.Size).Returns(size);
-            mazemock.Setup(c => c.HitTest(It.IsAny<Point>())).Returns<Point>(p =>
-            {
-                if (p == exitpoint) return MazeHitTestEnum.Exitpoint;
-                if (p == entrypoint) return MazeHitTestEnum.Entrypoint;
-
-                return MazeHitTestEnum.Roadblock;
-            });
-            mazemock.Setup(x => x.Exitpoint).Returns(exitpoint);
-            mazemock.Setup(x => x.Entrypoint).Returns(entrypoint);
-
-            var runner = SpawnEngine(mazemock.Object);
-
-            // Act
-            var action = new Action(() => runner.Run());
-
-            // Assert
-            action.ShouldNotThrow();
-            runner.TrajectoryTip.Should().Be(null);
-            runner.InvalidatedSquares.ShouldBeEquivalentTo(new[] {entrypoint});
             runner.Trajectory.Any().Should().Be(false);
-        }
-
-        [Test]
-        [Category("Unit.MazeRunnerEnginesTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_Minimal1x3Vertical_ShouldFindPath() //S_G vertical
-        {
-            // Arrange
-            var size = new Size(width: 1, height: 3);
-            var exitpoint = new Point(x: 0, y: 2);
-            var freepoint = new Point(x: 0, y: 1);
-            var entrypoint = new Point(x: 0, y: 0);
-
-            var mazemock = new Mock<IMaze>();
-            mazemock.Setup(x => x.Size).Returns(size);
-            mazemock.Setup(c => c.HitTest(It.IsAny<Point>())).Returns<Point>(p =>
-            {
-                if (p == freepoint) return MazeHitTestEnum.Free;
-                if (p == exitpoint) return MazeHitTestEnum.Exitpoint;
-                if (p == entrypoint) return MazeHitTestEnum.Entrypoint;
-
-                return MazeHitTestEnum.Roadblock;
-            });
-            mazemock.Setup(x => x.Exitpoint).Returns(exitpoint);
-            mazemock.Setup(x => x.Entrypoint).Returns(entrypoint);
-
-            var runner = SpawnEngine(mazemock.Object);
-
-            // Act
-            var action = new Action(() => runner.Run());
-
-            // Assert
-            action.ShouldNotThrow();
-            runner.TrajectoryTip.Should().Be(exitpoint);
-            runner.InvalidatedSquares.Any().Should().Be(false);
-            runner.Trajectory.ShouldAllBeEquivalentTo(new[] { entrypoint, freepoint, exitpoint });
-        }
-
-        [Test]
-        [Category("Unit.MazeRunnerEnginesTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_Minimal1x3Vertical_ShouldNotFindPath() //SXG vertical
-        {
-            // Arrange
-            var size = new Size(width: 1, height: 3);
-            var exitpoint = new Point(x: 0, y: 2);
-            var entrypoint = new Point(x: 0, y: 0);
-
-            var mazemock = new Mock<IMaze>();
-            mazemock.Setup(x => x.Size).Returns(size);
-            mazemock.Setup(c => c.HitTest(It.IsAny<Point>())).Returns<Point>(p =>
-            {
-                if (p == exitpoint) return MazeHitTestEnum.Exitpoint;
-                if (p == entrypoint) return MazeHitTestEnum.Entrypoint;
-
-                return MazeHitTestEnum.Roadblock;
-            });
-            mazemock.Setup(x => x.Exitpoint).Returns(exitpoint);
-            mazemock.Setup(x => x.Entrypoint).Returns(entrypoint);
-
-            var runner = SpawnEngine(mazemock.Object);
-
-            // Act
-            var action = new Action(() => runner.Run());
-
-            // Assert
-            action.ShouldNotThrow();
             runner.TrajectoryTip.Should().Be(null);
-            runner.InvalidatedSquares.ShouldBeEquivalentTo(new[] {entrypoint});
+            runner.TrajectoryLength.Should().Be(0);
+            runner.InvalidatedSquares.Any().Should().Be(false);
+        }
+
+        [Test]
+        [Category("Unit.MazeRunnerEnginesTests")]
+        public void MazeRunnerEnginesTests_Minimal1x3Horizontal_ShouldFindPath() //S_G horizontal
+        {
+            // Arrange
+            var maze = TestArtifacts.Minimal_1X3_S_G;
+            var runner = SpawnEngine(maze);
+
+            // Act
+            var action = new Action(() => runner.Run());
+
+            // Assert
+            runner.MonitorEvents();
+            action.ShouldNotThrow();
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
+
+            runner.Trajectory.ShouldAllBeEquivalentTo(new[] { maze.Entrypoint, new Point(x: 1, y: 0), maze.Exitpoint});
+            runner.TrajectoryTip.Should().Be(maze.Exitpoint);
+            runner.TrajectoryLength.Should().Be(3);
+            runner.InvalidatedSquares.Any().Should().Be(false);
+        }
+
+        [Test]
+        [Category("Unit.MazeRunnerEnginesTests")]
+        public void MazeRunnerEnginesTests_Minimal1x3Horizontal_ShouldFailToFindPath() //SXG horizontal
+        {
+            // Arrange
+            var maze = TestArtifacts.Minimal_1X3_SXG;
+            var runner = SpawnEngine(maze);
+
+            // Act
+            var action = new Action(() => runner.Run());
+
+            // Assert
+            runner.MonitorEvents();
+            action.ShouldNotThrow();
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
+
+            runner.Trajectory.Any().Should().Be(false);
+            runner.TrajectoryTip.Should().Be(null);
+            runner.TrajectoryLength.Should().Be(0);
+            runner.InvalidatedSquares.ShouldBeEquivalentTo(new[] {maze.Entrypoint});
+        }
+
+        [Test]
+        [Category("Unit.MazeRunnerEnginesTests")]
+        public void MazeRunnerEnginesTests_Minimal1x3Vertical_ShouldFindPath() //S_G vertical
+        {
+            // Arrange
+            var maze = TestArtifacts.Minimal_3X1_S_G;
+            var runner = SpawnEngine(maze);
+
+            // Act
+            var action = new Action(() => runner.Run());
+
+            // Assert
+            runner.MonitorEvents();
+            action.ShouldNotThrow();
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
+
+            runner.TrajectoryTip.Should().Be(maze.Exitpoint);
+            runner.InvalidatedSquares.Any().Should().Be(false);
+            runner.Trajectory.ShouldAllBeEquivalentTo(new[] {maze.Entrypoint, new Point(x: 0, y: 1), maze.Exitpoint});
+        }
+
+        [Test]
+        [Category("Unit.MazeRunnerEnginesTests")]
+        public void MazeRunnerEnginesTests_Minimal1x3Vertical_ShouldNotFindPath() //SXG vertical
+        {
+            // Arrange
+            var maze = TestArtifacts.Minimal_3X1_SXG;
+            var runner = SpawnEngine(maze);
+
+            // Act
+            var action = new Action(() => runner.Run());
+
+            // Assert
+            runner.MonitorEvents();
+            action.ShouldNotThrow();
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
+
+            runner.TrajectoryTip.Should().Be(null);
+            runner.InvalidatedSquares.ShouldBeEquivalentTo(new[] {maze.Entrypoint});
             runner.Trajectory.Any().Should().Be(false);
         }
     }

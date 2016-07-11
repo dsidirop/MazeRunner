@@ -68,6 +68,7 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Artifacts\TestArtifacts.cs" />
     <Compile Include="IntegrationTests\MazeIntegrationTests.cs" />
     <Compile Include="IntegrationTests\EngineIntegrationTests.cs" />
     <Compile Include="UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
@@ -99,9 +100,9 @@
       <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
       <Name>MazeRunner.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.SimpleMazeRunner\MazeRunner.SimpleMazeRunner.csproj">
+    <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj">
       <Project>{00ba4d89-486d-4806-80c5-dc7135960c9a}</Project>
-      <Name>MazeRunner.SimpleMazeRunner</Name>
+      <Name>MazeRunner.Engine.SimpleMazeRunner</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using MazeRunner.Shared.Maze;
 
-namespace MazeRunner.SimpleMazeRunner
+namespace MazeRunner.Engine.SimpleMazeRunner
 {
     public class MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy : MazeRunnerEngineDepthFirstPolicyBase
     {

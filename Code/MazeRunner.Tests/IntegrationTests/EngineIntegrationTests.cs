@@ -3,9 +3,10 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
+using MazeRunner.Shared.Engine;
 using MazeRunner.Shared.Maze;
-using MazeRunner.SimpleMazeRunner;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
 
@@ -13,9 +14,12 @@ using NUnit.Framework;
 
 namespace MazeRunner.Tests.IntegrationTests
 {
-    [TestFixture]
-    public class EngineIntegrationTests
+    [TestFixture(typeof(MazeRunnerEngineSimpleDepthFirstPolicy))]
+    [TestFixture(typeof(MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy))]
+    public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
     {
+        static private IMazeRunnerEngine SpawnEngine(IMaze maze) => (TEngine) Activator.CreateInstance(typeof(TEngine), maze);
+
         private readonly dynamic _filepathOfArtifactFiles = new ExpandoObject();
 
         [OneTimeSetUp]
@@ -57,11 +61,11 @@ namespace MazeRunner.Tests.IntegrationTests
         [Test]
         [Repeat(30)]
         [Category("Unit.EngineIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_RandomMaze4x4_ShouldFindPath()
+        public void EngineIntegrationTests_RandomMaze4x4_ShouldFindPath()
         {
             // Arrange
-            var maze = MazeFactory.I.Random(4, 4, 0.1); //1 roadblock
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = MazeFactorySingleton.I.Random(4, 4, 0.1); //1 roadblock
+            var engine = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => engine.Run());
@@ -73,11 +77,11 @@ namespace MazeRunner.Tests.IntegrationTests
 
         [Test]
         [Category("Unit.EngineIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_EITMaze001Diagonal_ShouldFindPath()
+        public void EngineIntegrationTests_EITMaze001Diagonal_ShouldFindPath()
         {
             // Arrange
-            var maze = (IMaze) MazeFactory.I.FromFile(_filepathOfArtifactFiles.EITMaze001Diagonal);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = (IMaze) MazeFactorySingleton.I.FromFile(_filepathOfArtifactFiles.EITMaze001Diagonal);
+            var engine = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => engine.Run());
@@ -90,11 +94,11 @@ namespace MazeRunner.Tests.IntegrationTests
 
         [Test]
         [Category("Unit.EngineIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_EITMaze002GTrap_ShouldFindPath()
+        public void EngineIntegrationTests_EITMaze002GTrap_ShouldFindPath()
         {
             // Arrange
-            var maze = (IMaze) MazeFactory.I.FromFile(_filepathOfArtifactFiles.EITMaze002GTrap);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = (IMaze) MazeFactorySingleton.I.FromFile(_filepathOfArtifactFiles.EITMaze002GTrap);
+            var engine = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => engine.Run());
@@ -107,11 +111,11 @@ namespace MazeRunner.Tests.IntegrationTests
 
         [Test]
         [Category("Unit.EngineIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_EITMaze003GEscape_ShouldFindPath()
+        public void EngineIntegrationTests_EITMaze003GEscape_ShouldFindPath()
         {
             // Arrange
-            var maze = (IMaze) MazeFactory.I.FromFile(_filepathOfArtifactFiles.EITMaze003GEscape);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = (IMaze) MazeFactorySingleton.I.FromFile(_filepathOfArtifactFiles.EITMaze003GEscape);
+            var engine = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => engine.Run());
@@ -125,11 +129,11 @@ namespace MazeRunner.Tests.IntegrationTests
         [Test]
         [Repeat(1000)]
         [Category("Unit.EngineIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_EITMaze004LabyrinthSolvable_ShouldFindPath()
+        public void EngineIntegrationTests_EITMaze004LabyrinthSolvable_ShouldFindPath()
         {
             // Arrange
-            var maze = (IMaze) MazeFactory.I.FromFile(_filepathOfArtifactFiles.EITMaze004LabyrinthSolvable);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = (IMaze) MazeFactorySingleton.I.FromFile(_filepathOfArtifactFiles.EITMaze004LabyrinthSolvable);
+            var engine = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => engine.Run());
@@ -142,11 +146,11 @@ namespace MazeRunner.Tests.IntegrationTests
         [Test]
         [Repeat(1000)]
         [Category("Unit.EngineIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_EITMaze005LabyrinthUnsolvable_ShouldFailToFindPath()
+        public void EngineIntegrationTests_EITMaze005LabyrinthUnsolvable_ShouldFailToFindPath()
         {
             // Arrange
-            var maze = (IMaze) MazeFactory.I.FromFile(_filepathOfArtifactFiles.EITMaze005LabyrinthUnsolvable);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = (IMaze) MazeFactorySingleton.I.FromFile(_filepathOfArtifactFiles.EITMaze005LabyrinthUnsolvable);
+            var engine = SpawnEngine(maze);
 
             // Act
             var action = new Action(() => engine.Run());

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00BA4D89-486D-4806-80C5-DC7135960C9A}</ProjectGuid>
+    <ProjectGuid>{6D0F8024-9281-43C3-9B02-9D8C832C3E0F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MazeRunner.SimpleMazeRunner</RootNamespace>
-    <AssemblyName>MazeRunner.SimpleMazeRunner</AssemblyName>
+    <RootNamespace>MazeRunner.EnginesFactory</RootNamespace>
+    <AssemblyName>MazeRunner.EnginesFactory</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,9 +32,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyInfo.cs">
@@ -43,14 +46,12 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy.cs" />
-    <Compile Include="MazeRunnerEngineDepthFirstPolicyBase.cs" />
-    <Compile Include="MazeRunnerEngineSimpleDepthFirstPolicy.cs" />
+    <Compile Include="EnginesFactorySingleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MazeRunner.Shared\MazeRunner.Shared.csproj">
-      <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
+      <Project>{DFD6EB8C-9033-42EC-AE63-803D07DECA2A}</Project>
       <Name>MazeRunner.Shared</Name>
     </ProjectReference>
   </ItemGroup>

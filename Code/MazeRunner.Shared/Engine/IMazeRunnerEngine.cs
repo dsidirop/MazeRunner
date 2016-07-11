@@ -9,10 +9,12 @@ namespace MazeRunner.Shared.Engine
         event EventHandler StateChanged; //progressed
         event EventHandler<ConcludedEventArgs> Concluded;
 
+        int TrajectoryLength { get; }
         Point? TrajectoryTip { get; }
         IEnumerable<Point> Trajectory { get; }
         IEnumerable<Point> InvalidatedSquares { get; }
 
-        void Run();
+        IMazeRunnerEngine Run();
+        IMazeRunnerEngine Reset();
     }
 }
