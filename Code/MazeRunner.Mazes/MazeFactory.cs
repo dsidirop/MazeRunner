@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using MazeRunner.Shared;
+using MazeRunner.Shared.Helpers;
+using MazeRunner.Shared.Maze;
+
 // ReSharper disable AccessToModifiedClosure
 
 namespace MazeRunner.Mazes
@@ -16,8 +18,8 @@ namespace MazeRunner.Mazes
             if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
 
             var totalSquareCount = ((double) width)*height;
-            if (totalSquareCount < Maze.MinimumArea) throw new ArgumentException("Maze area too small");
             if (totalSquareCount > Maze.MaximumArea) throw new ArgumentException("Maze area too big");
+            if (totalSquareCount < Maze.MinimumArea) throw new ArgumentException("Maze area too small");
             if (roadblocksDensity < 0 || roadblocksDensity > 1) throw new ArgumentOutOfRangeException(nameof(roadblocksDensity));
 
             var roadblocksCount = (int) (totalSquareCount*roadblocksDensity);

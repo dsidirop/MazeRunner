@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
+using MazeRunner.Shared.Helpers;
 
-namespace MazeRunner.Shared
+namespace MazeRunner.Shared.Maze
 {
     public interface IMaze
     {

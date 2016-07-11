@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using MazeRunner.Shared;
+using MazeRunner.Shared.Helpers;
+using MazeRunner.Shared.Maze;
 
 namespace MazeRunner.Mazes
 {

@@ -1,4 +1,4 @@
-﻿namespace MazeRunner.Shared
+﻿namespace MazeRunner.Shared.Helpers
 {
     public enum MazeHitTestEnum
     {

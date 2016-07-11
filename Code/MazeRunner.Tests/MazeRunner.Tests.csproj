@@ -16,27 +16,35 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.11.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.11.0\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentAssertions.Core, Version=4.11.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.11.0\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.5.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.10\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
@@ -54,14 +62,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MazeFactoryTests\MazeFactoryTests.cs" />
+    <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
+      <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="IntegrationTests\MazeIntegrationTests.cs" />
+    <Compile Include="IntegrationTests\EngineIntegrationTests.cs" />
+    <Compile Include="UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
+    <Compile Include="UnitTests\MazeRunnerEnginesTests\MazeRunnerEnginesTests.cs" />
+    <Compile Include="UnitTests\MazeSquareTests\MazeSquareTests.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_InvalidChars.txt" />
-    <Compile Include="MazeTests\MazeTests.cs" />
+    <EmbeddedResource Include="Artifacts\MFT_InvalidChars.txt" />
+    <Compile Include="UnitTests\MazeTests\MazeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,31 +99,42 @@
       <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
       <Name>MazeRunner.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MazeRunner.SimpleMazeRunner\MazeRunner.SimpleMazeRunner.csproj">
+      <Project>{00ba4d89-486d-4806-80c5-dc7135960c9a}</Project>
+      <Name>MazeRunner.SimpleMazeRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_StrayNewLines.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_StrayNewLines.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_Empty.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_Empty.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_NoExitpoint.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_NoExitpoint.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_NoEntrypoint.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_NoEntrypoint.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_JaggedMaze.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_JaggedMaze.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_MinValid_1x2.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_MinValid_1x2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MazeFactoryTests\Artifacts\MFT_MinValid_2x1.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_MinValid_2x1.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MazeFactoryTests\Artifacts\MFT_Valid_3x4.txt" />
+    <Content Include="Artifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
+    <Content Include="Artifacts\EIT_Maze004_LabyrinthSolvable.txt" />
+    <Content Include="Artifacts\EIT_Maze003_GEscape.txt" />
+    <Content Include="Artifacts\EIT_Maze002_GTrap.txt" />
+    <Content Include="Artifacts\EIT_Maze001_Diagonal.txt" />
+    <Content Include="Artifacts\MFT_Valid_3x4.txt" />
+    <Content Include="README.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
