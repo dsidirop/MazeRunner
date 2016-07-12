@@ -26,7 +26,7 @@ namespace MazeRunner.EnginesFactory.Factory
             EnsureInit();
 
             var type = (Type) null;
-            if (!_engines.TryGetValue(enginename, out type)) throw new ArgumentOutOfRangeException(nameof(enginename));
+            if (!_engines.TryGetValue(enginename?.Trim() ?? "", out type)) throw new ArgumentOutOfRangeException(nameof(enginename));
 
             return Activator.CreateInstance(type, maze) as IMazeRunnerEngine;
         }

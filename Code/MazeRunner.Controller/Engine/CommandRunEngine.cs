@@ -10,7 +10,7 @@ namespace MazeRunner.Controller.Engine
         internal int? TryRunEngine(string[] args)
         {
             if ((args.Length < 2 && args.Length > 4)
-                || args.FindParameter("engine=") == null
+                || args.FindParameter("engines=") == null
                 || args.FindParameter("mazefile=") == null
                 || (args.Length == 3 && args.FindParameter("repeat=") == null && args.FindParameter("verbose") == null)
                 || (args.Length == 4 && (args.FindParameter("repeat=") == null || args.FindParameter("verbose") == null))) return null;
@@ -20,11 +20,11 @@ namespace MazeRunner.Controller.Engine
             {
                 var verbose = args.FindParameter("verbose") != null;
                 var mazefile = args.FindParameter("mazefile=").TryGetParameterValueString();
-                var enginename = args.FindParameter("engine=").TryGetParameterValueString();
                 var repetitions = Math.Max(1, args.FindParameter("repeat=").TryGetParameterValueInt()); //optional
+                var enginenames = args.FindParameter("engines=").TryGetParameterValueString().ParseEngineNames(_enginesFactory);
 
                 var maze = _mazesFactory.FromFile(mazefile, suppressExceptions: false);
-                var engine = _enginesFactory.Spawn(enginename, maze);
+                var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToList();
 
                 _enginesBenchmarker.LapCompleted += (s, ea) => //per lap
                 {
@@ -46,7 +46,7 @@ namespace MazeRunner.Controller.Engine
                         $"Time-duration (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
                 };
 
-                _enginesBenchmarker.Run(new[] {engine}, repetitions);
+                _enginesBenchmarker.Run(enginesToBenchmark, repetitions);
             }
             catch (Exception ex)
             {

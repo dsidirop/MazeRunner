@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Controller.Engine
 {
     static internal class CommandUtilsX
     {
+        static internal IReadOnlyCollection<string> ParseEngineNames(this string enginenames, IEnginesFactory enginesFactory)
+            => enginenames.Equals("all", StringComparison.InvariantCultureIgnoreCase) ? enginesFactory.EnginesNames : enginenames.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+
         static internal string FindParameter(this string[] args, string parameter)
             => Array.FindLast(args, a => parameter.EndsWith("=") ? a.StartsWith($"--{parameter}", StringComparison.InvariantCultureIgnoreCase) : a.Equals($"--{parameter}", StringComparison.InvariantCultureIgnoreCase));
 

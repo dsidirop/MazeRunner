@@ -14,7 +14,7 @@ namespace MazeRunner.Controller.Engine
                 $@"Usage:{nl2}" +
                 $@"{programname} --help{nl}" +
                 $@"{programname} --listengines{nl}" +
-                $@"{programname} --engine=enginename   --mazefile=path  [--repeat=number]  [--verbose]{nl}" +
+                $@"{programname} --engines=[enginename1,enginename2|all]   --mazefile=path  [--repeat=number]  [--verbose]{nl}" +
                 $@"{programname} --generatemaze  --width=width  --height=height  --walldensity=walldensity  --output=path{nl}");
 
             return exitcode;
