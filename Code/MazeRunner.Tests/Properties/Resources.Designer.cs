@@ -144,6 +144,28 @@ namespace MazeRunner.Tests.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _S__
+        ///_X_S
+        ///__G_.
+        /// </summary>
+        internal static string MFT_Invalid_DoubleEntryPoint {
+            get {
+                return ResourceManager.GetString("MFT_Invalid_DoubleEntryPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _S__
+        ///_X_G
+        ///__G_.
+        /// </summary>
+        internal static string MFT_Invalid_DoubleExitPoint {
+            get {
+                return ResourceManager.GetString("MFT_Invalid_DoubleExitPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ___!@#SGX.
         /// </summary>
         internal static string MFT_InvalidChars {

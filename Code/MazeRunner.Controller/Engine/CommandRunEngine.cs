@@ -36,7 +36,7 @@ namespace MazeRunner.Controller.Engine
 
                     var solution = maze.ToAsciiMap(p => engine.Trajectory.Contains(p) ? '*' : (engine.InvalidatedSquares.Contains(p) ? (char?)'#' : null));
                     _standardOutput.WriteLine(
-                        $"{(engine.TrajectoryTip == null ? "FAILURE" : $"SUCCESS({engine.TrajectoryLength}){nl}{string.Join(" → ", engine.Trajectory.Select(p => $"({p.X},{p.Y})"))}{nl}")}{nl}" +
+                        $"RUN#{i + 1} → {(engine.TrajectoryTip == null ? "FAILURE" : $"SUCCESS({engine.TrajectoryLength}) → {string.Join(" → ", engine.Trajectory.Select(p => $"({p.X},{p.Y})"))}{nl}")}{nl}" +
                         $"{solution}{nl}{nl}" +
                         $"X=wall, *=trajectory, #=visited{nl}");
                 }
@@ -46,7 +46,7 @@ namespace MazeRunner.Controller.Engine
                 _standardOutput.WriteLine(
                     $"Number of runs: {repetitions}{nl}" +
                     $"Path-lengths (Best / Worst / Average): {pathlengths.First()} / {pathlengths.Last()} / {pathlengths.Average()}{nl}" +
-                    $"Time-duration in ms (Best / Worst / Average): {timedurations.First().TotalMilliseconds} / {timedurations.First().TotalMilliseconds} / {new TimeSpan(Convert.ToInt64(timedurations.Average(timeSpan => timeSpan.Ticks))).TotalMilliseconds}{nl}");
+                    $"Time-duration in ms (Best / Worst / Average): {timedurations.First().TotalMilliseconds} / {timedurations.Last().TotalMilliseconds} / {new TimeSpan(Convert.ToInt64(timedurations.Average(timeSpan => timeSpan.Ticks))).TotalMilliseconds}{nl}");
             }
             catch (Exception ex)
             {

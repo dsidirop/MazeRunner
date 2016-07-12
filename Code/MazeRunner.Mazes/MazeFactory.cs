@@ -84,10 +84,14 @@ namespace MazeRunner.Mazes
                             }
                             else if (c == 'G')
                             {
+                                if (exitpoint != null) throw new InvalidDataException("Maze has two Exit points");
+
                                 exitpoint = new Point(columnIndex, lineIndex);
                             }
                             else if (c == 'S')
                             {
+                                if (entrypoint != null) throw new InvalidDataException("Maze has two Entry points");
+
                                 entrypoint = new Point(columnIndex, lineIndex);
                             }
                             else if (c == 'X')

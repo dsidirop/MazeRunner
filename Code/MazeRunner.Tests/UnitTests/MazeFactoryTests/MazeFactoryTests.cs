@@ -30,6 +30,8 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             _filepathOfArtifactFiles.NoEntrypoint = SpawnTempFile(Resources.MFT_NoEntrypoint);
             _filepathOfArtifactFiles.InvalidChars = SpawnTempFile(Resources.MFT_InvalidChars);
             _filepathOfArtifactFiles.StrayNewLines = SpawnTempFile(Resources.MFT_StrayNewLines);
+            _filepathOfArtifactFiles.InvalidDoubleExitPoints = SpawnTempFile(Resources.MFT_Invalid_DoubleExitPoint);
+            _filepathOfArtifactFiles.InvalidDoubleEntryPoints = SpawnTempFile(Resources.MFT_Invalid_DoubleEntryPoint);
         }
 
         static private string SpawnTempFile(string contents)
@@ -194,6 +196,32 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Assert
             action.ShouldNotThrow();
             result.ToAsciiMap().Should().Be(File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim());
+        }
+
+        [Test]
+        [Category("Unit.MazeFactory")]
+        public void MazeFactory_InvalidDoubleEntryPoints_ShouldThrowInvalidDataException()
+        {
+            // Arrange
+
+            // Act
+            var action = new Action(() => MazesFactorySingleton.I.FromFile(_filepathOfArtifactFiles.InvalidDoubleEntryPoints, suppressExceptions: false));
+
+            // Assert
+            action.ShouldThrow<InvalidDataException>().WithMessage("Maze has two Entry points");
+        }
+
+        [Test]
+        [Category("Unit.MazeFactory")]
+        public void MazeFactory_InvalidDoubleExitPoints_ShouldThrowInvalidDataException()
+        {
+            // Arrange
+
+            // Act
+            var action = new Action(() => MazesFactorySingleton.I.FromFile(_filepathOfArtifactFiles.InvalidDoubleExitPoints, suppressExceptions: false));
+
+            // Assert
+            action.ShouldThrow<InvalidDataException>().WithMessage("Maze has two exit points");
         }
     }
 }

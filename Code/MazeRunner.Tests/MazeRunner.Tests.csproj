@@ -141,6 +141,8 @@
     <Content Include="Artifacts\EIT_Maze003_GEscape.txt" />
     <Content Include="Artifacts\EIT_Maze002_GTrap.txt" />
     <Content Include="Artifacts\EIT_Maze001_Diagonal.txt" />
+    <Content Include="Artifacts\MFT_Invalid_DoubleEntryPoint.txt" />
+    <Content Include="Artifacts\MFT_Invalid_DoubleExitPoint.txt" />
     <Content Include="Artifacts\MFT_Valid_3x4.txt" />
     <Content Include="README.txt" />
   </ItemGroup>
