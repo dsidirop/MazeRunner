@@ -21,7 +21,7 @@ namespace MazeRunner.Controller.Bootstrapping.Commands
             }
             catch (Exception ex)
             {
-                exitcode = 2;
+                exitcode = ex is InvalidCommandLineArgument ? 1 : 2;
                 Console.Error.WriteLine($@"Failed to generate random maze: {ex.Message}");
             }
 

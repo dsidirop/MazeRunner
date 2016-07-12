@@ -34,14 +34,10 @@ namespace MazeRunner.Controller.Bootstrapping.Commands
             if (parameter == null) return default(T);
 
             var result = converter(SimpleValueParser.Match(parameter));
-            if (!result.Item1)
-            {
-                Console.Error.WriteLine($@"Malformed parameter: {parameter}");
-                Environment.Exit(1);
-            }
+            if (!result.Item1) throw new InvalidCommandLineArgument($@"Malformed parameter: {parameter}");
 
             return result.Item2;
         }
-        static private readonly Regex SimpleValueParser = new Regex(@"^.*?[=]""?(?<Value>.+)""?$");
+        static private readonly Regex SimpleValueParser = new Regex(@"^.*?[=]""?(?<Value>.+?)""?$");
     }
 }

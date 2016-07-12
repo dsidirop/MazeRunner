@@ -48,6 +48,7 @@
     <Compile Include="Bootstrapping\Commands\CommandListEngines.cs" />
     <Compile Include="Bootstrapping\Commands\CommandPrintUsageMessage.cs" />
     <Compile Include="Bootstrapping\Commands\CommandGenerateRandomMaze.cs" />
+    <Compile Include="Bootstrapping\Commands\InvalidCommandLineArgument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyInfo.cs">

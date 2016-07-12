@@ -18,7 +18,7 @@ namespace MazeRunner.Tests.IntegrationTests
         static private readonly Tuple<string, string[], int>[] Cases; //must be static
         static private readonly dynamic FilepathOfArtifactFiles = new ExpandoObject();
 
-        static ControllerIntegrationTests()
+        static ControllerIntegrationTests() //dont move this into [onetimesetup]
         {
             FilepathOfArtifactFiles.OutputMazeFile = SpawnTempFile();
             FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable = SpawnTempFile(Resources.EIT_Maze004_LabyrinthSolvable);
@@ -34,13 +34,15 @@ namespace MazeRunner.Tests.IntegrationTests
                 new Tuple<string, string[], int>("006", new[] {"--engine=foobar"}, 1),
                 new Tuple<string, string[], int>("007", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", "--mazefile=abc"}, 3),
                 new Tuple<string, string[], int>("008", new[] {$"--engine=Aaaaaaaabbbbbbbbbbbccccccccccccc", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 3),
-                new Tuple<string, string[], int>("009", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 0), //fix
-                new Tuple<string, string[], int>("010", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0), //fix
-                new Tuple<string, string[], int>("011", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 0), //fix
+                new Tuple<string, string[], int>("009", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 0),
+                new Tuple<string, string[], int>("010", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
+                new Tuple<string, string[], int>("011", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 0),
                 new Tuple<string, string[], int>("012", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=1.1", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
                 new Tuple<string, string[], int>("013", new[] {$"--generatemaze", "--width=0", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
                 new Tuple<string, string[], int>("014", new[] {$"--generatemaze", "--width=7", "--height=0", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("015", new[] {$"--generatemaze", "--width=1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2)
+                new Tuple<string, string[], int>("015", new[] {$"--generatemaze", "--width=1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("016", new[] {$"--generatemaze", "--width=-1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("017", new string[] { }, 0)
             };
         }
 
@@ -75,22 +77,7 @@ namespace MazeRunner.Tests.IntegrationTests
                 File.Delete(kvp.Value);
             }
         }
-
-        [Test]
-        [Category("Unit.ControllerIntegrationTests")]
-        public void CommandLineTests_PrintUsageMessage_ShouldPass()
-        {
-            // Arrange
-            var exitcode = 0;
-
-            // Act
-            var action = new Action(() => exitcode = Bootstrapper.Run(new string[] {}));
-
-            // Assert
-            action.ShouldNotThrow();
-            exitcode.Should().Be(0);
-        }
-
+        
         [Test]
         [TestCaseSource(nameof(Cases))]
         [Category("Unit.ControllerIntegrationTests")]

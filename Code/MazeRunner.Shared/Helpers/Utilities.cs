@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using MazeRunner.Shared.Maze;
 
@@ -10,6 +12,15 @@ namespace MazeRunner.Shared.Helpers
 {
     static public class Utilities
     {
+        static public readonly string ProductInstallationFolderpath_system;
+        static Utilities()
+        {
+            var assembly = Assembly.GetExecutingAssembly(); //tried application.startuppath but it didnt work
+            var assemblyFilepath = assembly.Location;
+
+            ProductInstallationFolderpath_system = Path.GetDirectoryName(assemblyFilepath);
+        }
+
         static private readonly Random RandomNumbersEngine = new Random();
         static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive) //max is exclusive here
         {
