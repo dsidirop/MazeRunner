@@ -4,7 +4,8 @@ using System.IO;
 using FluentAssertions;
 using MazeRunner.Controller.Engine;
 using MazeRunner.Engine.SimpleMazeRunner;
-using MazeRunner.EnginesFactory;
+using MazeRunner.EnginesFactory.Benchmark;
+using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Artifacts;
 using MazeRunner.Tests.Properties;
@@ -17,11 +18,12 @@ namespace MazeRunner.Tests.IntegrationTests
     [TestFixture]
     public class ControllerIntegrationTests
     {
+        static private readonly dynamic FilepathOfArtifactFiles;
         static private readonly Tuple<string, string[], int>[] Cases; //must be static
-        static private readonly dynamic FilepathOfArtifactFiles = new ExpandoObject();
 
         static ControllerIntegrationTests() //dont move this into [onetimesetup]
         {
+            FilepathOfArtifactFiles = new ExpandoObject();
             FilepathOfArtifactFiles.OutputMazeFile = SpawnTempFile();
             FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable = SpawnTempFile(Resources.EIT_Maze004_LabyrinthSolvable);
 
@@ -93,7 +95,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var commandLineParams = @case.Item2;
 
             // Act
-            var action = new Action(() => exitcode = new ControllerEngine(EnginesFactorySingleton.I, MazesFactorySingleton.I, standardOutput, standardError).Run(commandLineParams));
+            var action = new Action(() => exitcode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EngineBenchmarker(), standardOutput, standardError).Run(commandLineParams));
 
             // Assert
             action.ShouldNotThrow();

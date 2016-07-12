@@ -1,4 +1,4 @@
-﻿using MazeRunner.Shared.Maze;
+﻿using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Engine.SimpleMazeRunner
 {

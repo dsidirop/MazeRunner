@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using MazeRunner.Shared.Engine;
-using MazeRunner.Shared.Maze;
 
-namespace MazeRunner.EnginesFactory
+namespace MazeRunner.Shared.Interfaces
 {
     public interface IEnginesFactory
     {
-        IEnumerable<string> EnginesNames { get; }
+        IReadOnlyCollection<string> EnginesNames { get; }
 
         void EnsureInit();
         IMazeRunnerEngine Spawn(string enginename, IMaze maze);

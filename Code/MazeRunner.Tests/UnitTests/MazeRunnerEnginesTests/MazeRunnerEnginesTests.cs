@@ -4,8 +4,7 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using MazeRunner.Engine.SimpleMazeRunner;
-using MazeRunner.Shared.Engine;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 using MazeRunner.Tests.Artifacts;
 using NUnit.Framework;
 
@@ -69,7 +68,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
             runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
             runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
 
-            runner.Trajectory.ShouldAllBeEquivalentTo(new[] { maze.Entrypoint, maze.Exitpoint });
+            runner.Trajectory.ShouldAllBeEquivalentTo(new[] {maze.Entrypoint, maze.Exitpoint});
             runner.TrajectoryTip.Should().Be(maze.Exitpoint);
             runner.TrajectoryLength.Should().Be(2);
             runner.InvalidatedSquares.Any().Should().Be(false);

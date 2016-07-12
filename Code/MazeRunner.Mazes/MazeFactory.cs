@@ -4,13 +4,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 
 // ReSharper disable AccessToModifiedClosure
 
 namespace MazeRunner.Mazes
 {
-    public sealed class MazesFactorySingleton : IMazesFactory //lazysingleton
+    public class MazesFactory : IMazesFactory
     {
         public IMaze Random(int width, int height, double roadblocksDensity = 0.5)
         {
@@ -122,12 +122,5 @@ namespace MazeRunner.Mazes
 
             return result;
         }
-
-        private MazesFactorySingleton() //threadsafe init
-        {
-        }
-
-        static public MazesFactorySingleton I => _lazyInstance.Value;
-        static private readonly Lazy<MazesFactorySingleton> _lazyInstance = new Lazy<MazesFactorySingleton>(() => new MazesFactorySingleton());
     }
 }

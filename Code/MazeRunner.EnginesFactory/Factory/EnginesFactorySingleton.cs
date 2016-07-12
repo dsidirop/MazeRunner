@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MazeRunner.Shared.Engine;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 
-namespace MazeRunner.EnginesFactory
+namespace MazeRunner.EnginesFactory.Factory
 {
     public class EnginesFactorySingleton : IEnginesFactory
     {
         private Dictionary<string, Type> _engines;
 
-        public IEnumerable<string> EnginesNames
+        public IReadOnlyCollection<string> EnginesNames
         {
             get
             {

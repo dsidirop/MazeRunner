@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
-using MazeRunner.Shared.Helpers;
 
-namespace MazeRunner.Shared.Maze
+namespace MazeRunner.Shared.Interfaces
 {
     public interface IMaze
     {

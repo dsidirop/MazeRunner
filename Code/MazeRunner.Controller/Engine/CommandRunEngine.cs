@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MazeRunner.Shared.Helpers;
@@ -23,30 +21,24 @@ namespace MazeRunner.Controller.Engine
                 var maze = _mazesFactory.FromFile(mazefile, suppressExceptions: false);
                 var engine = _enginesFactory.Spawn(enginename, maze);
 
-                var stopWatch = new Stopwatch();
-                var pathlengths = new List<int>(repetitions);
-                var timedurations = new List<TimeSpan>(repetitions);
-                for (var i = 0; i < repetitions; i++, engine.Reset())
+                _enginesBenchmarker.LapCompleted += (s, ea) => //per lap
                 {
-                    stopWatch.Restart();
-                    engine.Run();
-                    stopWatch.Stop();
-                    pathlengths.Add(engine.TrajectoryLength);
-                    timedurations.Add(stopWatch.Elapsed);
-
-                    var solution = maze.ToAsciiMap(p => engine.Trajectory.Contains(p) ? '*' : (engine.InvalidatedSquares.Contains(p) ? (char?)'#' : null));
+                    var solution = maze.ToAsciiMap(p => ea.Engine.Trajectory.Contains(p) ? '*' : (ea.Engine.InvalidatedSquares.Contains(p) ? (char?)'#' : null));
                     _standardOutput.WriteLine(
-                        $"RUN#{i + 1} → {(engine.TrajectoryTip == null ? "FAILURE" : $"SUCCESS({engine.TrajectoryLength}) → {string.Join(" → ", engine.Trajectory.Select(p => $"({p.X},{p.Y})"))}{nl}")}{nl}" +
+                        $"RUN#{ea.LapIndex + 1} -> {(ea.Engine.TrajectoryTip == null ? "FAILURE" : $"SUCCESS(pathlength={ea.Engine.TrajectoryLength},timespan={ea.Duration.TotalMilliseconds}) -> {string.Join(" -> ", ea.Engine.Trajectory.Select(p => $"({p.X},{p.Y})"))}{nl}")}{nl}" +
                         $"{solution}{nl}{nl}" +
                         $"X=wall, *=trajectory, #=visited{nl}");
-                }
+                };
+                _enginesBenchmarker.SingleEngineTestsCompleted += (s, ea) => //final
+                {
+                    _standardOutput.WriteLine(
+                        $"Engine: {ea.Engine.GetType().Name}{nl}" +
+                        $"Number of runs: {repetitions} (smooth runs: {repetitions - ea.Crashes}, crashes: {ea.Crashes}){nl}" +
+                        $"Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength}{nl}" +
+                        $"Time-duration (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
+                };
 
-                pathlengths.Sort();
-                timedurations.Sort();
-                _standardOutput.WriteLine(
-                    $"Number of runs: {repetitions}{nl}" +
-                    $"Path-lengths (Best / Worst / Average): {pathlengths.First()} / {pathlengths.Last()} / {pathlengths.Average()}{nl}" +
-                    $"Time-duration in ms (Best / Worst / Average): {timedurations.First().TotalMilliseconds} / {timedurations.Last().TotalMilliseconds} / {new TimeSpan(Convert.ToInt64(timedurations.Average(timeSpan => timeSpan.Ticks))).TotalMilliseconds}{nl}");
+                _enginesBenchmarker.Run(new[] {engine}, repetitions);
             }
             catch (Exception ex)
             {

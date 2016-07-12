@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Shared.Helpers
 {

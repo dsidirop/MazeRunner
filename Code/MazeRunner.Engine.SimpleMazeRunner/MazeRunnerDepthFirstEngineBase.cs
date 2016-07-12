@@ -2,14 +2,25 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using MazeRunner.Shared.Engine;
+using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Engine.SimpleMazeRunner
 {
     public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
     {
+        private event EventHandler _starting;
+        public event EventHandler Starting
+        {
+            add
+            {
+                _starting -= value;
+                _starting += value;
+            }
+            remove { _starting -= value; }
+        }
+
         private event EventHandler<ConcludedEventArgs> _concluded;
         public event EventHandler<ConcludedEventArgs> Concluded
         {
@@ -43,9 +54,10 @@ namespace MazeRunner.Engine.SimpleMazeRunner
             private set { _currentTrajectorySquares.Add(value.Value, value.Value); }
         }
 
+        public IMaze Maze => _maze;
         public int TrajectoryLength => _currentTrajectorySquares.Count;
-        public IEnumerable<Point> Trajectory => _currentTrajectorySquares.Keys.Cast<Point>();
-        public IEnumerable<Point> InvalidatedSquares => _invalidatedSquares;
+        public IEnumerable<Point> Trajectory => _currentTrajectorySquares.Keys.Cast<Point>(); //no easy way to use ireadonlycollection here
+        public IReadOnlyCollection<Point> InvalidatedSquares => _invalidatedSquares;
 
         protected MazeRunnerDepthFirstEngineBase(IMaze maze, bool avoidPathfolding)
         {
@@ -69,39 +81,53 @@ namespace MazeRunner.Engine.SimpleMazeRunner
 
         public IMazeRunnerEngine Run()
         {
-            for (var tip = TrajectoryTip = _maze.Entrypoint; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack any further
+            var wentsmooth = true;
+            try
             {
-                var adjacentSquares = tip.Value.GetAdjacentPoints(); //nullable points
-                var possibleExitpointFound = adjacentSquares.FirstOrDefault(x => _maze.HitTest(x.Value) == MazeHitTestEnum.Exitpoint); //lookahead one
-                if (possibleExitpointFound != null)
+                OnStarting();
+
+                for (var tip = TrajectoryTip = _maze.Entrypoint; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack any further
                 {
-                    TrajectoryTip = possibleExitpointFound;
-                    OnEngineStateChanged();
-                    break;
+                    var adjacentSquares = tip.Value.GetAdjacentPoints(); //nullable points
+                    var possibleExitpointFound = adjacentSquares.FirstOrDefault(x => _maze.HitTest(x.Value) == MazeHitTestEnum.Exitpoint); //lookahead one
+                    if (possibleExitpointFound != null)
+                    {
+                        TrajectoryTip = possibleExitpointFound;
+                        OnEngineStateChanged();
+                        break;
+                    }
+
+                    var randomValidAdjacentSquare = adjacentSquares.Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
+                    {
+                        return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
+                               && !_currentTrajectorySquares.Contains(candidateSquare) //already in trajectory
+                               && !_invalidatedSquares.Contains(candidateSquare.Value) //ReSharper disable once AssignNullToNotNullAttribute  already invalidated
+                               && (!_avoidPathfolding || candidateSquare.Value.GetAdjacentPoints().Except(new[] {tip}).All(z => !_currentTrajectorySquares.Contains(z))); //to avoid pathfolding we check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
+                    });
+
+                    if (randomValidAdjacentSquare != null) //found an unvisited adjacent square that matches the criteria of our policy
+                    {
+                        TrajectoryTip = randomValidAdjacentSquare;
+                        continue;
+                    }
+
+                    _invalidatedSquares.Add(tip.Value); //current trajectorytip has no unvisited adjacent squares that match our
+                    _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
                 }
-
-                var randomValidAdjacentSquare = adjacentSquares.Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
-                {
-                    return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
-                           && !_currentTrajectorySquares.Contains(candidateSquare) //already in trajectory
-                           && !_invalidatedSquares.Contains(candidateSquare.Value) //ReSharper disable once AssignNullToNotNullAttribute  already invalidated
-                           && (!_avoidPathfolding || candidateSquare.Value.GetAdjacentPoints().Except(new[] {tip}).All(z => !_currentTrajectorySquares.Contains(z))); //to avoid pathfolding we check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
-                });
-
-                if (randomValidAdjacentSquare != null) //found an unvisited adjacent square that matches the criteria of our policy
-                {
-                    TrajectoryTip = randomValidAdjacentSquare;
-                    continue;
-                }
-
-                _invalidatedSquares.Add(tip.Value); //current trajectorytip has no unvisited adjacent squares that match our
-                _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
             }
-
-            OnConcluded(new ConcludedEventArgs {Success = TrajectoryTip != null, Trajectory = Trajectory.ToArray()});
+            catch (Exception ex)
+            {
+                wentsmooth = false;
+                throw;
+            }
+            finally
+            {
+                OnConcluded(new ConcludedEventArgs {Crashed = !wentsmooth, Success = wentsmooth && TrajectoryTip != null});
+            }
             return this;
         }
 
+        protected virtual void OnStarting() => _starting?.Invoke(this, EventArgs.Empty);
         protected virtual void OnConcluded(ConcludedEventArgs ea) => _concluded?.Invoke(this, ea);
         protected virtual void OnEngineStateChanged() => _stateChanged?.Invoke(this, EventArgs.Empty);
     }

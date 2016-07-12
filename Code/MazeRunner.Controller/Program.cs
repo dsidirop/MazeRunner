@@ -1,6 +1,7 @@
 ﻿using System;
 using MazeRunner.Controller.Engine;
-using MazeRunner.EnginesFactory;
+using MazeRunner.EnginesFactory.Benchmark;
+using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 
 namespace MazeRunner.Controller
@@ -9,7 +10,7 @@ namespace MazeRunner.Controller
     {
         static public void Main(string[] args)
         {
-            Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, MazesFactorySingleton.I, Console.Out, Console.Error).Run(args);
+            Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EngineBenchmarker(), Console.Out, Console.Error).Run(args);
         }
     }
 }
