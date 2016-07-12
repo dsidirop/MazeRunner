@@ -139,6 +139,12 @@
   <data name="MFT_InvalidChars" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\artifacts\mft_invalidchars.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="MFT_Invalid_DoubleEntryPoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\artifacts\mft_invalid_doubleentrypoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="MFT_Invalid_DoubleExitPoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\artifacts\mft_invalid_doubleexitpoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="MFT_JaggedMaze" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\artifacts\mft_jaggedmaze.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

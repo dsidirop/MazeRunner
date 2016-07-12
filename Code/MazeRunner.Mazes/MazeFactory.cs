@@ -4,13 +4,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 
 // ReSharper disable AccessToModifiedClosure
 
 namespace MazeRunner.Mazes
 {
-    public sealed class MazeFactory //lazysingleton
+    public class MazesFactory : IMazesFactory
     {
         public IMaze Random(int width, int height, double roadblocksDensity = 0.5)
         {
@@ -84,10 +84,14 @@ namespace MazeRunner.Mazes
                             }
                             else if (c == 'G')
                             {
+                                if (exitpoint != null) throw new InvalidDataException("Maze has two Exit points");
+
                                 exitpoint = new Point(columnIndex, lineIndex);
                             }
                             else if (c == 'S')
                             {
+                                if (entrypoint != null) throw new InvalidDataException("Maze has two Entry points");
+
                                 entrypoint = new Point(columnIndex, lineIndex);
                             }
                             else if (c == 'X')
@@ -118,12 +122,5 @@ namespace MazeRunner.Mazes
 
             return result;
         }
-
-        private MazeFactory() //threadsafe init
-        {
-        }
-
-        static public MazeFactory I => _lazyInstance.Value;
-        static private readonly Lazy<MazeFactory> _lazyInstance = new Lazy<MazeFactory>(() => new MazeFactory());
     }
 }

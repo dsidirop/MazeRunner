@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 
-namespace MazeRunner.Shared.Engine
+namespace MazeRunner.Shared.Helpers
 {
     public class MazeSquare
     {

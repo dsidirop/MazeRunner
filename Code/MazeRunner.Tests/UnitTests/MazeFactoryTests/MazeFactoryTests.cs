@@ -5,7 +5,7 @@ using System.IO;
 using FluentAssertions;
 using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
 
@@ -30,6 +30,8 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             _filepathOfArtifactFiles.NoEntrypoint = SpawnTempFile(Resources.MFT_NoEntrypoint);
             _filepathOfArtifactFiles.InvalidChars = SpawnTempFile(Resources.MFT_InvalidChars);
             _filepathOfArtifactFiles.StrayNewLines = SpawnTempFile(Resources.MFT_StrayNewLines);
+            _filepathOfArtifactFiles.InvalidDoubleExitPoints = SpawnTempFile(Resources.MFT_Invalid_DoubleExitPoint);
+            _filepathOfArtifactFiles.InvalidDoubleEntryPoints = SpawnTempFile(Resources.MFT_Invalid_DoubleEntryPoint);
         }
 
         static private string SpawnTempFile(string contents)
@@ -66,7 +68,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var dubiouspath = "/something/that/doesnt/exist";
 
             // Act
-            var action = new Action(() => MazeFactory.I.FromFile(dubiouspath, suppressExceptions: true));
+            var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: true));
 
             // Assert
             action.ShouldNotThrow();
@@ -80,7 +82,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var dubiouspath = "/something/that/doesnt/exist";
 
             // Act
-            var action = new Action(() => MazeFactory.I.FromFile(dubiouspath, suppressExceptions: false));
+            var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: false));
 
             // Assert
             action.ShouldThrow<DirectoryNotFoundException>();
@@ -93,7 +95,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Arrange
             
             // Act
-            var action = new Action(() => { MazeFactory.I.FromFile(_filepathOfArtifactFiles.InvalidChars, suppressExceptions: false); });
+            var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidChars, suppressExceptions: false); });
 
             // Assert
             action.ShouldThrow<InvalidDataException>().WithMessage("Invalid character ! at line 1 column 4");
@@ -106,7 +108,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            var action = new Action(() => { MazeFactory.I.FromFile(_filepathOfArtifactFiles.StrayNewLines, suppressExceptions: false); });
+            var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.StrayNewLines, suppressExceptions: false); });
 
             // Assert
             action.ShouldThrow<InvalidDataException>().WithMessage("Line 2 is empty (only the very last line is allowed to be empty)");
@@ -119,7 +121,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            var action = new Action(() => { MazeFactory.I.FromFile(_filepathOfArtifactFiles.Empty, suppressExceptions: false); });
+            var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.Empty, suppressExceptions: false); });
 
             // Assert
             action.ShouldThrow<InvalidDataException>().WithMessage("Empty");
@@ -132,7 +134,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            var action = new Action(() => { MazeFactory.I.FromFile(_filepathOfArtifactFiles.NoEntrypoint, suppressExceptions: false); });
+            var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.NoEntrypoint, suppressExceptions: false); });
 
             // Assert
             action.ShouldThrow<InvalidDataException>().WithMessage("No entrypoint specified");
@@ -145,7 +147,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            var action = new Action(() => { MazeFactory.I.FromFile(_filepathOfArtifactFiles.NoExitpoint, suppressExceptions: false); });
+            var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.NoExitpoint, suppressExceptions: false); });
 
             // Assert
             action.ShouldThrow<InvalidDataException>().WithMessage("No exitpoint specified");
@@ -158,7 +160,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            var action = new Action(() => { MazeFactory.I.FromFile(_filepathOfArtifactFiles.JaggedMaze, suppressExceptions: false); });
+            var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.JaggedMaze, suppressExceptions: false); });
 
             // Assert
             action.ShouldThrow<InvalidDataException>().WithMessage("Line 2 has different number of columns (7) than the first line (which has 8)");
@@ -172,7 +174,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var result = (IMaze) null;
 
             // Act
-            var action = new Action(() => { result = MazeFactory.I.FromFile(_filepathOfArtifactFiles.MinValid1x2, suppressExceptions: false); });
+            var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.MinValid1x2, suppressExceptions: false); });
             
             // Assert
             action.ShouldNotThrow();
@@ -189,11 +191,37 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var result = (IMaze) null;
 
             // Act
-            var action = new Action(() => { result = MazeFactory.I.FromFile(_filepathOfArtifactFiles.Valid3x4, suppressExceptions: false); });
+            var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.Valid3x4, suppressExceptions: false); });
 
             // Assert
             action.ShouldNotThrow();
             result.ToAsciiMap().Should().Be(File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim());
+        }
+
+        [Test]
+        [Category("Unit.MazeFactory")]
+        public void MazeFactory_InvalidDoubleEntryPoints_ShouldThrowInvalidDataException()
+        {
+            // Arrange
+
+            // Act
+            var action = new Action(() => new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidDoubleEntryPoints, suppressExceptions: false));
+
+            // Assert
+            action.ShouldThrow<InvalidDataException>().WithMessage("Maze has two Entry points");
+        }
+
+        [Test]
+        [Category("Unit.MazeFactory")]
+        public void MazeFactory_InvalidDoubleExitPoints_ShouldThrowInvalidDataException()
+        {
+            // Arrange
+
+            // Act
+            var action = new Action(() => new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidDoubleExitPoints, suppressExceptions: false));
+
+            // Assert
+            action.ShouldThrow<InvalidDataException>().WithMessage("Maze has two exit points");
         }
     }
 }

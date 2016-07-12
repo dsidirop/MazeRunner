@@ -3,9 +3,9 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.SimpleMazeRunner;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
 
@@ -56,8 +56,8 @@ namespace MazeRunner.Tests.IntegrationTests
         public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze4x4_ShouldFindPath()
         {
             // Arrange
-            var maze = MazeFactory.I.Random(4, 4, 0.1);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = new MazesFactory().Random(4, 4, 0.1);
+            var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
 
             // Act
             var action = new Action(() =>
@@ -78,8 +78,8 @@ namespace MazeRunner.Tests.IntegrationTests
         public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze10x10_ShouldFindPath()
         {
             // Arrange
-            var maze = MazeFactory.I.Random(10, 10, 0.1);
-            var engine = new MazeRunnerEngineDepthFirstAvoidPathfoldingPolicy(maze);
+            var maze = new MazesFactory().Random(10, 10, 0.1);
+            var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
 
             // Act
             var action = new Action(() =>

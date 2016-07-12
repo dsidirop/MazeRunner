@@ -4,8 +4,9 @@ using System.Drawing;
 using System.Linq;
 using FluentAssertions;
 using MazeRunner.Mazes;
+using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Maze;
+using MazeRunner.Shared.Interfaces;
 using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement

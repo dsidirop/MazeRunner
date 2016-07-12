@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using FluentAssertions;
-using MazeRunner.Shared.Engine;
 using MazeRunner.Shared.Helpers;
 using NUnit.Framework;
 
