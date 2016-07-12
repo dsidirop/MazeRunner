@@ -2,16 +2,16 @@
 using System.Linq;
 using MazeRunner.Shared.Helpers;
 
-namespace MazeRunner.Controller.Bootstrapping.Commands
+namespace MazeRunner.Controller.Engine
 {
-    static internal partial class Command
+    public partial class ControllerEngine
     {
-        static internal int PrintUsageMessage(string[] args)
+        internal int PrintUsageMessage(string[] args)
         {
             var exitcode = !args.Any() || args.Length == 1 && args.FindParameter("help") != null ? 0 : 1;
 
             const string programname = "MazeRunner.Controller";
-            Console.Out.WriteLine(
+            _standardOutput.WriteLine(
                 $@"Usage:{nl2}" +
                 $@"{programname} --help{nl}" +
                 $@"{programname} --listengines{nl}" +

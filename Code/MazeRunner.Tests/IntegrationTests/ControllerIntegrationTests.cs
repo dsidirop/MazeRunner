@@ -2,8 +2,10 @@
 using System.Dynamic;
 using System.IO;
 using FluentAssertions;
-using MazeRunner.Controller.Bootstrapping;
+using MazeRunner.Controller.Engine;
 using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.EnginesFactory;
+using MazeRunner.Mazes;
 using MazeRunner.Tests.Artifacts;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
@@ -49,7 +51,7 @@ namespace MazeRunner.Tests.IntegrationTests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            
+
         }
 
         static private string SpawnTempFile(string contents = "")
@@ -77,21 +79,25 @@ namespace MazeRunner.Tests.IntegrationTests
                 File.Delete(kvp.Value);
             }
         }
-        
+
         [Test]
         [TestCaseSource(nameof(Cases))]
         [Category("Unit.ControllerIntegrationTests")]
-        public void CommandLineTests_Help_ShouldPass(Tuple<string, string[], int> @case)
+        public void ControllerIntegrationTests_Help_ShouldPass(Tuple<string, string[], int> @case)
         {
             // Arrange
             var exitcode = 0;
+            var standardError = new StringWriter();
+            var standardOutput = new StringWriter();
+            var desiredExitCode = @case.Item3;
+            var commandLineParams = @case.Item2;
 
             // Act
-            var action = new Action(() => exitcode = Bootstrapper.Run(@case.Item2));
+            var action = new Action(() => exitcode = new ControllerEngine(EnginesFactorySingleton.I, MazesFactorySingleton.I, standardOutput, standardError).Run(commandLineParams));
 
             // Assert
             action.ShouldNotThrow();
-            exitcode.Should().Be(@case.Item3);
+            exitcode.Should().Be(desiredExitCode);
         }
     }
 }

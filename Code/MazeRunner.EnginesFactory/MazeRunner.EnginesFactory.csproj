@@ -47,6 +47,7 @@
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="EnginesFactorySingleton.cs" />
+    <Compile Include="IEnginesFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace MazeRunner.Controller.Bootstrapping.Commands
+namespace MazeRunner.Controller.Engine
 {
     static internal class CommandUtilsX
     {
@@ -34,7 +34,7 @@ namespace MazeRunner.Controller.Bootstrapping.Commands
             if (parameter == null) return default(T);
 
             var result = converter(SimpleValueParser.Match(parameter));
-            if (!result.Item1) throw new InvalidCommandLineArgument($@"Malformed parameter: {parameter}");
+            if (!result.Item1) throw new InvalidCommandLineArgumentException($@"Malformed parameter: {parameter}");
 
             return result.Item2;
         }

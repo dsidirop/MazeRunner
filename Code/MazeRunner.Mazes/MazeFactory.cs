@@ -10,7 +10,7 @@ using MazeRunner.Shared.Maze;
 
 namespace MazeRunner.Mazes
 {
-    public sealed class MazeFactorySingleton //lazysingleton
+    public sealed class MazesFactorySingleton : IMazesFactory //lazysingleton
     {
         public IMaze Random(int width, int height, double roadblocksDensity = 0.5)
         {
@@ -119,11 +119,11 @@ namespace MazeRunner.Mazes
             return result;
         }
 
-        private MazeFactorySingleton() //threadsafe init
+        private MazesFactorySingleton() //threadsafe init
         {
         }
 
-        static public MazeFactorySingleton I => _lazyInstance.Value;
-        static private readonly Lazy<MazeFactorySingleton> _lazyInstance = new Lazy<MazeFactorySingleton>(() => new MazeFactorySingleton());
+        static public MazesFactorySingleton I => _lazyInstance.Value;
+        static private readonly Lazy<MazesFactorySingleton> _lazyInstance = new Lazy<MazesFactorySingleton>(() => new MazesFactorySingleton());
     }
 }
