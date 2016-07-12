@@ -23,7 +23,7 @@ namespace MazeRunner.Controller.Engine
 
         public int Run(string[] args)
         {
-            var exitcode = (int?)0;
+            var exitcode = (int?) 0;
             if ((exitcode = TryRunEngine(args)) != null) return exitcode.Value;
             if ((exitcode = TryListEngines(args)) != null) return exitcode.Value;
             if ((exitcode = TryGenerateRandomMaze(args)) != null) return exitcode.Value;

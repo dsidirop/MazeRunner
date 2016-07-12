@@ -40,13 +40,14 @@ namespace MazeRunner.Tests.IntegrationTests
                 new Tuple<string, string[], int>("008", new[] {$"--engine=Aaaaaaaabbbbbbbbbbbccccccccccccc", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 3),
                 new Tuple<string, string[], int>("009", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 0),
                 new Tuple<string, string[], int>("010", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
-                new Tuple<string, string[], int>("011", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 0),
-                new Tuple<string, string[], int>("012", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=1.1", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("013", new[] {$"--generatemaze", "--width=0", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("014", new[] {$"--generatemaze", "--width=7", "--height=0", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("015", new[] {$"--generatemaze", "--width=1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("016", new[] {$"--generatemaze", "--width=-1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("017", new string[] { }, 0)
+                new Tuple<string, string[], int>("011", new[] {$"--engine={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10", "--verbose"}, 0),
+                new Tuple<string, string[], int>("012", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 0),
+                new Tuple<string, string[], int>("013", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=1.1", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("014", new[] {$"--generatemaze", "--width=0", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("015", new[] {$"--generatemaze", "--width=7", "--height=0", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("016", new[] {$"--generatemaze", "--width=1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("017", new[] {$"--generatemaze", "--width=-1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("018", new string[] { }, 0)
             };
         }
 
