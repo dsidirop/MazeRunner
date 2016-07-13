@@ -1,1 +1,2 @@
-﻿If you use resharper with vs15 you need v2016.1.2+ for these tests to work
+﻿- If you use resharper with vs15 you need v2016.1.2+ for these tests to work
+- The project runs in x86 mode due to an issue with debugging tests when the mode is set to AnyCPU or x64. Seems like resharper is having issues with x64 machines. Go figure ...

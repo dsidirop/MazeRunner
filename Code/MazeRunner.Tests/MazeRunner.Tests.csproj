@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,6 +12,8 @@
     <AssemblyName>MazeRunner.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,8 +46,8 @@
       <HintPath>..\packages\FluentAssertions.4.11.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Moq, Version=4.5.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.5.10\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.13.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.5.13\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
@@ -68,25 +71,25 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Artifacts\TestArtifacts.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TestArtifacts\Artifacts.cs" />
     <Compile Include="IntegrationTests\ControllerIntegrationTests.cs" />
     <Compile Include="IntegrationTests\MazeIntegrationTests.cs" />
     <Compile Include="IntegrationTests\EngineIntegrationTests.cs" />
     <Compile Include="UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
     <Compile Include="UnitTests\MazeRunnerEnginesTests\MazeRunnerEnginesTests.cs" />
     <Compile Include="UnitTests\MazeSquareTests\MazeSquareTests.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Artifacts\MFT_InvalidChars.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_InvalidChars.txt" />
     <Compile Include="UnitTests\MazeTests\MazeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -115,39 +118,46 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_StrayNewLines.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_StrayNewLines.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_Empty.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_Empty.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_NoExitpoint.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_NoExitpoint.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_NoEntrypoint.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_NoEntrypoint.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_JaggedMaze.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_JaggedMaze.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_MinValid_1x2.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_MinValid_1x2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\MFT_MinValid_2x1.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_MinValid_2x1.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Artifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
-    <Content Include="Artifacts\EIT_Maze004_LabyrinthSolvable.txt" />
-    <Content Include="Artifacts\EIT_Maze003_GEscape.txt" />
-    <Content Include="Artifacts\EIT_Maze002_GTrap.txt" />
-    <Content Include="Artifacts\EIT_Maze001_Diagonal.txt" />
-    <Content Include="Artifacts\MFT_Invalid_DoubleEntryPoint.txt" />
-    <Content Include="Artifacts\MFT_Invalid_DoubleExitPoint.txt" />
-    <Content Include="Artifacts\MFT_Valid_3x4.txt" />
+    <Content Include="TestArtifacts\00_DO_NOT_RENAME_THIS_FOLDER_TO_MERELY_ARTIFACTS.txt" />
+    <EmbeddedResource Include="TestArtifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
+    <EmbeddedResource Include="TestArtifacts\EIT_Maze004_LabyrinthSolvable.txt" />
+    <EmbeddedResource Include="TestArtifacts\EIT_Maze003_GEscape.txt" />
+    <EmbeddedResource Include="TestArtifacts\EIT_Maze002_GTrap.txt" />
+    <EmbeddedResource Include="TestArtifacts\EIT_Maze001_Diagonal.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_Invalid_DoubleEntryPoint.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_Invalid_DoubleExitPoint.txt" />
+    <EmbeddedResource Include="TestArtifacts\MFT_Valid_3x4.txt" />
     <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

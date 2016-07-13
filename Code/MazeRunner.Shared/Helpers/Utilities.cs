@@ -100,6 +100,18 @@ namespace MazeRunner.Shared.Helpers
             return sb.ToString().Trim();
         }
 
+        static public string Quotify(string input, bool doubleInsteadOfSingleQuotes = true, bool wrapInQuotes = true)
+        {
+            var quoteCharacter = doubleInsteadOfSingleQuotes ? @"""" : @"'";
+            var escapedQuoteCharacter = @"\" + quoteCharacter;
+
+            input = input.Replace(@"\", @"\\");
+            input = input.Replace(quoteCharacter, escapedQuoteCharacter);
+            if (!wrapInQuotes) return input;
+
+            return quoteCharacter + input + quoteCharacter;
+        }
+
         // ReSharper disable LoopCanBeConvertedToQuery
         static public IEnumerable<T> ConvertAll<T>(this IEnumerable en, Converter<object, T> converter)
         {

@@ -5,7 +5,6 @@ using System.Reflection;
 using FluentAssertions;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Shared.Interfaces;
-using MazeRunner.Tests.Artifacts;
 using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -56,7 +55,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
         public void MazeRunnerEnginesTests_Minimal1x2_ShouldFindPath() //SG
         {
             // Arrange
-            var maze = TestArtifacts.Minimal_1X2_SG;
+            var maze = TestArtifacts.Artifacts.Minimal_1X2_SG;
             var runner = SpawnEngine(maze);
 
             // Act
@@ -79,7 +78,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
         public void MazeRunnerEnginesTests_ResetEngine_ShouldReset()
         {
             // Arrange
-            var maze = TestArtifacts.Minimal_1X2_SG;
+            var maze = TestArtifacts.Artifacts.Minimal_1X2_SG;
             var runner = SpawnEngine(maze);
 
             // Act
@@ -102,7 +101,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
         public void MazeRunnerEnginesTests_Minimal1x3Horizontal_ShouldFindPath() //S_G horizontal
         {
             // Arrange
-            var maze = TestArtifacts.Minimal_1X3_S_G;
+            var maze = TestArtifacts.Artifacts.Minimal_1X3_S_G;
             var runner = SpawnEngine(maze);
 
             // Act
@@ -125,7 +124,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
         public void MazeRunnerEnginesTests_Minimal1x3Horizontal_ShouldFailToFindPath() //SXG horizontal
         {
             // Arrange
-            var maze = TestArtifacts.Minimal_1X3_SXG;
+            var maze = TestArtifacts.Artifacts.Minimal_1X3_SXG;
             var runner = SpawnEngine(maze);
 
             // Act
@@ -148,7 +147,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
         public void MazeRunnerEnginesTests_Minimal1x3Vertical_ShouldFindPath() //S_G vertical
         {
             // Arrange
-            var maze = TestArtifacts.Minimal_3X1_S_G;
+            var maze = TestArtifacts.Artifacts.Minimal_3X1_S_G;
             var runner = SpawnEngine(maze);
 
             // Act
@@ -170,7 +169,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests
         public void MazeRunnerEnginesTests_Minimal1x3Vertical_ShouldNotFindPath() //SXG vertical
         {
             // Arrange
-            var maze = TestArtifacts.Minimal_3X1_SXG;
+            var maze = TestArtifacts.Artifacts.Minimal_3X1_SXG;
             var runner = SpawnEngine(maze);
 
             // Act
