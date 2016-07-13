@@ -83,7 +83,6 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            // var action = new Action(() => { new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
             var action = new Action(Target);
 
             // Assert
@@ -92,7 +91,7 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
 
         private void Target()
         {
-            var foo = 1;
+            new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), new HashSet<Point>());
         }
     }
 }
