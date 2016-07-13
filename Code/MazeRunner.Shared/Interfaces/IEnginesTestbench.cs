@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MazeRunner.Shared.Interfaces
 {
-    public interface IEngineBenchmarker
+    public interface IEnginesTestbench
     {
         event EventHandler AllDone;
         event EventHandler<LapConcludedEventArgs> LapCompleted;

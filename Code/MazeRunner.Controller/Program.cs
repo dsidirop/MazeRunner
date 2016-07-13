@@ -10,7 +10,7 @@ namespace MazeRunner.Controller
     {
         static public void Main(string[] args)
         {
-            Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EngineBenchmarker(), Console.Out, Console.Error).Run(args);
+            Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), Console.Out, Console.Error).Run(args);
         }
     }
 }

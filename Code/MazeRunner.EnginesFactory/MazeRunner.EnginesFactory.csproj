@@ -50,7 +50,7 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="Benchmark\EngineBenchmarker.cs" />
+    <Compile Include="Benchmark\EnginesTestbench.cs" />
     <Compile Include="Factory\EnginesFactorySingleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

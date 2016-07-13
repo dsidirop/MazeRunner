@@ -7,7 +7,7 @@ using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.EnginesFactory.Benchmark
 {
-    public class EngineBenchmarker : IEngineBenchmarker
+    public class EnginesTestbench : IEnginesTestbench
     {
         private event EventHandler<LapConcludedEventArgs> _lapConcluded;
         public event EventHandler<LapConcludedEventArgs> LapCompleted

@@ -10,9 +10,9 @@ namespace MazeRunner.Controller.Engine
         private readonly TextWriter _standardOutput;
         private readonly IMazesFactory _mazesFactory;
         private readonly IEnginesFactory _enginesFactory;
-        private readonly IEngineBenchmarker _enginesBenchmarker;
+        private readonly IEnginesTestbench _enginesBenchmarker;
 
-        public ControllerEngine(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEngineBenchmarker enginesBenchmarker, TextWriter standardOutput, TextWriter standardError)
+        public ControllerEngine(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesBenchmarker, TextWriter standardOutput, TextWriter standardError)
         {
             _mazesFactory = mazesFactory;
             _standardError = standardError;

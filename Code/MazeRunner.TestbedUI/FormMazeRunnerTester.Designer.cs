@@ -30,32 +30,46 @@
         {
             this.mstripFile = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.randomMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpUniversal = new System.Windows.Forms.TableLayoutPanel();
+            this.splitBoxHorizontal = new System.Windows.Forms.SplitContainer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tlpOptionsSidebar = new System.Windows.Forms.TableLayoutPanel();
             this.lbxkAvailableEngines = new System.Windows.Forms.CheckedListBox();
             this.lblAvailableEngines = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
-            this.tlpOptionsContainer = new System.Windows.Forms.TableLayoutPanel();
-            this.lblIterations = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.lblDelay = new System.Windows.Forms.Label();
             this.tlpStartStop = new System.Windows.Forms.TableLayoutPanel();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
+            this.tlpLogs = new System.Windows.Forms.TableLayoutPanel();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.lblLogs = new System.Windows.Forms.Label();
+            this.lblMovementDelay = new System.Windows.Forms.Label();
+            this.nudMovementDelay = new System.Windows.Forms.NumericUpDown();
+            this.nudIterations = new System.Windows.Forms.NumericUpDown();
+            this.lblIterations = new System.Windows.Forms.Label();
+            this.tlpOptionsContainer = new System.Windows.Forms.TableLayoutPanel();
+            this.tlpDummyContainer = new System.Windows.Forms.TableLayoutPanel();
             this.mstripFile.SuspendLayout();
             this.tlpUniversal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).BeginInit();
+            this.splitBoxHorizontal.Panel1.SuspendLayout();
+            this.splitBoxHorizontal.Panel2.SuspendLayout();
+            this.splitBoxHorizontal.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.tlpOptionsSidebar.SuspendLayout();
             this.gbOptions.SuspendLayout();
-            this.tlpOptionsContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.tlpStartStop.SuspendLayout();
+            this.tlpLogs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIterations)).BeginInit();
+            this.tlpOptionsContainer.SuspendLayout();
+            this.tlpDummyContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // mstripFile
@@ -65,7 +79,7 @@
             this.toolsToolStripMenuItem});
             this.mstripFile.Location = new System.Drawing.Point(0, 0);
             this.mstripFile.Name = "mstripFile";
-            this.mstripFile.Size = new System.Drawing.Size(944, 24);
+            this.mstripFile.Size = new System.Drawing.Size(884, 24);
             this.mstripFile.TabIndex = 0;
             this.mstripFile.Text = "menuStrip1";
             // 
@@ -78,19 +92,19 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
-            // loadMazeToolStripMenuItem
-            // 
-            this.loadMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.LoadMaze;
-            this.loadMazeToolStripMenuItem.Name = "loadMazeToolStripMenuItem";
-            this.loadMazeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.loadMazeToolStripMenuItem.Text = "&Load Maze";
-            // 
             // saveMazeToolStripMenuItem
             // 
             this.saveMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.SaveMaze;
             this.saveMazeToolStripMenuItem.Name = "saveMazeToolStripMenuItem";
-            this.saveMazeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveMazeToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
             this.saveMazeToolStripMenuItem.Text = "&Save Maze";
+            // 
+            // loadMazeToolStripMenuItem
+            // 
+            this.loadMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.LoadMaze;
+            this.loadMazeToolStripMenuItem.Name = "loadMazeToolStripMenuItem";
+            this.loadMazeToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.loadMazeToolStripMenuItem.Text = "&Load Maze";
             // 
             // toolsToolStripMenuItem
             // 
@@ -109,20 +123,55 @@
             // 
             // tlpUniversal
             // 
-            this.tlpUniversal.ColumnCount = 2;
+            this.tlpUniversal.ColumnCount = 1;
             this.tlpUniversal.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpUniversal.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpUniversal.Controls.Add(this.tlpOptionsSidebar, 1, 0);
-            this.tlpUniversal.Controls.Add(this.txtLog, 0, 1);
+            this.tlpUniversal.Controls.Add(this.splitBoxHorizontal, 0, 0);
             this.tlpUniversal.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpUniversal.Location = new System.Drawing.Point(0, 24);
-            this.tlpUniversal.Margin = new System.Windows.Forms.Padding(0);
             this.tlpUniversal.Name = "tlpUniversal";
-            this.tlpUniversal.RowCount = 2;
+            this.tlpUniversal.RowCount = 1;
             this.tlpUniversal.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpUniversal.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tlpUniversal.Size = new System.Drawing.Size(944, 713);
+            this.tlpUniversal.Size = new System.Drawing.Size(884, 587);
             this.tlpUniversal.TabIndex = 1;
+            // 
+            // splitBoxHorizontal
+            // 
+            this.splitBoxHorizontal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitBoxHorizontal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitBoxHorizontal.Location = new System.Drawing.Point(3, 3);
+            this.splitBoxHorizontal.Name = "splitBoxHorizontal";
+            this.splitBoxHorizontal.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitBoxHorizontal.Panel1
+            // 
+            this.splitBoxHorizontal.Panel1.Controls.Add(this.splitContainer1);
+            this.splitBoxHorizontal.Panel1MinSize = 300;
+            // 
+            // splitBoxHorizontal.Panel2
+            // 
+            this.splitBoxHorizontal.Panel2.Controls.Add(this.tlpLogs);
+            this.splitBoxHorizontal.Panel2MinSize = 200;
+            this.splitBoxHorizontal.Size = new System.Drawing.Size(878, 581);
+            this.splitBoxHorizontal.SplitterDistance = 373;
+            this.splitBoxHorizontal.SplitterWidth = 8;
+            this.splitBoxHorizontal.TabIndex = 3;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Panel1MinSize = 300;
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.tlpOptionsSidebar);
+            this.splitContainer1.Panel2MinSize = 380;
+            this.splitContainer1.Size = new System.Drawing.Size(878, 373);
+            this.splitContainer1.SplitterDistance = 485;
+            this.splitContainer1.SplitterWidth = 8;
+            this.splitContainer1.TabIndex = 0;
             // 
             // tlpOptionsSidebar
             // 
@@ -135,7 +184,8 @@
             this.tlpOptionsSidebar.Controls.Add(this.gbOptions, 0, 5);
             this.tlpOptionsSidebar.Controls.Add(this.tlpStartStop, 0, 6);
             this.tlpOptionsSidebar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpOptionsSidebar.Location = new System.Drawing.Point(663, 3);
+            this.tlpOptionsSidebar.Location = new System.Drawing.Point(0, 0);
+            this.tlpOptionsSidebar.MinimumSize = new System.Drawing.Size(300, 300);
             this.tlpOptionsSidebar.Name = "tlpOptionsSidebar";
             this.tlpOptionsSidebar.RowCount = 7;
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
@@ -145,7 +195,7 @@
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpOptionsSidebar.Size = new System.Drawing.Size(278, 407);
+            this.tlpOptionsSidebar.Size = new System.Drawing.Size(383, 371);
             this.tlpOptionsSidebar.TabIndex = 0;
             // 
             // lbxkAvailableEngines
@@ -155,7 +205,7 @@
             this.lbxkAvailableEngines.FormattingEnabled = true;
             this.lbxkAvailableEngines.Location = new System.Drawing.Point(3, 30);
             this.lbxkAvailableEngines.Name = "lbxkAvailableEngines";
-            this.lbxkAvailableEngines.Size = new System.Drawing.Size(272, 96);
+            this.lbxkAvailableEngines.Size = new System.Drawing.Size(377, 164);
             this.lbxkAvailableEngines.TabIndex = 0;
             // 
             // lblAvailableEngines
@@ -165,7 +215,7 @@
             this.lblAvailableEngines.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAvailableEngines.Location = new System.Drawing.Point(3, 10);
             this.lblAvailableEngines.Name = "lblAvailableEngines";
-            this.lblAvailableEngines.Size = new System.Drawing.Size(272, 13);
+            this.lblAvailableEngines.Size = new System.Drawing.Size(377, 13);
             this.lblAvailableEngines.TabIndex = 1;
             this.lblAvailableEngines.Text = "Available Engines:";
             // 
@@ -173,104 +223,19 @@
             // 
             this.gbOptions.AutoSize = true;
             this.gbOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbOptions.Controls.Add(this.tlpOptionsContainer);
+            this.gbOptions.Controls.Add(this.tlpDummyContainer);
             this.gbOptions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbOptions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbOptions.Location = new System.Drawing.Point(3, 142);
+            this.gbOptions.Location = new System.Drawing.Point(3, 210);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(272, 74);
+            this.gbOptions.Size = new System.Drawing.Size(377, 74);
             this.gbOptions.TabIndex = 2;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Options:";
             // 
-            // tlpOptionsContainer
-            // 
-            this.tlpOptionsContainer.AutoSize = true;
-            this.tlpOptionsContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpOptionsContainer.ColumnCount = 2;
-            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptionsContainer.Controls.Add(this.lblIterations, 0, 0);
-            this.tlpOptionsContainer.Controls.Add(this.numericUpDown1, 1, 0);
-            this.tlpOptionsContainer.Controls.Add(this.numericUpDown2, 1, 1);
-            this.tlpOptionsContainer.Controls.Add(this.lblDelay, 0, 1);
-            this.tlpOptionsContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpOptionsContainer.Location = new System.Drawing.Point(3, 17);
-            this.tlpOptionsContainer.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpOptionsContainer.Name = "tlpOptionsContainer";
-            this.tlpOptionsContainer.RowCount = 2;
-            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptionsContainer.Size = new System.Drawing.Size(266, 54);
-            this.tlpOptionsContainer.TabIndex = 0;
-            // 
-            // lblIterations
-            // 
-            this.lblIterations.AutoSize = true;
-            this.lblIterations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIterations.Location = new System.Drawing.Point(3, 0);
-            this.lblIterations.Name = "lblIterations";
-            this.lblIterations.Size = new System.Drawing.Size(115, 27);
-            this.lblIterations.TabIndex = 0;
-            this.lblIterations.Text = "&Iterations:";
-            this.lblIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDown1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown1.Location = new System.Drawing.Point(124, 3);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(139, 21);
-            this.numericUpDown1.TabIndex = 1;
-            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDown2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown2.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Location = new System.Drawing.Point(124, 30);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(139, 21);
-            this.numericUpDown2.TabIndex = 2;
-            this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // lblDelay
-            // 
-            this.lblDelay.AutoSize = true;
-            this.lblDelay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDelay.Location = new System.Drawing.Point(3, 27);
-            this.lblDelay.Name = "lblDelay";
-            this.lblDelay.Size = new System.Drawing.Size(115, 27);
-            this.lblDelay.TabIndex = 3;
-            this.lblDelay.Text = "&Movement Delay (ms):";
-            this.lblDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // tlpStartStop
             // 
-            this.tlpStartStop.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tlpStartStop.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.tlpStartStop.AutoSize = true;
             this.tlpStartStop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpStartStop.ColumnCount = 3;
@@ -279,7 +244,8 @@
             this.tlpStartStop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpStartStop.Controls.Add(this.btnStart, 0, 0);
             this.tlpStartStop.Controls.Add(this.btnStop, 2, 0);
-            this.tlpStartStop.Location = new System.Drawing.Point(28, 291);
+            this.tlpStartStop.Location = new System.Drawing.Point(80, 317);
+            this.tlpStartStop.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
             this.tlpStartStop.Name = "tlpStartStop";
             this.tlpStartStop.RowCount = 1;
             this.tlpStartStop.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -320,42 +286,194 @@
             this.btnStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnStop.UseVisualStyleBackColor = true;
             // 
+            // tlpLogs
+            // 
+            this.tlpLogs.ColumnCount = 1;
+            this.tlpLogs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpLogs.Controls.Add(this.txtLog, 0, 1);
+            this.tlpLogs.Controls.Add(this.lblLogs, 0, 0);
+            this.tlpLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpLogs.Location = new System.Drawing.Point(0, 0);
+            this.tlpLogs.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpLogs.Name = "tlpLogs";
+            this.tlpLogs.Padding = new System.Windows.Forms.Padding(5);
+            this.tlpLogs.RowCount = 2;
+            this.tlpLogs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpLogs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpLogs.Size = new System.Drawing.Size(876, 198);
+            this.tlpLogs.TabIndex = 0;
+            // 
             // txtLog
             // 
-            this.tlpUniversal.SetColumnSpan(this.txtLog, 2);
             this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLog.Location = new System.Drawing.Point(3, 416);
+            this.txtLog.Location = new System.Drawing.Point(8, 27);
+            this.txtLog.MinimumSize = new System.Drawing.Size(250, 100);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(938, 294);
-            this.txtLog.TabIndex = 1;
+            this.txtLog.Size = new System.Drawing.Size(860, 163);
+            this.txtLog.TabIndex = 2;
+            // 
+            // lblLogs
+            // 
+            this.lblLogs.AutoSize = true;
+            this.lblLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLogs.Location = new System.Drawing.Point(8, 5);
+            this.lblLogs.Name = "lblLogs";
+            this.lblLogs.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.lblLogs.Size = new System.Drawing.Size(860, 19);
+            this.lblLogs.TabIndex = 3;
+            this.lblLogs.Text = "Logs:";
+            // 
+            // lblMovementDelay
+            // 
+            this.lblMovementDelay.AutoSize = true;
+            this.lblMovementDelay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMovementDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMovementDelay.Location = new System.Drawing.Point(3, 27);
+            this.lblMovementDelay.Name = "lblMovementDelay";
+            this.lblMovementDelay.Size = new System.Drawing.Size(115, 27);
+            this.lblMovementDelay.TabIndex = 3;
+            this.lblMovementDelay.Text = "&Movement Delay (ms):";
+            this.lblMovementDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // nudMovementDelay
+            // 
+            this.nudMovementDelay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudMovementDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudMovementDelay.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudMovementDelay.Location = new System.Drawing.Point(124, 30);
+            this.nudMovementDelay.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
+            this.nudMovementDelay.Name = "nudMovementDelay";
+            this.nudMovementDelay.Size = new System.Drawing.Size(119, 21);
+            this.nudMovementDelay.TabIndex = 2;
+            this.nudMovementDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudMovementDelay.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // nudIterations
+            // 
+            this.nudIterations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudIterations.Location = new System.Drawing.Point(124, 3);
+            this.nudIterations.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.nudIterations.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudIterations.Name = "nudIterations";
+            this.nudIterations.Size = new System.Drawing.Size(119, 21);
+            this.nudIterations.TabIndex = 1;
+            this.nudIterations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudIterations.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lblIterations
+            // 
+            this.lblIterations.AutoSize = true;
+            this.lblIterations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIterations.Location = new System.Drawing.Point(3, 0);
+            this.lblIterations.Name = "lblIterations";
+            this.lblIterations.Size = new System.Drawing.Size(115, 27);
+            this.lblIterations.TabIndex = 0;
+            this.lblIterations.Text = "&Iterations:";
+            this.lblIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tlpOptionsContainer
+            // 
+            this.tlpOptionsContainer.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tlpOptionsContainer.AutoSize = true;
+            this.tlpOptionsContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpOptionsContainer.ColumnCount = 2;
+            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpOptionsContainer.Controls.Add(this.lblIterations, 0, 0);
+            this.tlpOptionsContainer.Controls.Add(this.nudIterations, 1, 0);
+            this.tlpOptionsContainer.Controls.Add(this.nudMovementDelay, 1, 1);
+            this.tlpOptionsContainer.Controls.Add(this.lblMovementDelay, 0, 1);
+            this.tlpOptionsContainer.Location = new System.Drawing.Point(62, 0);
+            this.tlpOptionsContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpOptionsContainer.MaximumSize = new System.Drawing.Size(300, 0);
+            this.tlpOptionsContainer.Name = "tlpOptionsContainer";
+            this.tlpOptionsContainer.RowCount = 2;
+            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpOptionsContainer.Size = new System.Drawing.Size(246, 54);
+            this.tlpOptionsContainer.TabIndex = 0;
+            // 
+            // tlpDummyContainer
+            // 
+            this.tlpDummyContainer.AutoSize = true;
+            this.tlpDummyContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpDummyContainer.ColumnCount = 1;
+            this.tlpDummyContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpDummyContainer.Controls.Add(this.tlpOptionsContainer, 0, 0);
+            this.tlpDummyContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpDummyContainer.Location = new System.Drawing.Point(3, 17);
+            this.tlpDummyContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpDummyContainer.Name = "tlpDummyContainer";
+            this.tlpDummyContainer.RowCount = 1;
+            this.tlpDummyContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpDummyContainer.Size = new System.Drawing.Size(371, 54);
+            this.tlpDummyContainer.TabIndex = 1;
             // 
             // FormMazeRunnerTester
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(944, 737);
+            this.ClientSize = new System.Drawing.Size(884, 611);
             this.Controls.Add(this.tlpUniversal);
             this.Controls.Add(this.mstripFile);
             this.Icon = global::MazeRunner.TestbedUI.Properties.Resources.Appicon;
             this.MainMenuStrip = this.mstripFile;
+            this.MinimumSize = new System.Drawing.Size(900, 650);
             this.Name = "FormMazeRunnerTester";
             this.Text = "Maze Runner";
             this.mstripFile.ResumeLayout(false);
             this.mstripFile.PerformLayout();
             this.tlpUniversal.ResumeLayout(false);
-            this.tlpUniversal.PerformLayout();
+            this.splitBoxHorizontal.Panel1.ResumeLayout(false);
+            this.splitBoxHorizontal.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).EndInit();
+            this.splitBoxHorizontal.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.tlpOptionsSidebar.ResumeLayout(false);
             this.tlpOptionsSidebar.PerformLayout();
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
-            this.tlpOptionsContainer.ResumeLayout(false);
-            this.tlpOptionsContainer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.tlpStartStop.ResumeLayout(false);
             this.tlpStartStop.PerformLayout();
+            this.tlpLogs.ResumeLayout(false);
+            this.tlpLogs.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIterations)).EndInit();
+            this.tlpOptionsContainer.ResumeLayout(false);
+            this.tlpOptionsContainer.PerformLayout();
+            this.tlpDummyContainer.ResumeLayout(false);
+            this.tlpDummyContainer.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -367,22 +485,27 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadMazeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveMazeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem randomMazeToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tlpUniversal;
+        private System.Windows.Forms.SplitContainer splitBoxHorizontal;
+        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TableLayoutPanel tlpOptionsSidebar;
         private System.Windows.Forms.CheckedListBox lbxkAvailableEngines;
         private System.Windows.Forms.Label lblAvailableEngines;
         private System.Windows.Forms.GroupBox gbOptions;
-        private System.Windows.Forms.TableLayoutPanel tlpOptionsContainer;
-        private System.Windows.Forms.TextBox txtLog;
-        private System.Windows.Forms.Label lblIterations;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.Label lblDelay;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem randomMazeToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tlpStartStop;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.TableLayoutPanel tlpLogs;
+        private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.Label lblLogs;
+        private System.Windows.Forms.TableLayoutPanel tlpDummyContainer;
+        private System.Windows.Forms.TableLayoutPanel tlpOptionsContainer;
+        private System.Windows.Forms.Label lblIterations;
+        private System.Windows.Forms.NumericUpDown nudIterations;
+        private System.Windows.Forms.NumericUpDown nudMovementDelay;
+        private System.Windows.Forms.Label lblMovementDelay;
     }
 }
 

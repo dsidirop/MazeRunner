@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\ConcludedEventArgs.cs" />
-    <Compile Include="Interfaces\IEngineBenchmarker.cs" />
+    <Compile Include="Interfaces\IEnginesTestbench.cs" />
     <Compile Include="Interfaces\IEnginesFactory.cs" />
     <Compile Include="Interfaces\IMazeRunnerEngine.cs" />
     <Compile Include="Helpers\MazeSquare.cs" />

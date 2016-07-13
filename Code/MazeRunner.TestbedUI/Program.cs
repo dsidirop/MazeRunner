@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
+using MazeRunner.EnginesFactory.Benchmark;
+using MazeRunner.EnginesFactory.Factory;
+using MazeRunner.Mazes;
 
 namespace MazeRunner.TestbedUI
 {
-    static class Program
+    static internal class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
-        static void Main()
+        static private void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMazeRunnerTester());
+            Application.Run(new FormMazeRunnerTester(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench()));
         }
     }
 }

@@ -100,7 +100,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var commandLineParams = @case.Item2;
 
             // Act
-            var action = new Action(() => exitcode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EngineBenchmarker(), standardOutput, standardError).Run(commandLineParams));
+            var action = new Action(() => exitcode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), standardOutput, standardError).Run(commandLineParams));
 
             // Assert
             action.ShouldNotThrow();
