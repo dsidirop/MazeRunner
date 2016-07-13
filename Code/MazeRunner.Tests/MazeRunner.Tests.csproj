@@ -110,6 +110,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj">
+      <Project>{00BA4D89-486D-4806-80C5-DC7135960C9A}</Project>
+      <Name>MazeRunner.Engine.SimpleMazeRunner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj">
       <Project>{D264CDC6-B5CD-4146-B056-7D22BFE10F75}</Project>
       <Name>MazeRunner.Mazes</Name>

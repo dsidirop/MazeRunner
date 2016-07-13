@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using FluentAssertions;
+using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
+using MazeRunner.Shared.Interfaces;
 //using System.Dynamic;
 //using System.IO;
 //using FluentAssertions;
@@ -83,15 +86,37 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
             // Arrange
 
             // Act
-            var action = new Action(Target);
+            var action = new Action(Maze_InvalidSizeWidth_ThrowsArgumentException_helper);
 
             // Assert
             action.ShouldThrow<ArgumentException>().WithMessage("size");
         }
 
-        private void Target()
+        private void Maze_InvalidSizeWidth_ThrowsArgumentException_helper()
         {
             new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), new HashSet<Point>());
+        }
+
+        [TestMethod]
+        [TestCategory("Unit.Maze")]
+        public void MazeRunnerEnginesTests_Minimal1x3Horizontal_ShouldFindPath() //S_G horizontal
+        {
+            // Arrange
+            var maze = TestArtifacts.Artifacts.Minimal_1X3_S_G;
+            var runner = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
+
+            // Act
+            runner.MonitorEvents();
+            runner.Run();
+
+            // Assert
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.Concluded));
+            runner.ShouldRaise(nameof(IMazeRunnerEngine.StateChanged));
+
+            runner.Trajectory.ShouldAllBeEquivalentTo(new[] { maze.Entrypoint, new Point(x: 1, y: 0), maze.Exitpoint });
+            runner.TrajectoryTip.Should().Be(maze.Exitpoint);
+            runner.TrajectoryLength.Should().Be(3);
+            runner.InvalidatedSquares.Any().Should().Be(false);
         }
     }
 }
