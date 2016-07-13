@@ -53,7 +53,7 @@ namespace MazeRunner.EnginesFactory.Factory
             {
                 return Assembly.LoadFrom(filepath).GetExportedTypes();
             }
-            catch (Exception ex)
+            catch
             {
                 //todo log
                 return new Type[] {};

@@ -7,7 +7,7 @@ using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
-using MazeRunner.Tests.Artifacts;
+using MazeRunner.Shared.Helpers;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
 
@@ -38,19 +38,19 @@ namespace MazeRunner.Tests.IntegrationTests
                 new Tuple<string, string[], int>("005", new[] {"--engines"}, 1),
                 new Tuple<string, string[], int>("006", new[] {"--engines=foobar"}, 1),
                 new Tuple<string, string[], int>("007", new[] {$"--engines=", "--mazefile=abc"}, 1),
-                new Tuple<string, string[], int>("010", new[] {$"--engines=all", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
+                new Tuple<string, string[], int>("010", new[] {$"--engines=all", $"--mazefile={Utilities.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
                 new Tuple<string, string[], int>("007", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", "--mazefile=abc"}, 3),
-                new Tuple<string, string[], int>("008", new[] {$"--engines=Aaaaaaaabbbbbbbbbbbccccccccccccc", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 3),
-                new Tuple<string, string[], int>("009", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 0),
-                new Tuple<string, string[], int>("010", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
-                new Tuple<string, string[], int>("011", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10", "--verbose"}, 0),
-                new Tuple<string, string[], int>("010", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)},{nameof(MazeRunnerDepthFirstAvoidPathfoldingEngine)}", $"--mazefile={TestArtifacts.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
-                new Tuple<string, string[], int>("012", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 0),
-                new Tuple<string, string[], int>("013", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=1.1", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("014", new[] {$"--generatemaze", "--width=0", "--height=7", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("015", new[] {$"--generatemaze", "--width=7", "--height=0", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("016", new[] {$"--generatemaze", "--width=1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
-                new Tuple<string, string[], int>("017", new[] {$"--generatemaze", "--width=-1", "--height=1", "--walldensity=0.3", $"--output={TestArtifacts.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("008", new[] {$"--engines=Aaaaaaaabbbbbbbbbbbccccccccccccc", $"--mazefile={Utilities.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 3),
+                new Tuple<string, string[], int>("009", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={Utilities.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}"}, 0),
+                new Tuple<string, string[], int>("010", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={Utilities.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
+                new Tuple<string, string[], int>("011", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)}", $"--mazefile={Utilities.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10", "--verbose"}, 0),
+                new Tuple<string, string[], int>("010", new[] {$"--engines={nameof(MazeRunnerSimpleDepthFirstEngine)},{nameof(MazeRunnerDepthFirstAvoidPathfoldingEngine)}", $"--mazefile={Utilities.Quotify(FilepathOfArtifactFiles.EITMaze004LabyrinthSolvable)}", "--repeat=10"}, 0),
+                new Tuple<string, string[], int>("012", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=0.3", $"--output={Utilities.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 0),
+                new Tuple<string, string[], int>("013", new[] {$"--generatemaze", "--width=5", "--height=7", "--walldensity=1.1", $"--output={Utilities.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("014", new[] {$"--generatemaze", "--width=0", "--height=7", "--walldensity=0.3", $"--output={Utilities.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("015", new[] {$"--generatemaze", "--width=7", "--height=0", "--walldensity=0.3", $"--output={Utilities.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("016", new[] {$"--generatemaze", "--width=1", "--height=1", "--walldensity=0.3", $"--output={Utilities.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
+                new Tuple<string, string[], int>("017", new[] {$"--generatemaze", "--width=-1", "--height=1", "--walldensity=0.3", $"--output={Utilities.Quotify(FilepathOfArtifactFiles.OutputMazeFile)}" }, 2),
                 new Tuple<string, string[], int>("018", new string[] { }, 0)
             };
         }

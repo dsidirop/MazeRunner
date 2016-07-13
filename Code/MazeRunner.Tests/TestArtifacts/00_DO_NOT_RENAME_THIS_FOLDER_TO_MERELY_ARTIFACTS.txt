@@ -1,0 +1,2 @@
+﻿Any folder named 'Artifacts' is getting ignored through .gitignore file. The folder name 'Artifacts' is getting this treatment because certain third party tools
+spawn such folders which should be getting auto-ignored. So better play it safe and abstain from naming folders thusly.

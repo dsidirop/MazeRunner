@@ -119,51 +119,51 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="EIT_Maze001_Diagonal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\EIT_Maze001_Diagonal.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\EIT_Maze001_Diagonal.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="EIT_Maze002_GTrap" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\EIT_Maze002_GTrap.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\EIT_Maze002_GTrap.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="EIT_Maze003_GEscape" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\EIT_Maze003_GEscape.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\EIT_Maze003_GEscape.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="EIT_Maze004_LabyrinthSolvable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\EIT_Maze004_LabyrinthSolvable.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\EIT_Maze004_LabyrinthSolvable.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="EIT_Maze005_LabyrinthUnsolvable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\EIT_Maze005_LabyrinthUnsolvable.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\EIT_Maze005_LabyrinthUnsolvable.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_Empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_Empty.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_Empty.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_InvalidChars" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_InvalidChars.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_InvalidChars.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_Invalid_DoubleEntryPoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_Invalid_DoubleEntryPoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_Invalid_DoubleEntryPoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_Invalid_DoubleExitPoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_Invalid_DoubleExitPoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_Invalid_DoubleExitPoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_JaggedMaze" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_JaggedMaze.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_JaggedMaze.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_MinValid_1x2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_MinValid_1x2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_MinValid_1x2.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_MinValid_2x1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_MinValid_2x1.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_MinValid_2x1.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_NoEntrypoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_NoEntrypoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_NoEntrypoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_NoExitpoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_NoExitpoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_NoExitpoint.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_StrayNewLines" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_StrayNewLines.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_StrayNewLines.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="MFT_Valid_3x4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\artifacts\MFT_Valid_3x4.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\TestArtifacts\MFT_Valid_3x4.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>
