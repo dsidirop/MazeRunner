@@ -2,7 +2,7 @@
 //using System.Dynamic;
 //using System.IO;
 //using FluentAssertions;
-using MazeRunner.Mazes;
+//using MazeRunner.Mazes;
 //using MazeRunner.Tests.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestContext = Microsoft.VisualStudio.TestTools.UnitTesting.TestContext;
@@ -66,7 +66,7 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
             var dubiouspath = "/something/that/doesnt/exist";
 
             // Act
-            var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: true));
+            // var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: true));
 
             // Assert
             // action.ShouldNotThrow();
