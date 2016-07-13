@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using FluentAssertions;
 using MazeRunner.Mazes;
 //using System.Dynamic;
 //using System.IO;
@@ -86,7 +87,7 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
             var action = new Action(Target);
 
             // Assert
-            //action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.ShouldThrow<ArgumentException>().WithMessage("size");
         }
 
         private void Target()
