@@ -18,3 +18,19 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("ee3176e8-d6d3-4d59-9f91-d41ff0c388b8")]
+
+[assembly: System.Reflection.AssemblyVersion("1.0.0.0000")]
+[assembly: System.Reflection.AssemblyInformationalVersion("1.0.0.0000")]
+[assembly: System.Reflection.AssemblyFileVersion("1.0.0.0000")]
+
+[assembly: AssemblyCompany("Rivotrus")]
+[assembly: AssemblyProduct("MazeRunner")]
+[assembly: AssemblyCopyright("Copyright © Dominick Sidiropoulos 2016")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#else
+[assembly: AssemblyConfiguration("Release")]
+#endif
