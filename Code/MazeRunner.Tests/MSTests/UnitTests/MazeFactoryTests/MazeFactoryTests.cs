@@ -83,10 +83,15 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
 
             // Act
             // var action = new Action(() => { new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
-            var action = new Action(delegate { var foo = 1; });
+            var action = new Action(Target);
 
             // Assert
             //action.ShouldThrow<ArgumentException>().WithMessage("size");
+        }
+
+        private void Target()
+        {
+            var foo = 1;
         }
     }
 }
