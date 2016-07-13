@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Dynamic;
+using System.IO;
+using MazeRunner.Tests.Properties;
 //using System.Dynamic;
 //using System.IO;
 //using FluentAssertions;
@@ -14,12 +16,12 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
     [TestClass]
     public class MazeFactoryTests
     {
-        // static private readonly dynamic _filepathOfArtifactFiles = new ExpandoObject();
+        static private readonly dynamic _filepathOfArtifactFiles = new ExpandoObject();
 
         [AssemblyInitialize]
         static public void AssemblyInit(TestContext context)
         {
-            // _filepathOfArtifactFiles.Empty = SpawnTempFile(Resources.MFT_Empty);
+            _filepathOfArtifactFiles.Empty = SpawnTempFile(Resources.MFT_Empty);
         }
 
         [ClassInitialize]
@@ -45,18 +47,18 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
         [AssemblyCleanup]
         static public void AssemblyCleanup()
         {
-            //foreach (var kvp in _filepathOfArtifactFiles)
-            //{
-            //    File.Delete(kvp.Value);
-            //}
+            foreach (var kvp in _filepathOfArtifactFiles)
+            {
+                File.Delete(kvp.Value);
+            }
         }
 
-        //static private string SpawnTempFile(string contents)
-        //{
-        //    var tmpfile = Path.GetTempFileName();
-        //    File.WriteAllText(tmpfile, contents);
-        //    return tmpfile;
-        //}
+        static private string SpawnTempFile(string contents)
+        {
+            var tmpfile = Path.GetTempFileName();
+            File.WriteAllText(tmpfile, contents);
+            return tmpfile;
+        }
 
         [TestMethod]
         [TestCategory("Unit.MazeFactory")]

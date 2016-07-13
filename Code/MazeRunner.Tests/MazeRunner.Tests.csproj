@@ -51,15 +51,45 @@
     </Compile>
     <Compile Include="MSTests\UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TestArtifacts\Artifacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />
+    <Content Include="TestArtifacts\00_DO_NOT_RENAME_THIS_FOLDER_TO_MERELY_ARTIFACTS.txt" />
+    <Content Include="TestArtifacts\EIT_Maze001_Diagonal.txt" />
+    <Content Include="TestArtifacts\EIT_Maze002_GTrap.txt" />
+    <Content Include="TestArtifacts\EIT_Maze003_GEscape.txt" />
+    <Content Include="TestArtifacts\EIT_Maze004_LabyrinthSolvable.txt" />
+    <Content Include="TestArtifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
+    <Content Include="TestArtifacts\MFT_Empty.txt" />
+    <Content Include="TestArtifacts\MFT_InvalidChars.txt" />
+    <Content Include="TestArtifacts\MFT_Invalid_DoubleEntryPoint.txt" />
+    <Content Include="TestArtifacts\MFT_Invalid_DoubleExitPoint.txt" />
+    <Content Include="TestArtifacts\MFT_JaggedMaze.txt" />
+    <Content Include="TestArtifacts\MFT_MinValid_1x2.txt" />
+    <Content Include="TestArtifacts\MFT_MinValid_2x1.txt" />
+    <Content Include="TestArtifacts\MFT_NoEntrypoint.txt" />
+    <Content Include="TestArtifacts\MFT_NoExitpoint.txt" />
+    <Content Include="TestArtifacts\MFT_StrayNewLines.txt" />
+    <Content Include="TestArtifacts\MFT_Valid_3x4.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
