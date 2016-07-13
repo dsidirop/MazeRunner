@@ -85,19 +85,9 @@ namespace MazeRunner.Engine.SimpleMazeRunner
             try
             {
                 OnStarting();
-
-                for (var tip = TrajectoryTip = _maze.Entrypoint; tip != null; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack any further
+                for (var tip = TrajectoryTip = _maze.Entrypoint; tip != null && _maze.HitTest(tip.Value) != MazeHitTestEnum.Exitpoint; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack any further
                 {
-                    var adjacentSquares = tip.Value.GetAdjacentPoints(); //nullable points
-                    var possibleExitpointFound = adjacentSquares.FirstOrDefault(x => _maze.HitTest(x.Value) == MazeHitTestEnum.Exitpoint); //lookahead one
-                    if (possibleExitpointFound != null)
-                    {
-                        TrajectoryTip = possibleExitpointFound;
-                        OnEngineStateChanged();
-                        break;
-                    }
-
-                    var randomValidAdjacentSquare = adjacentSquares.Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
+                    var randomValidAdjacentSquare = tip.Value.GetAdjacentPoints().Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
                     {
                         return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
                                && !_currentTrajectorySquares.Contains(candidateSquare) //already in trajectory
