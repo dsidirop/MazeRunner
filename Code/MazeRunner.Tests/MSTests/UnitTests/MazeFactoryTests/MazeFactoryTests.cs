@@ -1,6 +1,7 @@
-﻿using System.Dynamic;
-using System.IO;
-using MazeRunner.Tests.Properties;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using MazeRunner.Mazes;
 //using System.Dynamic;
 //using System.IO;
 //using FluentAssertions;
@@ -72,6 +73,19 @@ namespace MazeRunner.Tests.MSTests.UnitTests.MazeFactoryTests
 
             // Assert
             // action.ShouldNotThrow();
+        }
+
+        [TestMethod]
+        [TestCategory("Unit.Maze")]
+        public void Maze_InvalidSizeWidth_ThrowsArgumentException()
+        {
+            // Arrange
+
+            // Act
+            var action = new Action(() => { new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+
+            // Assert
+            //action.ShouldThrow<ArgumentException>().WithMessage("size");
         }
     }
 }
