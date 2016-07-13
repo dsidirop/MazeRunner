@@ -139,14 +139,14 @@
     <EmbeddedResource Include="Artifacts\MFT_MinValid_2x1.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Artifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
-    <Content Include="Artifacts\EIT_Maze004_LabyrinthSolvable.txt" />
-    <Content Include="Artifacts\EIT_Maze003_GEscape.txt" />
-    <Content Include="Artifacts\EIT_Maze002_GTrap.txt" />
-    <Content Include="Artifacts\EIT_Maze001_Diagonal.txt" />
-    <Content Include="Artifacts\MFT_Invalid_DoubleEntryPoint.txt" />
-    <Content Include="Artifacts\MFT_Invalid_DoubleExitPoint.txt" />
-    <Content Include="Artifacts\MFT_Valid_3x4.txt" />
+    <EmbeddedResource Include="Artifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
+    <EmbeddedResource Include="Artifacts\EIT_Maze004_LabyrinthSolvable.txt" />
+    <EmbeddedResource Include="Artifacts\EIT_Maze003_GEscape.txt" />
+    <EmbeddedResource Include="Artifacts\EIT_Maze002_GTrap.txt" />
+    <EmbeddedResource Include="Artifacts\EIT_Maze001_Diagonal.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_Invalid_DoubleEntryPoint.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_Invalid_DoubleExitPoint.txt" />
+    <EmbeddedResource Include="Artifacts\MFT_Valid_3x4.txt" />
     <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup />
