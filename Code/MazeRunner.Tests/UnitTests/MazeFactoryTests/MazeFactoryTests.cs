@@ -195,8 +195,10 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
 
             // Assert
             action.ShouldNotThrow();
-            result.ToAsciiMap().Should().Be(File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim());
+            result.ToAsciiMap(linesSeparator: Utilities.nl).Should().Be(File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim()); //0
         }
+        //0 We force the lineseparator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
+        //  If we omit this sort of enforcement then the line seperator that will be used will be \n instead of \r\n which will cause the comparison to fail
 
         [Test]
         [Category("Unit.MazeFactory")]
