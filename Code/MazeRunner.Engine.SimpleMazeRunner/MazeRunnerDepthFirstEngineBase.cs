@@ -105,7 +105,7 @@ namespace MazeRunner.Engine.SimpleMazeRunner
                     _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 wentsmooth = false;
                 throw;
