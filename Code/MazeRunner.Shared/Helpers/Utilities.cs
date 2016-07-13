@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Shared.Helpers
@@ -68,8 +69,12 @@ namespace MazeRunner.Shared.Helpers
         static public List<Point?> GetAdjacentPoints(this Point p) => Offsets.Select(i => new Point(p.X - i.X, p.Y - i.Y)).Cast<Point?>().ToList();
         static private readonly List<Point> Offsets = new List<Point> {new Point(x: 0, y: -1), new Point(x: 1, y: 0), new Point(x: 0, y: 1), new Point(x: -1, y: 0)};
 
-        static public string ToAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null)
+        static public string NormalizeNewlines(this string input, string newlineToUse) => Regex.Replace(input, @"\r\n|\n\r|\n|\r", newlineToUse); //the order \r\n|\n\r|\n|\r is important
+
+        static public string ToAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null, string linesSeparator = null)
         {
+            linesSeparator = linesSeparator ?? nl;
+
             var sb = new StringBuilder();
             for (var y = 0; y < maze.Size.Height; y++)
             {
@@ -94,7 +99,7 @@ namespace MazeRunner.Shared.Helpers
                         sb.Append('X');
                     }
                 }
-                sb.AppendLine();
+                sb.Append(linesSeparator);
             }
 
             return sb.ToString().Trim();
