@@ -46,6 +46,7 @@
       <HintPath>..\packages\FluentAssertions.4.11.0\lib\net45\FluentAssertions.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq, Version=4.5.13.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.13\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -71,20 +72,21 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="MSTests\UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="TestArtifacts\Artifacts.cs" />
-    <Compile Include="IntegrationTests\ControllerIntegrationTests.cs" />
-    <Compile Include="IntegrationTests\MazeIntegrationTests.cs" />
-    <Compile Include="IntegrationTests\EngineIntegrationTests.cs" />
-    <Compile Include="UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
-    <Compile Include="UnitTests\MazeRunnerEnginesTests\MazeRunnerEnginesTests.cs" />
-    <Compile Include="UnitTests\MazeSquareTests\MazeSquareTests.cs" />
+    <Compile Include="NUnit\IntegrationTests\ControllerIntegrationTests.cs" />
+    <Compile Include="NUnit\IntegrationTests\MazeIntegrationTests.cs" />
+    <Compile Include="NUnit\IntegrationTests\EngineIntegrationTests.cs" />
+    <Compile Include="NUnit\UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
+    <Compile Include="NUnit\UnitTests\MazeRunnerEnginesTests\MazeRunnerEnginesTests.cs" />
+    <Compile Include="NUnit\UnitTests\MazeSquareTests\MazeSquareTests.cs" />
     <EmbeddedResource Include="TestArtifacts\MFT_InvalidChars.txt" />
-    <Compile Include="UnitTests\MazeTests\MazeTests.cs" />
+    <Compile Include="NUnit\UnitTests\MazeTests\MazeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -150,7 +152,9 @@
     <EmbeddedResource Include="TestArtifacts\MFT_Valid_3x4.txt" />
     <Content Include="README.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
