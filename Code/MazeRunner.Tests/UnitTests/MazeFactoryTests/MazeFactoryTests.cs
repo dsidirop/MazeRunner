@@ -189,16 +189,18 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
         {
             // Arrange
             var result = (IMaze) null;
+            var desired = (File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim() as string).NormalizeNewlines("\r\n");
 
             // Act
             var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.Valid3x4, suppressExceptions: false); });
 
             // Assert
             action.ShouldNotThrow();
-            result.ToAsciiMap(linesSeparator: Utilities.nl).Should().Be(File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim()); //0
+            result.ToAsciiMap(linesSeparator: Utilities.nl).Should().Be(desired); //0
         }
         //0 We force the lineseparator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
         //  If we omit this sort of enforcement then the line seperator that will be used will be \n instead of \r\n which will cause the comparison to fail
+        //  Also bare in mind that git likes to normalize newlines into unixstyle \n newlines which also causes problems all by its own
 
         [Test]
         [Category("Unit.MazeFactory")]
