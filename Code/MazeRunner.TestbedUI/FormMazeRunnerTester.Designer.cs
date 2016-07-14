@@ -38,7 +38,6 @@
             this.tlpUniversal = new System.Windows.Forms.TableLayoutPanel();
             this.splitBoxHorizontal = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.ccMazeCanvas = new MazeRunner.TestbedUI.CompositeControls.CCMazeCanvas();
             this.tlpOptionsSidebar = new System.Windows.Forms.TableLayoutPanel();
             this.lbxkEnginesToBenchmark = new System.Windows.Forms.CheckedListBox();
             this.lblAvailableEngines = new System.Windows.Forms.Label();
@@ -58,6 +57,7 @@
             this.tlpFooterTitle = new System.Windows.Forms.TableLayoutPanel();
             this.lblLogs = new System.Windows.Forms.Label();
             this.lnkClearLogs = new System.Windows.Forms.LinkLabel();
+            this.ccMazeCanvas = new MazeRunner.TestbedUI.CompositeControls.CcMazeCanvas();
             this.mstripFile.SuspendLayout();
             this.tlpUniversal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).BeginInit();
@@ -86,7 +86,7 @@
             this.toolsToolStripMenuItem});
             this.mstripFile.Location = new System.Drawing.Point(0, 0);
             this.mstripFile.Name = "mstripFile";
-            this.mstripFile.Size = new System.Drawing.Size(884, 24);
+            this.mstripFile.Size = new System.Drawing.Size(1509, 24);
             this.mstripFile.TabIndex = 0;
             this.mstripFile.Text = "menuStrip1";
             // 
@@ -106,6 +106,7 @@
             this.saveMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveMazeToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.saveMazeToolStripMenuItem.Text = "&Save Maze";
+            this.saveMazeToolStripMenuItem.Click += new System.EventHandler(this.saveMazeToolStripMenuItem_Click);
             // 
             // loadMazeToolStripMenuItem
             // 
@@ -151,7 +152,7 @@
             this.tlpUniversal.Name = "tlpUniversal";
             this.tlpUniversal.RowCount = 1;
             this.tlpUniversal.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpUniversal.Size = new System.Drawing.Size(884, 687);
+            this.tlpUniversal.Size = new System.Drawing.Size(1509, 819);
             this.tlpUniversal.TabIndex = 1;
             // 
             // splitBoxHorizontal
@@ -171,8 +172,8 @@
             // 
             this.splitBoxHorizontal.Panel2.Controls.Add(this.tlpLogs);
             this.splitBoxHorizontal.Panel2MinSize = 200;
-            this.splitBoxHorizontal.Size = new System.Drawing.Size(878, 681);
-            this.splitBoxHorizontal.SplitterDistance = 437;
+            this.splitBoxHorizontal.Size = new System.Drawing.Size(1503, 813);
+            this.splitBoxHorizontal.SplitterDistance = 521;
             this.splitBoxHorizontal.SplitterWidth = 8;
             this.splitBoxHorizontal.TabIndex = 0;
             // 
@@ -193,21 +194,10 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tlpOptionsSidebar);
             this.splitContainer1.Panel2MinSize = 380;
-            this.splitContainer1.Size = new System.Drawing.Size(878, 437);
-            this.splitContainer1.SplitterDistance = 485;
+            this.splitContainer1.Size = new System.Drawing.Size(1503, 521);
+            this.splitContainer1.SplitterDistance = 1115;
             this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // ccMazeCanvas
-            // 
-            this.ccMazeCanvas.AutoSize = true;
-            this.ccMazeCanvas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ccMazeCanvas.Location = new System.Drawing.Point(5, 5);
-            this.ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
-            this.ccMazeCanvas.Maze = null;
-            this.ccMazeCanvas.Name = "ccMazeCanvas";
-            this.ccMazeCanvas.Size = new System.Drawing.Size(163, 163);
-            this.ccMazeCanvas.TabIndex = 0;
             // 
             // tlpOptionsSidebar
             // 
@@ -231,7 +221,7 @@
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpOptionsSidebar.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpOptionsSidebar.Size = new System.Drawing.Size(383, 435);
+            this.tlpOptionsSidebar.Size = new System.Drawing.Size(378, 519);
             this.tlpOptionsSidebar.TabIndex = 0;
             // 
             // lbxkEnginesToBenchmark
@@ -467,7 +457,7 @@
             this.tlpLogs.RowCount = 2;
             this.tlpLogs.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpLogs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpLogs.Size = new System.Drawing.Size(876, 234);
+            this.tlpLogs.Size = new System.Drawing.Size(1501, 282);
             this.tlpLogs.TabIndex = 0;
             // 
             // txtLog
@@ -480,7 +470,7 @@
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(860, 193);
+            this.txtLog.Size = new System.Drawing.Size(1485, 241);
             this.txtLog.TabIndex = 0;
             // 
             // tlpFooterTitle
@@ -523,11 +513,23 @@
             this.lnkClearLogs.Text = "(clear)";
             this.lnkClearLogs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // ccMazeCanvas
+            // 
+            this.ccMazeCanvas.AutoSize = true;
+            this.ccMazeCanvas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ccMazeCanvas.Location = new System.Drawing.Point(0, 0);
+            this.ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
+            this.ccMazeCanvas.Maze = null;
+            this.ccMazeCanvas.Name = "ccMazeCanvas";
+            this.ccMazeCanvas.Padding = new System.Windows.Forms.Padding(5);
+            this.ccMazeCanvas.Size = new System.Drawing.Size(173, 173);
+            this.ccMazeCanvas.TabIndex = 0;
+            // 
             // FormMazeRunnerTester
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 711);
+            this.ClientSize = new System.Drawing.Size(1509, 843);
             this.Controls.Add(this.tlpUniversal);
             this.Controls.Add(this.mstripFile);
             this.Icon = global::MazeRunner.TestbedUI.Properties.Resources.Appicon;
@@ -595,7 +597,7 @@
         private System.Windows.Forms.NumericUpDown nudIterations;
         private System.Windows.Forms.NumericUpDown nudMovementDelay;
         private System.Windows.Forms.Label lblMovementDelay;
-        private CompositeControls.CCMazeCanvas ccMazeCanvas;
+        private CompositeControls.CcMazeCanvas ccMazeCanvas;
         private System.Windows.Forms.ToolStripMenuItem reshuffleCurrentMazeToolStripMenuItem;
         private System.Windows.Forms.Label lblTip;
         private System.Windows.Forms.TableLayoutPanel tlpFooterTitle;

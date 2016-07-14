@@ -42,6 +42,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositeControls\CCMazeCanvas.cs">
@@ -55,6 +56,12 @@
     </Compile>
     <Compile Include="FormMazeRunnerTester.Designer.cs">
       <DependentUpon>FormMazeRunnerTester.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormNotificationAboutFileOperation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNotificationAboutFileOperation.Designer.cs">
+      <DependentUpon>FormNotificationAboutFileOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyInfo.cs">

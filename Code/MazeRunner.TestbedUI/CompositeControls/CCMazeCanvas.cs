@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace MazeRunner.TestbedUI.CompositeControls
 {
-    public partial class CCMazeCanvas : UserControl
+    public partial class CcMazeCanvas : UserControl
     {
         private const int CellEdgeLength = 80;
 
@@ -28,7 +28,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
             get { return _maze; }
         }
 
-        public CCMazeCanvas()
+        public CcMazeCanvas()
         {
             InitializeComponent();
 
@@ -44,7 +44,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
             });
         }
 
-        public CCMazeCanvas CustomizeCell(Point cellCoords, Color color, string textToAppend = null)
+        public CcMazeCanvas CustomizeCell(Point cellCoords, Color color, string textToAppend = null)
         {
             var label = tlpMesh.GetControlFromPosition(cellCoords.X, cellCoords.Y);
             if (label == null) throw new ArgumentOutOfRangeException(nameof(cellCoords));

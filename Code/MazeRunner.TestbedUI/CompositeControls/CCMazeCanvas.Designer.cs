@@ -1,6 +1,6 @@
 ﻿namespace MazeRunner.TestbedUI.CompositeControls
 {
-    partial class CCMazeCanvas
+    partial class CcMazeCanvas
     {
         /// <summary> 
         /// Required designer variable.
@@ -58,7 +58,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tlpMesh);
             this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "CCMazeCanvas";
+            this.Name = "CcMazeCanvas";
             this.Size = new System.Drawing.Size(58, 43);
             this.tlpMesh.ResumeLayout(false);
             this.tlpMesh.PerformLayout();

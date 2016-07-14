@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -78,7 +79,7 @@ namespace MazeRunner.TestbedUI
                 {
                     if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
                     if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                }, null);
+                });
 
                 var delaySnapshot = (int) nudMovementDelay.Value;
                 if (delaySnapshot > 0) Thread.Sleep(delaySnapshot);
@@ -92,6 +93,41 @@ namespace MazeRunner.TestbedUI
         private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel();
         // once a tokensource gets cancelled its all over for it    thus we reinstantiate the tokensource inside btnstart_click
 
+        private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+        {
+            var filepath = "";
+            using (var saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Title = @"Save Maze as";
+                saveFileDialog.Filter = $"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
+                saveFileDialog.FileName = $"mazemap_{DateTime.Now.ToString("yyyyMMddHHmmss")}_{ccMazeCanvas.Maze.Size.Height:D5}x{ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
+                saveFileDialog.AddExtension = true;
+                saveFileDialog.ValidateNames = true;
+                saveFileDialog.CheckPathExists = true;
+                saveFileDialog.OverwritePrompt = true;
+                saveFileDialog.InitialDirectory = DesktopDirectory;
+                if (saveFileDialog.ShowDialog(this) != DialogResult.OK) return;
+
+                filepath = saveFileDialog.FileName;
+            }
+
+            try
+            {
+                File.WriteAllText(filepath, ccMazeCanvas.Maze.ToAsciiMap());
+                using (var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation())
+                {
+                    formFileGeneratedSuccessfully.Text = @"Backup Creation Successful";
+                    formFileGeneratedSuccessfully.FilePath = filepath;
+                    formFileGeneratedSuccessfully.FileGeneratedSuccessfullyMessage = @"Operation completed successfully";
+                    formFileGeneratedSuccessfully.ShowDialog(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessageSafe($"Failed save maze file to:{nl}{nl}{filepath}{nl}{nl}Please select a different location.", @"Error saving to disk", ex: ex);
+            }
+        }
+
         private void reshuffleCurrentMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
             var density = ccMazeCanvas.Maze.RoadblocksCount / (((double)ccMazeCanvas.Maze.Size.Width) * ccMazeCanvas.Maze.Size.Height);
@@ -101,6 +137,11 @@ namespace MazeRunner.TestbedUI
         private void generateRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
             //todo show form
+        }
+
+        protected DialogResult ShowMessageSafe(string text, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Error, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Exception ex = null, IWin32Window owner = null)
+        {
+            return MessageBox.Show(owner ?? this, text, caption, buttons, icon, defaultButton);
         }
 
         private sealed class MazeSpecs
@@ -119,6 +160,8 @@ namespace MazeRunner.TestbedUI
         //0 we could have reduce this to [Obfuscation] but it wouldnt be that clear what we are after in terms of obfuscation
 
         static private readonly string nl = Utilities.nl;
+        static private readonly string DesktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        static private readonly string MazefileExtension = ".mz";
         static private readonly Color NewTipPositionColor = Color.MediumSeaGreen;
         static private readonly Color TrajectorySquareColor = Color.DarkGreen;
         static private readonly Color InvalidatedSquareColor = Color.Gray;

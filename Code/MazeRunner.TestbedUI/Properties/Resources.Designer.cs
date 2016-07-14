@@ -73,6 +73,16 @@ namespace MazeRunner.TestbedUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap FileNotification {
+            get {
+                object obj = ResourceManager.GetObject("FileNotification", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap GenerateRandomMaze {
             get {
                 object obj = ResourceManager.GetObject("GenerateRandomMaze", resourceCulture);

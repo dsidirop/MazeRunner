@@ -91,7 +91,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                     var starting = new EventHandler((s, ea) =>
                     {
                         stopWatch.Restart();
-                        OnLapStarting(new LapStartingEventArgs());
+                        OnlapStarting(new LapStartingEventArgs());
                     });
                     var concluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
                     {
@@ -108,7 +108,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         }
                         finally
                         {
-                            OnLapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
+                            OnlapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
                         }
                     });
 
@@ -152,8 +152,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
 
 
         protected virtual void OnAllDone() => _allDone?.Invoke(this, EventArgs.Empty);
-        protected virtual void OnLapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
-        protected virtual void OnLapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
+        protected virtual void OnlapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
+        protected virtual void OnlapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea) => _singleEngineTestsCompleted?.Invoke(this, ea);
         
