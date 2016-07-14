@@ -49,6 +49,7 @@
     <Compile Include="Interfaces\IMazeRunnerEngine.cs" />
     <Compile Include="Helpers\MazeSquare.cs" />
     <Compile Include="Interfaces\LapConcludedEventArgs.cs" />
+    <Compile Include="Interfaces\LapStartingEventArgs.cs" />
     <Compile Include="Interfaces\SingleEngineTestsCompletedEventArgs.cs" />
     <Compile Include="Interfaces\SingleEngineTestsStartingEventArgs.cs" />
     <Compile Include="Interfaces\StateChangedEventArgs.cs" />

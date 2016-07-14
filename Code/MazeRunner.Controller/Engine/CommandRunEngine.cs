@@ -26,7 +26,7 @@ namespace MazeRunner.Controller.Engine
                 var maze = _mazesFactory.FromFile(mazefile, suppressExceptions: false);
                 var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToList();
 
-                _enginesBenchmarker.LapCompleted += (s, ea) => //per lap
+                _enginesBenchmarker.LapConcluded += (s, ea) => //per lap
                 {
                     if (!verbose) return;
 

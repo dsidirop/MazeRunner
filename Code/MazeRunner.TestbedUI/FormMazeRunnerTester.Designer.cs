@@ -55,7 +55,9 @@
             this.lblTip = new System.Windows.Forms.Label();
             this.tlpLogs = new System.Windows.Forms.TableLayoutPanel();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.tlpFooterTitle = new System.Windows.Forms.TableLayoutPanel();
             this.lblLogs = new System.Windows.Forms.Label();
+            this.lnkClearLogs = new System.Windows.Forms.LinkLabel();
             this.mstripFile.SuspendLayout();
             this.tlpUniversal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).BeginInit();
@@ -74,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).BeginInit();
             this.tlpStartStop.SuspendLayout();
             this.tlpLogs.SuspendLayout();
+            this.tlpFooterTitle.SuspendLayout();
             this.SuspendLayout();
             // 
             // mstripFile
@@ -336,7 +339,7 @@
             this.nudIterations.TabIndex = 0;
             this.nudIterations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudIterations.Value = new decimal(new int[] {
-            1,
+            3,
             0,
             0,
             0});
@@ -360,6 +363,11 @@
             this.nudMovementDelay.Size = new System.Drawing.Size(119, 21);
             this.nudMovementDelay.TabIndex = 1;
             this.nudMovementDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudMovementDelay.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             // 
             // lblMovementDelay
             // 
@@ -450,7 +458,7 @@
             this.tlpLogs.ColumnCount = 1;
             this.tlpLogs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpLogs.Controls.Add(this.txtLog, 0, 1);
-            this.tlpLogs.Controls.Add(this.lblLogs, 0, 0);
+            this.tlpLogs.Controls.Add(this.tlpFooterTitle, 0, 0);
             this.tlpLogs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpLogs.Location = new System.Drawing.Point(0, 0);
             this.tlpLogs.Margin = new System.Windows.Forms.Padding(0);
@@ -466,25 +474,54 @@
             // 
             this.txtLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLog.Location = new System.Drawing.Point(8, 27);
+            this.txtLog.Location = new System.Drawing.Point(8, 33);
             this.txtLog.MinimumSize = new System.Drawing.Size(250, 100);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(860, 199);
+            this.txtLog.Size = new System.Drawing.Size(860, 193);
             this.txtLog.TabIndex = 0;
+            // 
+            // tlpFooterTitle
+            // 
+            this.tlpFooterTitle.AutoSize = true;
+            this.tlpFooterTitle.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpFooterTitle.ColumnCount = 2;
+            this.tlpFooterTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpFooterTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpFooterTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpFooterTitle.Controls.Add(this.lblLogs, 0, 0);
+            this.tlpFooterTitle.Controls.Add(this.lnkClearLogs, 1, 0);
+            this.tlpFooterTitle.Location = new System.Drawing.Point(8, 8);
+            this.tlpFooterTitle.Name = "tlpFooterTitle";
+            this.tlpFooterTitle.RowCount = 1;
+            this.tlpFooterTitle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpFooterTitle.Size = new System.Drawing.Size(83, 19);
+            this.tlpFooterTitle.TabIndex = 1;
             // 
             // lblLogs
             // 
             this.lblLogs.AutoSize = true;
-            this.lblLogs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblLogs.Location = new System.Drawing.Point(8, 5);
+            this.lblLogs.Location = new System.Drawing.Point(3, 0);
             this.lblLogs.Name = "lblLogs";
             this.lblLogs.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.lblLogs.Size = new System.Drawing.Size(860, 19);
-            this.lblLogs.TabIndex = 3;
+            this.lblLogs.Size = new System.Drawing.Size(33, 19);
+            this.lblLogs.TabIndex = 4;
             this.lblLogs.Text = "Logs:";
+            // 
+            // lnkClearLogs
+            // 
+            this.lnkClearLogs.AutoSize = true;
+            this.lnkClearLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lnkClearLogs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lnkClearLogs.Location = new System.Drawing.Point(42, 0);
+            this.lnkClearLogs.Name = "lnkClearLogs";
+            this.lnkClearLogs.Size = new System.Drawing.Size(38, 19);
+            this.lnkClearLogs.TabIndex = 5;
+            this.lnkClearLogs.TabStop = true;
+            this.lnkClearLogs.Text = "(clear)";
+            this.lnkClearLogs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormMazeRunnerTester
             // 
@@ -525,6 +562,8 @@
             this.tlpStartStop.PerformLayout();
             this.tlpLogs.ResumeLayout(false);
             this.tlpLogs.PerformLayout();
+            this.tlpFooterTitle.ResumeLayout(false);
+            this.tlpFooterTitle.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -550,7 +589,6 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.TableLayoutPanel tlpLogs;
         private System.Windows.Forms.TextBox txtLog;
-        private System.Windows.Forms.Label lblLogs;
         private System.Windows.Forms.TableLayoutPanel tlpDummyContainer;
         private System.Windows.Forms.TableLayoutPanel tlpOptionsContainer;
         private System.Windows.Forms.Label lblIterations;
@@ -560,6 +598,9 @@
         private CompositeControls.CCMazeCanvas ccMazeCanvas;
         private System.Windows.Forms.ToolStripMenuItem reshuffleCurrentMazeToolStripMenuItem;
         private System.Windows.Forms.Label lblTip;
+        private System.Windows.Forms.TableLayoutPanel tlpFooterTitle;
+        private System.Windows.Forms.Label lblLogs;
+        private System.Windows.Forms.LinkLabel lnkClearLogs;
     }
 }
 

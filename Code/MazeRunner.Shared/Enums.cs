@@ -7,4 +7,11 @@
         Exitpoint = 2,
         Entrypoint = 3
     }
+
+    public enum ConclusionStatusTypeEnum
+    {
+        Crashed = 0,
+        Cancelled = 1,
+        Completed = 2
+    }
 }

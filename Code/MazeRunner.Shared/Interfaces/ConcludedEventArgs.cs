@@ -6,6 +6,6 @@ namespace MazeRunner.Shared.Interfaces
     public class ConcludedEventArgs : EventArgs
     {
         public bool Success;
-        public bool Crashed;
+        public ConclusionStatusTypeEnum Status;
     }
 }

@@ -42,19 +42,18 @@ namespace MazeRunner.TestbedUI
         {
             ccMazeCanvas.Maze = _mazesFactory.Random(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
 
+            lnkClearLogs.LinkClicked += (s, eaa) => txtLog.Clear();
+
             _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //order
             _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
             lbxkEnginesToBenchmark.ItemCheck += (s, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
             
             _enginesTestbench.AllDone += (s, eaa) => _synchContext.Post(o => txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------"));
-            _enginesTestbench.LapCompleted += (s, eaa) => _synchContext.Post(o => txtLog.Text += $@"{eaa.LapIndex + 1} ");
+            _enginesTestbench.LapStarting += (s, eaa) => _synchContext.Post(o => ccMazeCanvas.ResetCellsToDefaultColors());
+            _enginesTestbench.LapConcluded += (s, eaa) => _synchContext.Post(o => txtLog.Text += $@"{eaa.LapIndex + 1} ");
             _enginesTestbench.SingleEngineTestsStarting += (s, eaa) =>
             {
-                _synchContext.Post(o =>
-                {
-                    txtLog.Text += $@"{nl}{nl}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Lap-count: ";
-                    ccMazeCanvas.ResetCellsToDefaultColors();
-                });
+                _synchContext.Post(o => txtLog.Text += $@"{nl}{nl}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Lap-count: ");
                 Thread.Sleep(400);
             };
             _enginesTestbench.SingleEngineTestsCompleted += (s, eaa) =>
@@ -90,11 +89,8 @@ namespace MazeRunner.TestbedUI
             _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token); //order
         }
 
-        private void btnStop_Click(object sender, EventArgs ea)
-        {
-            _tokenSource.Cancel(); //0
-        }
-        //0 once a tokensource gets cancelled its all over for it    thus we reinstantiate the tokensource inside btnstart_click
+        private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel();
+        // once a tokensource gets cancelled its all over for it    thus we reinstantiate the tokensource inside btnstart_click
 
         private void reshuffleCurrentMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
@@ -126,7 +122,7 @@ namespace MazeRunner.TestbedUI
         static private readonly Color NewTipPositionColor = Color.MediumSeaGreen;
         static private readonly Color TrajectorySquareColor = Color.DarkGreen;
         static private readonly Color InvalidatedSquareColor = Color.Gray;
-        static private readonly MazeSpecs KickstartMazeSpecs = new MazeSpecs {Width = 5, Height = 5, RoadblockDensity = 0.5};
+        static private readonly MazeSpecs KickstartMazeSpecs = new MazeSpecs {Width = 10, Height = 10, RoadblockDensity = 0.1};
     }
 
     static internal class ControlsUtilsX

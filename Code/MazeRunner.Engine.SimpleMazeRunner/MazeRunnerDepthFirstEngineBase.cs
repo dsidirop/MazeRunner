@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
@@ -79,18 +80,24 @@ namespace MazeRunner.Engine.SimpleMazeRunner
             return this;
         }
 
-        public IMazeRunnerEngine Run()
+        public IMazeRunnerEngine Run(CancellationToken? cancellationToken = null)
         {
-            var wentsmooth = true;
+            var ct = cancellationToken ?? CancellationToken.None;
+
+            var conclusionStatusType = ConclusionStatusTypeEnum.Completed;
             try
             {
                 OnStarting();
+
+                ct.ThrowIfCancellationRequested();
 
                 var si = 1;
                 var tip = TrajectoryTip = _maze.Entrypoint;
                 OnStateChanged(new StateChangedEventArgs {StepIndex = si++, OldTip = null, NewTip = tip, IsProgressNotBacktracking = true});
                 while (tip != null && _maze.HitTest(tip.Value) != MazeHitTestEnum.Exitpoint)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     var randomValidAdjacentSquare = tip.Value.GetAdjacentPoints().Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
                     {
                         return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
@@ -119,14 +126,21 @@ namespace MazeRunner.Engine.SimpleMazeRunner
                     });
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                wentsmooth = false;
-                throw;
+                if (ex is OperationCanceledException)
+                {
+                    conclusionStatusType = ConclusionStatusTypeEnum.Cancelled;
+                }
+                else
+                {
+                    conclusionStatusType = ConclusionStatusTypeEnum.Crashed;
+                    throw;
+                }
             }
             finally
             {
-                OnConcluded(new ConcludedEventArgs {Crashed = !wentsmooth, Success = wentsmooth && TrajectoryTip != null});
+                OnConcluded(new ConcludedEventArgs {Status = conclusionStatusType, Success = conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null});
             }
             return this;
         }

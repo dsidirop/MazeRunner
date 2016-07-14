@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 
 namespace MazeRunner.Shared.Interfaces
 {
@@ -17,7 +18,7 @@ namespace MazeRunner.Shared.Interfaces
         IEnumerable<Point> Trajectory { get; }
         IReadOnlyCollection<Point> InvalidatedSquares { get; }
 
-        IMazeRunnerEngine Run();
+        IMazeRunnerEngine Run(CancellationToken? ct = null);
         IMazeRunnerEngine Reset();
     }
 }

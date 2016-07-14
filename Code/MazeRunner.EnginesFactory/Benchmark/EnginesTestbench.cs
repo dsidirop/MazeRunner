@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 
@@ -11,8 +12,19 @@ namespace MazeRunner.EnginesFactory.Benchmark
 {
     public class EnginesTestbench : IEnginesTestbench
     {
+        private event EventHandler<LapStartingEventArgs> _lapStarting;
+        public event EventHandler<LapStartingEventArgs> LapStarting
+        {
+            add
+            {
+                _lapStarting -= value;
+                _lapStarting += value;
+            }
+            remove { _lapStarting -= value; }
+        }
+
         private event EventHandler<LapConcludedEventArgs> _lapConcluded;
-        public event EventHandler<LapConcludedEventArgs> LapCompleted
+        public event EventHandler<LapConcludedEventArgs> LapConcluded
         {
             add
             {
@@ -63,7 +75,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
             if (repetitions <= 0) throw new ArgumentOutOfRangeException(nameof(repetitions));
             if (enginesToTest?.Any(x => x == null) ?? true) throw new ArgumentNullException(nameof(enginesToTest));
 
-            cancellationToken = cancellationToken ?? CancellationToken.None;
+            var ct = cancellationToken ?? CancellationToken.None;
             try
             {
                 var stopWatch = new Stopwatch();
@@ -76,19 +88,28 @@ namespace MazeRunner.EnginesFactory.Benchmark
                     var timedurations = new List<TimeSpan>(repetitions);
 
                     var ii = 0;
-                    var starting = new EventHandler((s, ea) => stopWatch.Restart());
+                    var starting = new EventHandler((s, ea) =>
+                    {
+                        stopWatch.Restart();
+                        OnLapStarting(new LapStartingEventArgs());
+                    });
                     var concluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
                     {
-                        stopWatch.Stop(); //order
-                        if (ea.Crashed)
+                        try
                         {
-                            crashes++;
-                            return;
+                            stopWatch.Stop(); //order
+                            if (ea.Status == ConclusionStatusTypeEnum.Crashed)
+                            {
+                                crashes++;
+                                return;
+                            }
+                            timedurations.Add(stopWatch.Elapsed); //order
+                            pathlengths.Add(eng.TrajectoryLength); //order
                         }
-
-                        timedurations.Add(stopWatch.Elapsed); //order
-                        pathlengths.Add(eng.TrajectoryLength); //order
-                        OnLapConcluded(new LapConcludedEventArgs {LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng}); //order
+                        finally
+                        {
+                            OnLapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
+                        }
                     });
 
                     try
@@ -97,7 +118,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         eng.Concluded += concluded;
                         for (var i = 0; i < repetitions; i++, eng.Reset())
                         {
-                            eng.Run(); //safe
+                            eng.Run(cancellationToken); //safe
+                            ct.ThrowIfCancellationRequested();
                         }
                     }
                     finally
@@ -130,6 +152,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
 
 
         protected virtual void OnAllDone() => _allDone?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnLapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
         protected virtual void OnLapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea) => _singleEngineTestsCompleted?.Invoke(this, ea);

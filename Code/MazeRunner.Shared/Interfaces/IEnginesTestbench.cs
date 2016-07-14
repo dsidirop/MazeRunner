@@ -7,7 +7,8 @@ namespace MazeRunner.Shared.Interfaces
     public interface IEnginesTestbench
     {
         event EventHandler AllDone;
-        event EventHandler<LapConcludedEventArgs> LapCompleted;
+        event EventHandler<LapStartingEventArgs> LapStarting;
+        event EventHandler<LapConcludedEventArgs> LapConcluded;
         event EventHandler<SingleEngineTestsStartingEventArgs> SingleEngineTestsStarting;
         event EventHandler<SingleEngineTestsCompletedEventArgs> SingleEngineTestsCompleted;
 

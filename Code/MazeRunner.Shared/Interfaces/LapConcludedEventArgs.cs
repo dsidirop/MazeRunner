@@ -8,5 +8,6 @@ namespace MazeRunner.Shared.Interfaces
         public int LapIndex;
         public TimeSpan Duration;
         public IMazeRunnerEngine Engine;
+        public ConclusionStatusTypeEnum Status;
     }
 }
