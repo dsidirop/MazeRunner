@@ -1,7 +1,7 @@
 # MazeRunner
 
 Quickstart (Winforms Flavor):
-
+ 
 	0. Open the project using Code\MazeRunner.sln (Make sure you have Visual Studio 2015+ installed)
 	1. Open the nuget package manager console (Tools -> Nuget package manager -> Manage NuGet Packages for Solution) and restore all missing packages (NUnit, Castle.Core, Microsoft.Net.Compilers)
 	2. Set the project MazeRunner.TestbedUI as your startup project
