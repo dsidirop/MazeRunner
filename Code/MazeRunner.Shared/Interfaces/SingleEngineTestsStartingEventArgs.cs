@@ -3,10 +3,8 @@
 namespace MazeRunner.Shared.Interfaces
 {
     [Serializable]
-    public class LapConcludedEventArgs : EventArgs
+    public class SingleEngineTestsStartingEventArgs : EventArgs
     {
-        public int LapIndex;
-        public TimeSpan Duration;
         public IMazeRunnerEngine Engine;
     }
 }

@@ -2,11 +2,7 @@
 
 namespace MazeRunner.Shared.Interfaces
 {
-    public class SingleEngineTestsStartingEventArgs : EventArgs
-    {
-        public IMazeRunnerEngine Engine;
-    }
-
+    [Serializable]
     public class SingleEngineTestsCompletedEventArgs : EventArgs
     {
         public IMazeRunnerEngine Engine;

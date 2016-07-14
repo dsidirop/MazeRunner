@@ -7,8 +7,8 @@ namespace MazeRunner.Shared.Interfaces
     public interface IMazeRunnerEngine
     {
         event EventHandler Starting;
-        event EventHandler StateChanged; //progressed
         event EventHandler<ConcludedEventArgs> Concluded;
+        event EventHandler<StateChangedEventArgs> StateChanged; //progressed
 
         IMaze Maze { get; }
 

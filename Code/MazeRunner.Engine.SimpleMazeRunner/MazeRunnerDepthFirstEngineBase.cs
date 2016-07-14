@@ -32,8 +32,8 @@ namespace MazeRunner.Engine.SimpleMazeRunner
             remove { _concluded -= value; }
         }
 
-        private event EventHandler _stateChanged;
-        public event EventHandler StateChanged
+        private event EventHandler<StateChangedEventArgs> _stateChanged;
+        public event EventHandler<StateChangedEventArgs> StateChanged
         {
             add
             {
@@ -85,7 +85,11 @@ namespace MazeRunner.Engine.SimpleMazeRunner
             try
             {
                 OnStarting();
-                for (var tip = TrajectoryTip = _maze.Entrypoint; tip != null && _maze.HitTest(tip.Value) != MazeHitTestEnum.Exitpoint; tip = TrajectoryTip, OnEngineStateChanged()) //tip becomes null when we backtrack all the way back before square one and cant backtrack any further
+
+                var si = 1;
+                var tip = TrajectoryTip = _maze.Entrypoint;
+                OnStateChanged(new StateChangedEventArgs {StepIndex = si++, OldTip = null, NewTip = tip, IsProgressNotBacktracking = true});
+                while (tip != null && _maze.HitTest(tip.Value) != MazeHitTestEnum.Exitpoint)
                 {
                     var randomValidAdjacentSquare = tip.Value.GetAdjacentPoints().Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
                     {
@@ -95,14 +99,24 @@ namespace MazeRunner.Engine.SimpleMazeRunner
                                && (!_avoidPathfolding || candidateSquare.Value.GetAdjacentPoints().Except(new[] {tip}).All(z => !_currentTrajectorySquares.Contains(z))); //to avoid pathfolding we check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
                     });
 
-                    if (randomValidAdjacentSquare != null) //found an unvisited adjacent square that matches the criteria of our policy
+                    var newSquareFound = randomValidAdjacentSquare != null;
+                    if (newSquareFound) //found an unvisited adjacent square that matches the criteria of our policy
                     {
                         TrajectoryTip = randomValidAdjacentSquare;
-                        continue;
+                    }
+                    else
+                    {
+                        _invalidatedSquares.Add(tip.Value); //current trajectorytip has no unvisited adjacent squares that match our
+                        _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
                     }
 
-                    _invalidatedSquares.Add(tip.Value); //current trajectorytip has no unvisited adjacent squares that match our
-                    _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
+                    OnStateChanged(new StateChangedEventArgs
+                    {
+                        OldTip = tip, //order
+                        NewTip = (tip = TrajectoryTip), //order   tip becomes null when we backtrack all the way back before square one and cant backtrack any further
+                        StepIndex = si++,
+                        IsProgressNotBacktracking = newSquareFound
+                    });
                 }
             }
             catch
@@ -119,6 +133,6 @@ namespace MazeRunner.Engine.SimpleMazeRunner
 
         protected virtual void OnStarting() => _starting?.Invoke(this, EventArgs.Empty);
         protected virtual void OnConcluded(ConcludedEventArgs ea) => _concluded?.Invoke(this, ea);
-        protected virtual void OnEngineStateChanged() => _stateChanged?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnStateChanged(StateChangedEventArgs ea) => _stateChanged?.Invoke(this, ea);
     }
 }
