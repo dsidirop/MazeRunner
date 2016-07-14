@@ -89,6 +89,7 @@ namespace MazeRunner.TestbedUI
             btnStop.Enabled = testsUnderway;
             btnStart.Enabled = !testsUnderway;
             nudIterations.Enabled = !testsUnderway;
+            nudMovementDelay.Enabled = !testsUnderway;
             lbxkEnginesToBenchmark.Enabled = !testsUnderway;
             saveMazeToolStripMenuItem.Enabled = !testsUnderway;
             loadMazeToolStripMenuItem.Enabled = !testsUnderway;
@@ -96,13 +97,27 @@ namespace MazeRunner.TestbedUI
             reshuffleCurrentMazeToolStripMenuItem.Enabled = !testsUnderway;
         }
 
+        private const int MaxMazeArea = 800;
+        private const int MinDelayThreshold = 20;
         private void btnStart_Click(object sender, EventArgs ea)
         {
-            var delaySnapshot = (int) nudMovementDelay.Value;
+            var delay = (int)nudMovementDelay.Value;
+
+            var delayIsSmall = delay < MinDelayThreshold;
+            var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
+            if (mazeTooLarge)
+            {
+                ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (delayIsSmall)
+            {
+                ShowMessageSafe($"Live Update of Cells will be disabled because the Delay is set to a value which is too small. Use delay > {MinDelayThreshold}ms to enable live-updating.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
             var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
             enginesToBenchmark.ForEach(x => x.StateChanged += (s, eaa) =>
             {
-                if (delaySnapshot >= 10) //0
+                if (!delayIsSmall && !mazeTooLarge) //0
                 {
                     _synchContext.Post(o =>
                     {
@@ -111,7 +126,7 @@ namespace MazeRunner.TestbedUI
                     });
                 }
                 
-                if (delaySnapshot > 0) Thread.Sleep(delaySnapshot);
+                if (delay > 0) Thread.Sleep(delay);
             });
 
             _tokenSource?.Dispose(); //order
