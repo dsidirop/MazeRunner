@@ -14,18 +14,18 @@ namespace MazeRunner.TestbedUI
 {
     public partial class FormMazeRunnerTester : Form
     {
+        private CancellationTokenSource _tokenSource;
         private readonly IMazesFactory _mazesFactory;
         private readonly IEnginesFactory _enginesFactory;
         private readonly IEnginesTestbench _enginesTestbench;
+        private readonly SynchronizationContext _synchContext;
         private readonly BindingList<EngineEntry> _mazeRunnersEnginesDataSource;
-
-        private readonly SynchronizationContext _context;
 
         public FormMazeRunnerTester(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesTestbench)
         {
             InitializeComponent();
 
-            _context = SynchronizationContext.Current ?? new SynchronizationContext();
+            _synchContext = SynchronizationContext.Current ?? new SynchronizationContext();
             _mazesFactory = mazesFactory;
             _enginesFactory = enginesFactory;
             _enginesTestbench = enginesTestbench;
@@ -40,59 +40,63 @@ namespace MazeRunner.TestbedUI
 
         protected override void OnLoad(EventArgs ea)
         {
-            _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry { Selected = true, Name = x })); //order
+            ccMazeCanvas.Maze = _mazesFactory.Random(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
+
+            _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //order
             _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
             lbxkEnginesToBenchmark.ItemCheck += (s, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
-
-            ccMazeCanvas.Maze = _mazesFactory.Random(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
-            _enginesTestbench.AllDone += (s, eaa) =>
-            {
-                txtLog.Text += $@"{nl}------------ All Done ----------";
-                txtLog.ScrollToBottom();
-            };
-            _enginesTestbench.LapCompleted += (s, eaa) => txtLog.Text += $@"{eaa.LapIndex + 1} ";
+            
+            _enginesTestbench.AllDone += (s, eaa) => _synchContext.Post(o => txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------"));
+            _enginesTestbench.LapCompleted += (s, eaa) => _synchContext.Post(o => txtLog.Text += $@"{eaa.LapIndex + 1} ");
             _enginesTestbench.SingleEngineTestsStarting += (s, eaa) =>
             {
-                txtLog.Text += $@"{nl}{nl}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Lap-count: ";
-
-                ccMazeCanvas.ResetCellsToDefaultColors();
+                _synchContext.Post(o =>
+                {
+                    txtLog.Text += $@"{nl}{nl}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Lap-count: ";
+                    ccMazeCanvas.ResetCellsToDefaultColors();
+                });
+                Thread.Sleep(400);
             };
             _enginesTestbench.SingleEngineTestsCompleted += (s, eaa) =>
             {
-                txtLog.Text +=
+                _synchContext.Post(o => txtLog.AppendTextAndScrollToBottom(
                     $"{nl}{nl}" +
                     $"Engine: {eaa.Engine.GetType().Name}{nl}" +
                     $"Number of runs: {eaa.Repetitions} (smooth runs: {eaa.Repetitions - eaa.Crashes}, crashes: {eaa.Crashes}){nl}" +
                     $"Path-lengths (Best / Worst / Average): {eaa.BestPathLength} / {eaa.WorstPathLength} / {eaa.AveragePathLength}{nl}" +
-                    $"Time-durations (Best / Worst / Average): {eaa.BestTimePerformance.TotalMilliseconds}ms / {eaa.WorstTimePerformance.TotalMilliseconds}ms / {eaa.AverageTimePerformance.TotalMilliseconds}ms{nl}";
-                txtLog.ScrollToBottom();
+                    $"Time-durations (Best / Worst / Average): {eaa.BestTimePerformance.TotalMilliseconds}ms / {eaa.WorstTimePerformance.TotalMilliseconds}ms / {eaa.AverageTimePerformance.TotalMilliseconds}ms{nl}"));
 
-                Thread.Sleep(2000);
+                Thread.Sleep(1300);
             };
         }
 
         private void btnStart_Click(object sender, EventArgs ea)
         {
             var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
-            enginesToBenchmark.ForEach(x =>
+            enginesToBenchmark.ForEach(x => x.StateChanged += (s, eaa) =>
             {
-                x.StateChanged += (s, eaa) =>
+                _synchContext.Post(o =>
                 {
-                    if (nudMovementDelay.Value > 0) Thread.Sleep((int) nudMovementDelay.Value);
-
                     if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
                     if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                };
+                }, null);
+
+                var delaySnapshot = (int) nudMovementDelay.Value;
+                if (delaySnapshot > 0) Thread.Sleep(delaySnapshot);
             });
-            _enginesTestbench.Run(enginesToBenchmark, (int) nudIterations.Value); //todo async
+
+            _tokenSource?.Dispose(); //order
+            _tokenSource = new CancellationTokenSource(); //order
+            _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token); //order
         }
 
         private void btnStop_Click(object sender, EventArgs ea)
         {
-            _enginesTestbench.Stop(); //todo
+            _tokenSource.Cancel(); //0
         }
+        //0 once a tokensource gets cancelled its all over for it    thus we reinstantiate the tokensource inside btnstart_click
 
-        private void reshuffleCurrentRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+        private void reshuffleCurrentMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
             var density = ccMazeCanvas.Maze.RoadblocksCount / (((double)ccMazeCanvas.Maze.Size.Width) * ccMazeCanvas.Maze.Size.Height);
             ccMazeCanvas.Maze = _mazesFactory.Random(ccMazeCanvas.Maze.Size.Width, ccMazeCanvas.Maze.Size.Height, density);
@@ -127,12 +131,16 @@ namespace MazeRunner.TestbedUI
 
     static internal class ControlsUtilsX
     {
-        static internal void ScrollToBottom(this TextBox textbox)
+        static internal void AppendTextAndScrollToBottom(this TextBox textbox, string textToAppend)
         {
+            textbox.Text += textToAppend;
             if (!textbox.Visible) return;
 
             textbox.SelectionStart = textbox.TextLength;
             textbox.ScrollToCaret();
         }
+
+        static internal void Post(this SynchronizationContext context, SendOrPostCallback callback) => context.Post(callback, null);
+        static internal void Send(this SynchronizationContext context, SendOrPostCallback callback) => context.Send(callback, null);
     }
 }

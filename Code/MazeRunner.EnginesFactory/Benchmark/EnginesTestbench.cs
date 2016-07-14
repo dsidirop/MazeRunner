@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 
@@ -53,16 +55,15 @@ namespace MazeRunner.EnginesFactory.Benchmark
             remove { _allDone -= value; }
         }
 
-        public void Stop()
-        {
-            //todo
-        }
+        public void RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null)
+            => Task.Factory.StartNew(() => Run(enginesToTest, repetitions, cancellationToken), cancellationToken ?? CancellationToken.None);
 
-        public void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
+        public void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
         {
             if (repetitions <= 0) throw new ArgumentOutOfRangeException(nameof(repetitions));
             if (enginesToTest?.Any(x => x == null) ?? true) throw new ArgumentNullException(nameof(enginesToTest));
 
+            cancellationToken = cancellationToken ?? CancellationToken.None;
             try
             {
                 var stopWatch = new Stopwatch();
@@ -123,12 +124,12 @@ namespace MazeRunner.EnginesFactory.Benchmark
             }
             finally
             {
-                OnDone();
+                OnAllDone();
             }
         }
 
 
-        protected virtual void OnDone() => _allDone?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnAllDone() => _allDone?.Invoke(this, EventArgs.Empty);
         protected virtual void OnLapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea) => _singleEngineTestsCompleted?.Invoke(this, ea);

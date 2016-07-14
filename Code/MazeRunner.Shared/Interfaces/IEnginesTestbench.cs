@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MazeRunner.Shared.Interfaces
 {
@@ -10,7 +11,7 @@ namespace MazeRunner.Shared.Interfaces
         event EventHandler<SingleEngineTestsStartingEventArgs> SingleEngineTestsStarting;
         event EventHandler<SingleEngineTestsCompletedEventArgs> SingleEngineTestsCompleted;
 
-        void Stop();
-        void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions);
+        void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null);
+        void RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null);
     }
 }

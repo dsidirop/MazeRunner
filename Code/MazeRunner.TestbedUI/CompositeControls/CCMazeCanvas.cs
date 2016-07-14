@@ -11,7 +11,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
 {
     public partial class CCMazeCanvas : UserControl
     {
-        private const int CellEdgeLength = 50;
+        private const int CellEdgeLength = 80;
 
         private RowStyle StandardRowStyle => new RowStyle(SizeType.Absolute, height: CellEdgeLength);
         private ColumnStyle StandardColumnStyle => new ColumnStyle(SizeType.Absolute, width: CellEdgeLength);
@@ -23,7 +23,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
             {
                 if (_maze == value) return;
 
-                SetMaze(_maze = value);
+                SetupMaze(_maze = value);
             }
             get { return _maze; }
         }
@@ -59,7 +59,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
         }
         //0 we need to force a redraw only of a specific cell in the tlp   thus we calculate its client rectangle and invoke invalidate on it followed by update
 
-        private void SetMaze(IMaze maze)
+        private void SetupMaze(IMaze maze)
         {
             try
             {
@@ -111,16 +111,15 @@ namespace MazeRunner.TestbedUI.CompositeControls
                     {
                         var properColorAndText = HitTestToColorAndText[_maze.HitTest(new Point(column, row))];
                         var preexistingControl = tlpMesh.GetControlFromPosition(column, row);
-                        if (preexistingControl != null)
-                        {
-                            preexistingControl.Text = properColorAndText.Item3;
-                            preexistingControl.Font = properColorAndText.Item2;
-                            preexistingControl.BackColor = properColorAndText.Item1;
-                        }
-                        else
+                        if (preexistingControl == null) //0
                         {
                             tlpMesh.Controls.Add(SpawnCellControl(properColorAndText.Item1, properColorAndText.Item2, properColorAndText.Item3), column, row);
+                            continue;
                         }
+
+                        preexistingControl.Text = properColorAndText.Item3;
+                        preexistingControl.Font = properColorAndText.Item2;
+                        preexistingControl.BackColor = properColorAndText.Item1;
                     }
                 }
             }
@@ -129,6 +128,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
                 tlpMesh.ResumeLayout(performLayout: true);
             }
         }
+        //0 this method is also being used by setupmaze thus it needs to tread carefully when a cell has not filled yet with a control
 
         static private Label SpawnCellControl(Color color, Font font, string text)
         {

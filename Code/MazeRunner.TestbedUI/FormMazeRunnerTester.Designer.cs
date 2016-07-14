@@ -33,7 +33,7 @@
             this.saveMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reshuffleCurrentRandomMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reshuffleCurrentMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateRandomMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpUniversal = new System.Windows.Forms.TableLayoutPanel();
             this.splitBoxHorizontal = new System.Windows.Forms.SplitContainer();
@@ -115,19 +115,19 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reshuffleCurrentRandomMazeToolStripMenuItem,
+            this.reshuffleCurrentMazeToolStripMenuItem,
             this.generateRandomMazeToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
-            // reshuffleCurrentRandomMazeToolStripMenuItem
+            // reshuffleCurrentMazeToolStripMenuItem
             // 
-            this.reshuffleCurrentRandomMazeToolStripMenuItem.Name = "reshuffleCurrentRandomMazeToolStripMenuItem";
-            this.reshuffleCurrentRandomMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.reshuffleCurrentRandomMazeToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
-            this.reshuffleCurrentRandomMazeToolStripMenuItem.Text = "&Reshuffle Current Random Maze";
-            this.reshuffleCurrentRandomMazeToolStripMenuItem.Click += new System.EventHandler(this.reshuffleCurrentRandomMazeToolStripMenuItem_Click);
+            this.reshuffleCurrentMazeToolStripMenuItem.Name = "reshuffleCurrentMazeToolStripMenuItem";
+            this.reshuffleCurrentMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.reshuffleCurrentMazeToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this.reshuffleCurrentMazeToolStripMenuItem.Text = "&Reshuffle Current Maze";
+            this.reshuffleCurrentMazeToolStripMenuItem.Click += new System.EventHandler(this.reshuffleCurrentMazeToolStripMenuItem_Click);
             // 
             // generateRandomMazeToolStripMenuItem
             // 
@@ -203,7 +203,7 @@
             this.ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
             this.ccMazeCanvas.Maze = null;
             this.ccMazeCanvas.Name = "ccMazeCanvas";
-            this.ccMazeCanvas.Size = new System.Drawing.Size(43, 43);
+            this.ccMazeCanvas.Size = new System.Drawing.Size(163, 163);
             this.ccMazeCanvas.TabIndex = 0;
             // 
             // tlpOptionsSidebar
@@ -391,7 +391,7 @@
             this.tlpStartStop.RowCount = 2;
             this.tlpStartStop.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpStartStop.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpStartStop.Size = new System.Drawing.Size(222, 85);
+            this.tlpStartStop.Size = new System.Drawing.Size(222, 107);
             this.tlpStartStop.TabIndex = 2;
             // 
             // btnStart
@@ -435,12 +435,12 @@
             this.lblTip.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblTip.AutoSize = true;
             this.tlpStartStop.SetColumnSpan(this.lblTip, 3);
-            this.lblTip.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTip.Location = new System.Drawing.Point(43, 59);
+            this.lblTip.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTip.Location = new System.Drawing.Point(46, 59);
             this.lblTip.Margin = new System.Windows.Forms.Padding(3, 15, 3, 0);
             this.lblTip.MaximumSize = new System.Drawing.Size(150, 0);
             this.lblTip.Name = "lblTip";
-            this.lblTip.Size = new System.Drawing.Size(135, 26);
+            this.lblTip.Size = new System.Drawing.Size(129, 48);
             this.lblTip.TabIndex = 2;
             this.lblTip.Text = "Tip: Press Ctrl + R to reshuffle the current maze";
             this.lblTip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -558,7 +558,7 @@
         private System.Windows.Forms.NumericUpDown nudMovementDelay;
         private System.Windows.Forms.Label lblMovementDelay;
         private CompositeControls.CCMazeCanvas ccMazeCanvas;
-        private System.Windows.Forms.ToolStripMenuItem reshuffleCurrentRandomMazeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reshuffleCurrentMazeToolStripMenuItem;
         private System.Windows.Forms.Label lblTip;
     }
 }
