@@ -60,9 +60,9 @@
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\README.md">
+    <None Include="..\..\README.md">
       <Link>README.md</Link>
-    </Compile>
+    </None>
     <Compile Include="Engine\CommandRunEngine.cs" />
     <Compile Include="Engine\CommandUtilsX.cs" />
   </ItemGroup>

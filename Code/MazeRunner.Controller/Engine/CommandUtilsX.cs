@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using MazeRunner.Shared.Interfaces;
 
@@ -27,7 +28,7 @@ namespace MazeRunner.Controller.Engine
             return parameter.TryGetParameterValue(m =>
             {
                 var value = 0D;
-                return new Tuple<bool, double>(m.Success && double.TryParse(m.Groups["Value"].Value, out value), value);
+                return new Tuple<bool, double>(m.Success && double.TryParse(m.Groups["Value"].Value, NumberStyles.Float, CultureInfo.CreateSpecificCulture("en-GB"), out value), value);
             });
         }
 

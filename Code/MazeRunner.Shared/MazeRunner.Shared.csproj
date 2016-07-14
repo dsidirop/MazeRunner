@@ -44,12 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\ConcludedEventArgs.cs" />
-    <Compile Include="Interfaces\IEngineBenchmarker.cs" />
+    <Compile Include="Interfaces\IEnginesTestbench.cs" />
     <Compile Include="Interfaces\IEnginesFactory.cs" />
     <Compile Include="Interfaces\IMazeRunnerEngine.cs" />
     <Compile Include="Helpers\MazeSquare.cs" />
     <Compile Include="Interfaces\LapConcludedEventArgs.cs" />
+    <Compile Include="Interfaces\LapStartingEventArgs.cs" />
     <Compile Include="Interfaces\SingleEngineTestsCompletedEventArgs.cs" />
+    <Compile Include="Interfaces\SingleEngineTestsStartingEventArgs.cs" />
+    <Compile Include="Interfaces\StateChangedEventArgs.cs" />
     <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Properties\CommonAssemblyVersionInfo.cs" />
     <Compile Include="Enums.cs" />

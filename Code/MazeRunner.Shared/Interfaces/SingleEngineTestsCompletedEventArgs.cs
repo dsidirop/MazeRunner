@@ -2,11 +2,13 @@
 
 namespace MazeRunner.Shared.Interfaces
 {
+    [Serializable]
     public class SingleEngineTestsCompletedEventArgs : EventArgs
     {
         public IMazeRunnerEngine Engine;
 
         public int Crashes;
+        public int Repetitions;
 
         public int BestPathLength;
         public int WorstPathLength;

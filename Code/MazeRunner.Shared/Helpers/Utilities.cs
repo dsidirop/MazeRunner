@@ -141,5 +141,6 @@ namespace MazeRunner.Shared.Helpers
         // ReSharper restore LoopCanBeConvertedToQuery
 
         static public readonly string nl = Environment.NewLine;
+        static public readonly string nl2 = nl + nl;
     }
 }

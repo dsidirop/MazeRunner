@@ -18,6 +18,7 @@ namespace MazeRunner.Mazes
         public Size Size => _rectangle.Size;
         public Point Exitpoint { get; }
         public Point Entrypoint { get; }
+        public int RoadblocksCount => _roadblocks.Count;
 
         public Maze(Size size, Point entrypoint, Point exitpoint, HashSet<Point> roadblocks)
         {

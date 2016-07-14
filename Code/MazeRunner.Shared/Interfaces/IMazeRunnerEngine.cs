@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 
 namespace MazeRunner.Shared.Interfaces
 {
     public interface IMazeRunnerEngine
     {
         event EventHandler Starting;
-        event EventHandler StateChanged; //progressed
         event EventHandler<ConcludedEventArgs> Concluded;
+        event EventHandler<StateChangedEventArgs> StateChanged; //progressed
 
         IMaze Maze { get; }
 
@@ -17,7 +18,7 @@ namespace MazeRunner.Shared.Interfaces
         IEnumerable<Point> Trajectory { get; }
         IReadOnlyCollection<Point> InvalidatedSquares { get; }
 
-        IMazeRunnerEngine Run();
+        IMazeRunnerEngine Run(CancellationToken? ct = null);
         IMazeRunnerEngine Reset();
     }
 }
