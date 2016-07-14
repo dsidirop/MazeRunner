@@ -115,6 +115,7 @@
             this.loadMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.loadMazeToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.loadMazeToolStripMenuItem.Text = "&Load Maze";
+            this.loadMazeToolStripMenuItem.Click += new System.EventHandler(this.loadMazeToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -345,8 +346,8 @@
             0});
             this.nudMovementDelay.Location = new System.Drawing.Point(124, 30);
             this.nudMovementDelay.Maximum = new decimal(new int[] {
-            276447232,
-            23283,
+            10000,
+            0,
             0,
             0});
             this.nudMovementDelay.Name = "nudMovementDelay";

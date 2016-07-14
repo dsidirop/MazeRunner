@@ -116,7 +116,7 @@ namespace MazeRunner.TestbedUI
                 File.WriteAllText(filepath, ccMazeCanvas.Maze.ToAsciiMap());
                 using (var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation())
                 {
-                    formFileGeneratedSuccessfully.Text = @"Backup Creation Successful";
+                    formFileGeneratedSuccessfully.Text = @"Maze Saved Successfully";
                     formFileGeneratedSuccessfully.FilePath = filepath;
                     formFileGeneratedSuccessfully.FileGeneratedSuccessfullyMessage = @"Operation completed successfully";
                     formFileGeneratedSuccessfully.ShowDialog(this);
@@ -128,6 +128,40 @@ namespace MazeRunner.TestbedUI
             }
         }
 
+        private void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+        {
+            try
+            {
+                var filepath = "";
+                using (var openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Title = @"Select existing backup file";
+                    openFileDialog.Filter = $"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
+                    openFileDialog.ValidateNames = true;
+                    openFileDialog.CheckPathExists = true;
+                    openFileDialog.CheckFileExists = true;
+                    openFileDialog.InitialDirectory = DesktopDirectory;
+                    if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
+
+                    filepath = openFileDialog.FileName;
+                }
+
+                try
+                {
+                    ccMazeCanvas.Maze = _mazesFactory.FromFile(filepath);
+                }
+                catch (Exception ex)
+                {
+                    ShowMessageSafe("Failed to restore backup copy", "Error reading from disk", ex: ex);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessageSafe(ex.Message, @"Mazefile Loading Failed", ex: ex);
+            }
+        }
+
         private void reshuffleCurrentMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
             var density = ccMazeCanvas.Maze.RoadblocksCount / (((double)ccMazeCanvas.Maze.Size.Width) * ccMazeCanvas.Maze.Size.Height);
@@ -136,7 +170,7 @@ namespace MazeRunner.TestbedUI
 
         private void generateRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
-            //todo show form
+            
         }
 
         protected DialogResult ShowMessageSafe(string text, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Error, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Exception ex = null, IWin32Window owner = null)
