@@ -25,6 +25,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
 
                 SetMaze(_maze = value);
             }
+            get { return _maze; }
         }
 
         public CCMazeCanvas()
@@ -113,7 +114,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
             return new Label
             {
                 Text = text,
-                Font = DefaultFont,
+                Font = FontForCells,
                 Name = "dummyLabel",
                 Dock = DockStyle.Fill,
                 Size = new Size(20, 20),
@@ -128,8 +129,8 @@ namespace MazeRunner.TestbedUI.CompositeControls
         }
 
         static private readonly Color White = Color.White;
-        static private readonly Font DefaultFont = new Font("Tahoma", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-        static private readonly Dictionary<MazeHitTestEnum, Tuple<Color, string>> HitTestToColorAndText = new Dictionary<MazeHitTestEnum, Tuple<Color, string>>
+        static private readonly Font FontForCells = new Font("Tahoma", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+        static public readonly Dictionary<MazeHitTestEnum, Tuple<Color, string>> HitTestToColorAndText = new Dictionary<MazeHitTestEnum, Tuple<Color, string>>
         {
             {MazeHitTestEnum.Free, new Tuple<Color, string>(White, "")},
             {MazeHitTestEnum.Roadblock, new Tuple<Color, string>(Color.Black, "")},

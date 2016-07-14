@@ -41,9 +41,9 @@ namespace MazeRunner.Controller.Engine
                     _standardOutput.WriteLine(
                         $"{nl}" +
                         $"Engine: {ea.Engine.GetType().Name}{nl}" +
-                        $"Number of runs: {repetitions} (smooth runs: {repetitions - ea.Crashes}, crashes: {ea.Crashes}){nl}" +
+                        $"Number of runs: {ea.Repetitions} (smooth runs: {ea.Repetitions - ea.Crashes}, crashes: {ea.Crashes}){nl}" +
                         $"Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength}{nl}" +
-                        $"Time-duration (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
+                        $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
                 };
 
                 _enginesBenchmarker.Run(enginesToBenchmark, repetitions);

@@ -20,6 +20,17 @@ namespace MazeRunner.EnginesFactory.Benchmark
             remove { _lapConcluded -= value; }
         }
 
+        private event EventHandler<SingleEngineTestsStartingEventArgs> _singleEngineTestsStarting;
+        public event EventHandler<SingleEngineTestsStartingEventArgs> SingleEngineTestsStarting
+        {
+            add
+            {
+                _singleEngineTestsStarting -= value;
+                _singleEngineTestsStarting += value;
+            }
+            remove { _singleEngineTestsStarting -= value; }
+        }
+
         private event EventHandler<SingleEngineTestsCompletedEventArgs> _singleEngineTestsCompleted;
         public event EventHandler<SingleEngineTestsCompletedEventArgs> SingleEngineTestsCompleted
         {
@@ -42,6 +53,11 @@ namespace MazeRunner.EnginesFactory.Benchmark
             remove { _allDone -= value; }
         }
 
+        public void Stop()
+        {
+            //todo
+        }
+
         public void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
         {
             if (repetitions <= 0) throw new ArgumentOutOfRangeException(nameof(repetitions));
@@ -52,12 +68,15 @@ namespace MazeRunner.EnginesFactory.Benchmark
                 var stopWatch = new Stopwatch();
                 enginesToTest.ForEach(eng =>
                 {
+                    OnSingleEngineTestsStarting(new SingleEngineTestsStartingEventArgs {Engine = eng});
+
                     var crashes = 0;
                     var pathlengths = new List<int>(repetitions);
                     var timedurations = new List<TimeSpan>(repetitions);
 
                     var ii = 0;
-                    eng.Concluded += (s, ea) =>
+                    var starting = new EventHandler((s, ea) => stopWatch.Restart());
+                    var concluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
                     {
                         stopWatch.Stop(); //order
                         if (ea.Crashed)
@@ -69,12 +88,21 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         timedurations.Add(stopWatch.Elapsed); //order
                         pathlengths.Add(eng.TrajectoryLength); //order
                         OnLapConcluded(new LapConcludedEventArgs {LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng}); //order
-                    };
-                    eng.Starting += (s, ea) => stopWatch.Restart();
+                    });
 
-                    for (var i = 0; i < repetitions; i++, eng.Reset())
+                    try
                     {
-                        eng.Run(); //safe
+                        eng.Starting += starting;
+                        eng.Concluded += concluded;
+                        for (var i = 0; i < repetitions; i++, eng.Reset())
+                        {
+                            eng.Run(); //safe
+                        }
+                    }
+                    finally
+                    {
+                        eng.Starting -= starting;
+                        eng.Concluded -= concluded;
                     }
 
                     pathlengths.Sort();
@@ -83,6 +111,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                     {
                         Engine = eng,
                         Crashes = crashes,
+                        Repetitions = repetitions,
                         BestPathLength = pathlengths.First(),
                         WorstPathLength = pathlengths.Last(),
                         AveragePathLength = pathlengths.Average(),
@@ -98,8 +127,11 @@ namespace MazeRunner.EnginesFactory.Benchmark
             }
         }
 
+
         protected virtual void OnDone() => _allDone?.Invoke(this, EventArgs.Empty);
         protected virtual void OnLapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
+        protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea) => _singleEngineTestsCompleted?.Invoke(this, ea);
+        
     }
 }

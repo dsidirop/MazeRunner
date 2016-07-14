@@ -33,7 +33,8 @@
             this.saveMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.randomMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reshuffleCurrentRandomMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateRandomMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpUniversal = new System.Windows.Forms.TableLayoutPanel();
             this.splitBoxHorizontal = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -113,18 +114,28 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.randomMazeToolStripMenuItem});
+            this.reshuffleCurrentRandomMazeToolStripMenuItem,
+            this.generateRandomMazeToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
-            // randomMazeToolStripMenuItem
+            // reshuffleCurrentRandomMazeToolStripMenuItem
             // 
-            this.randomMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.GenerateRandomMaze;
-            this.randomMazeToolStripMenuItem.Name = "randomMazeToolStripMenuItem";
-            this.randomMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.randomMazeToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.randomMazeToolStripMenuItem.Text = "&Generate Random Maze";
+            this.reshuffleCurrentRandomMazeToolStripMenuItem.Name = "reshuffleCurrentRandomMazeToolStripMenuItem";
+            this.reshuffleCurrentRandomMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.reshuffleCurrentRandomMazeToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this.reshuffleCurrentRandomMazeToolStripMenuItem.Text = "&Reshuffle Current Random Maze";
+            this.reshuffleCurrentRandomMazeToolStripMenuItem.Click += new System.EventHandler(this.reshuffleCurrentRandomMazeToolStripMenuItem_Click);
+            // 
+            // generateRandomMazeToolStripMenuItem
+            // 
+            this.generateRandomMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.GenerateRandomMaze;
+            this.generateRandomMazeToolStripMenuItem.Name = "generateRandomMazeToolStripMenuItem";
+            this.generateRandomMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.generateRandomMazeToolStripMenuItem.Size = new System.Drawing.Size(291, 22);
+            this.generateRandomMazeToolStripMenuItem.Text = "&Generate Different Random Maze";
+            this.generateRandomMazeToolStripMenuItem.Click += new System.EventHandler(this.generateRandomMazeToolStripMenuItem_Click);
             // 
             // tlpUniversal
             // 
@@ -189,6 +200,7 @@
             this._ccMazeCanvas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this._ccMazeCanvas.Location = new System.Drawing.Point(5, 5);
             this._ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
+            this._ccMazeCanvas.Maze = null;
             this._ccMazeCanvas.Name = "_ccMazeCanvas";
             this._ccMazeCanvas.Size = new System.Drawing.Size(43, 43);
             this._ccMazeCanvas.TabIndex = 0;
@@ -323,7 +335,7 @@
             this.nudIterations.TabIndex = 1;
             this.nudIterations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudIterations.Value = new decimal(new int[] {
-            1,
+            30,
             0,
             0,
             0});
@@ -445,6 +457,8 @@
             this.txtLog.MinimumSize = new System.Drawing.Size(250, 100);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
+            this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtLog.Size = new System.Drawing.Size(860, 163);
             this.txtLog.TabIndex = 2;
             // 
@@ -510,7 +524,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadMazeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveMazeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem randomMazeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateRandomMazeToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tlpUniversal;
         private System.Windows.Forms.SplitContainer splitBoxHorizontal;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -531,6 +545,7 @@
         private System.Windows.Forms.NumericUpDown nudMovementDelay;
         private System.Windows.Forms.Label lblMovementDelay;
         private CompositeControls.CCMazeCanvas _ccMazeCanvas;
+        private System.Windows.Forms.ToolStripMenuItem reshuffleCurrentRandomMazeToolStripMenuItem;
     }
 }
 
