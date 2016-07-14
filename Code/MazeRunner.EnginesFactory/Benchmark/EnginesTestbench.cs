@@ -56,6 +56,17 @@ namespace MazeRunner.EnginesFactory.Benchmark
             remove { _singleEngineTestsCompleted -= value; }
         }
 
+        private event EventHandler _launching;
+        public event EventHandler Launching
+        {
+            add
+            {
+                _launching -= value;
+                _launching += value;
+            }
+            remove { _launching -= value; }
+        }
+
         private event EventHandler _allDone;
         public event EventHandler AllDone
         {
@@ -66,6 +77,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
             }
             remove { _allDone -= value; }
         }
+
+        public bool Running { get; private set; }
 
         public void RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null)
             => Task.Factory.StartNew(() => Run(enginesToTest, repetitions, cancellationToken), cancellationToken ?? CancellationToken.None);
@@ -78,6 +91,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
             var ct = cancellationToken ?? CancellationToken.None;
             try
             {
+                OnLaunching();
+
                 var stopWatch = new Stopwatch();
                 enginesToTest.ForEach(eng =>
                 {
@@ -151,7 +166,18 @@ namespace MazeRunner.EnginesFactory.Benchmark
         }
 
 
-        protected virtual void OnAllDone() => _allDone?.Invoke(this, EventArgs.Empty);
+        protected virtual void OnAllDone()
+        {
+            Running = false;
+            _allDone?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnLaunching()
+        {
+            Running = true;
+            _launching?.Invoke(this, EventArgs.Empty);
+        }
+
         protected virtual void OnlapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
         protected virtual void OnlapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);

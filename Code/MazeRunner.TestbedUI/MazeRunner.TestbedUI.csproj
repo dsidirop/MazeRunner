@@ -45,11 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompositeControls\CCMazeCanvas.cs">
+    <Compile Include="Controls\CCDoubleBufferedTableLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\CCMazeCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CompositeControls\CCMazeCanvas.Designer.cs">
+    <Compile Include="Controls\CCMazeCanvas.Designer.cs">
       <DependentUpon>CCMazeCanvas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CCLabelWithBottomBorderOnly.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="FormMazeRunnerTester.cs">
       <SubType>Form</SubType>
@@ -57,12 +63,19 @@
     <Compile Include="FormMazeRunnerTester.Designer.cs">
       <DependentUpon>FormMazeRunnerTester.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormNotificationAboutFileOperation.cs">
+    <Compile Include="Helpers\FormGenerateNewRandomMaze.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormNotificationAboutFileOperation.Designer.cs">
+    <Compile Include="Helpers\FormGenerateNewRandomMaze.Designer.cs">
+      <DependentUpon>FormGenerateNewRandomMaze.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\FormNotificationAboutFileOperation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Helpers\FormNotificationAboutFileOperation.Designer.cs">
       <DependentUpon>FormNotificationAboutFileOperation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MazeSpecs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
@@ -71,11 +84,15 @@
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="CompositeControls\CCMazeCanvas.resx">
+    <Compile Include="Helpers\UtilsX.cs" />
+    <EmbeddedResource Include="Controls\CCMazeCanvas.resx">
       <DependentUpon>CCMazeCanvas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMazeRunnerTester.resx">
       <DependentUpon>FormMazeRunnerTester.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Helpers\FormGenerateNewRandomMaze.resx">
+      <DependentUpon>FormGenerateNewRandomMaze.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

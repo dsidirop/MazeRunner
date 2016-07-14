@@ -1,4 +1,4 @@
-﻿namespace MazeRunner.TestbedUI
+﻿namespace MazeRunner.TestbedUI.Helpers
 {
     partial class FormNotificationAboutFileOperation
     {

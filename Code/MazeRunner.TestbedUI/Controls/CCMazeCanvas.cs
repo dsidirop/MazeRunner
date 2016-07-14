@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
-using System.Collections.Generic;
 
-namespace MazeRunner.TestbedUI.CompositeControls
+namespace MazeRunner.TestbedUI.Controls
 {
-    public partial class CcMazeCanvas : UserControl
+    public partial class CCMazeCanvas : UserControl
     {
         private const int CellEdgeLength = 80;
 
@@ -23,12 +23,13 @@ namespace MazeRunner.TestbedUI.CompositeControls
             {
                 if (_maze == value) return;
 
-                SetupMaze(_maze = value);
+                _maze = value; //order
+                Reinitialize(); //order
             }
             get { return _maze; }
         }
 
-        public CcMazeCanvas()
+        public CCMazeCanvas()
         {
             InitializeComponent();
 
@@ -44,7 +45,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
             });
         }
 
-        public CcMazeCanvas CustomizeCell(Point cellCoords, Color color, string textToAppend = null)
+        public CCMazeCanvas CustomizeCell(Point cellCoords, Color color, string textToAppend = null)
         {
             var label = tlpMesh.GetControlFromPosition(cellCoords.X, cellCoords.Y);
             if (label == null) throw new ArgumentOutOfRangeException(nameof(cellCoords));
@@ -59,14 +60,16 @@ namespace MazeRunner.TestbedUI.CompositeControls
         }
         //0 we need to force a redraw only of a specific cell in the tlp   thus we calculate its client rectangle and invoke invalidate on it followed by update
 
-        private void SetupMaze(IMaze maze)
+        private void Reinitialize()
         {
             try
             {
                 tlpMesh.SuspendLayout();
-                while (tlpMesh.ColumnStyles.Count != maze.Size.Width)
+
+                tlpMesh.Controls.Clear();
+                while (tlpMesh.ColumnStyles.Count != _maze.Size.Width)
                 {
-                    if (tlpMesh.ColumnStyles.Count < maze.Size.Width)
+                    if (tlpMesh.ColumnStyles.Count < _maze.Size.Width)
                     {
                         tlpMesh.ColumnStyles.Add(StandardColumnStyle);
                     }
@@ -75,11 +78,11 @@ namespace MazeRunner.TestbedUI.CompositeControls
                         tlpMesh.ColumnStyles.RemoveAt(tlpMesh.ColumnStyles.Count - 1);
                     }
                 }
-                tlpMesh.ColumnCount = maze.Size.Width;
+                tlpMesh.ColumnCount = _maze.Size.Width;
 
-                while (tlpMesh.RowStyles.Count != maze.Size.Height)
+                while (tlpMesh.RowStyles.Count != _maze.Size.Height)
                 {
-                    if (tlpMesh.RowStyles.Count < maze.Size.Height)
+                    if (tlpMesh.RowStyles.Count < _maze.Size.Height)
                     {
                         tlpMesh.RowStyles.Add(StandardRowStyle);
                     }
@@ -88,7 +91,7 @@ namespace MazeRunner.TestbedUI.CompositeControls
                         tlpMesh.RowStyles.RemoveAt(tlpMesh.RowStyles.Count - 1);
                     }
                 }
-                tlpMesh.RowCount = maze.Size.Height;
+                tlpMesh.RowCount = _maze.Size.Height;
 
                 ResetCellsToDefaultColors();
             }

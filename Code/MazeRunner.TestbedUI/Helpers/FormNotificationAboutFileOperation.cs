@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace MazeRunner.TestbedUI
+namespace MazeRunner.TestbedUI.Helpers
 {
     public sealed partial class FormNotificationAboutFileOperation : Form
     {
