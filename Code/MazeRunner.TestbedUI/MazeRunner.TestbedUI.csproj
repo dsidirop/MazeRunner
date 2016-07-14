@@ -38,17 +38,18 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompositeControls\CCMazeCanvas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CompositeControls\CCMazeCanvas.Designer.cs">
+      <DependentUpon>CCMazeCanvas.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMazeRunnerTester.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +64,9 @@
       <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CompositeControls\CCMazeCanvas.resx">
+      <DependentUpon>CCMazeCanvas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMazeRunnerTester.resx">
       <DependentUpon>FormMazeRunnerTester.cs</DependentUpon>
     </EmbeddedResource>

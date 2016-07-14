@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
+// ReSharper disable NotAccessedField.Local
 
 namespace MazeRunner.TestbedUI
 {
@@ -21,16 +23,19 @@ namespace MazeRunner.TestbedUI
 
             _mazesFactory = mazesFactory;
             _enginesFactory = enginesFactory;
-            _enginesTestbench = enginesTestbench;
+            _enginesTestbench = enginesTestbench; // ReSharper disable once PossibleNullReferenceException
+            lbxkEnginesToBenchmark.ItemCheck += (s, ea) => (lbxkEnginesToBenchmark.DataSource as BindingList<EngineEntry>)[ea.Index].Selected = ea.NewValue == CheckState.Checked;
         }
 
-        protected override void OnLoad(EventArgs ea)
+        protected override void OnShown(EventArgs ea)
         {
-            lbxkAvailableEngines.ValueMember = nameof(EngineEntry.Selected); //order
-            lbxkAvailableEngines.DisplayMember = nameof(EngineEntry.Name); //order
-            lbxkAvailableEngines.DataSource = new BindingList<EngineEntry>(_enginesFactory.EnginesNames.Select(x => new EngineEntry {Selected = true, Name = x}).ToList()); //order
+            _ccMazeCanvas.Maze = _mazesFactory.Random(width: 10, height: 6, roadblocksDensity: 0.3);
 
-            (lbxkAvailableEngines.DataSource as BindingList<EngineEntry>).Each((x, i) => lbxkAvailableEngines.SetItemChecked(i, x.Selected)); //order
+            lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
+            lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
+            lbxkEnginesToBenchmark.DataSource = new BindingList<EngineEntry>(_enginesFactory.EnginesNames.Select(x => new EngineEntry {Selected = true, Name = x}).ToList()); //order
+
+            (lbxkEnginesToBenchmark.DataSource as BindingList<EngineEntry>).Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
         }
 
         [Obfuscation(Exclude = true, ApplyToMembers = true)] //0
@@ -40,5 +45,15 @@ namespace MazeRunner.TestbedUI
             public bool Selected { get; set; }
         }
         //0 we could have reduce this to [Obfuscation] but it wouldnt be that clear what we are after in terms of obfuscation
+
+        private void btnStart_Click(object sender, EventArgs ea)
+        {
+            _ccMazeCanvas.Maze = _mazesFactory.Random(width: 10, height: 10, roadblocksDensity: 0.4);
+        }
+
+        private void btnStop_Click(object sender, EventArgs ea)
+        {
+            _ccMazeCanvas.SetCustomColorOnCell(new Point(5, 5), Color.Gray);
+        }
     }
 }

@@ -37,22 +37,23 @@
             this.tlpUniversal = new System.Windows.Forms.TableLayoutPanel();
             this.splitBoxHorizontal = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._ccMazeCanvas = new MazeRunner.TestbedUI.CompositeControls.CCMazeCanvas();
             this.tlpOptionsSidebar = new System.Windows.Forms.TableLayoutPanel();
-            this.lbxkAvailableEngines = new System.Windows.Forms.CheckedListBox();
+            this.lbxkEnginesToBenchmark = new System.Windows.Forms.CheckedListBox();
             this.lblAvailableEngines = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
+            this.tlpDummyContainer = new System.Windows.Forms.TableLayoutPanel();
+            this.tlpOptionsContainer = new System.Windows.Forms.TableLayoutPanel();
+            this.lblIterations = new System.Windows.Forms.Label();
+            this.nudIterations = new System.Windows.Forms.NumericUpDown();
+            this.nudMovementDelay = new System.Windows.Forms.NumericUpDown();
+            this.lblMovementDelay = new System.Windows.Forms.Label();
             this.tlpStartStop = new System.Windows.Forms.TableLayoutPanel();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.tlpLogs = new System.Windows.Forms.TableLayoutPanel();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.lblLogs = new System.Windows.Forms.Label();
-            this.lblMovementDelay = new System.Windows.Forms.Label();
-            this.nudMovementDelay = new System.Windows.Forms.NumericUpDown();
-            this.nudIterations = new System.Windows.Forms.NumericUpDown();
-            this.lblIterations = new System.Windows.Forms.Label();
-            this.tlpOptionsContainer = new System.Windows.Forms.TableLayoutPanel();
-            this.tlpDummyContainer = new System.Windows.Forms.TableLayoutPanel();
             this.mstripFile.SuspendLayout();
             this.tlpUniversal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).BeginInit();
@@ -60,16 +61,17 @@
             this.splitBoxHorizontal.Panel2.SuspendLayout();
             this.splitBoxHorizontal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tlpOptionsSidebar.SuspendLayout();
             this.gbOptions.SuspendLayout();
+            this.tlpDummyContainer.SuspendLayout();
+            this.tlpOptionsContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIterations)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).BeginInit();
             this.tlpStartStop.SuspendLayout();
             this.tlpLogs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudIterations)).BeginInit();
-            this.tlpOptionsContainer.SuspendLayout();
-            this.tlpDummyContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // mstripFile
@@ -96,14 +98,16 @@
             // 
             this.saveMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.SaveMaze;
             this.saveMazeToolStripMenuItem.Name = "saveMazeToolStripMenuItem";
-            this.saveMazeToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.saveMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveMazeToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.saveMazeToolStripMenuItem.Text = "&Save Maze";
             // 
             // loadMazeToolStripMenuItem
             // 
             this.loadMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.LoadMaze;
             this.loadMazeToolStripMenuItem.Name = "loadMazeToolStripMenuItem";
-            this.loadMazeToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.loadMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.loadMazeToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.loadMazeToolStripMenuItem.Text = "&Load Maze";
             // 
             // toolsToolStripMenuItem
@@ -118,7 +122,8 @@
             // 
             this.randomMazeToolStripMenuItem.Image = global::MazeRunner.TestbedUI.Properties.Resources.GenerateRandomMaze;
             this.randomMazeToolStripMenuItem.Name = "randomMazeToolStripMenuItem";
-            this.randomMazeToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.randomMazeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.randomMazeToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.randomMazeToolStripMenuItem.Text = "&Generate Random Maze";
             // 
             // tlpUniversal
@@ -162,6 +167,11 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.AutoScroll = true;
+            this.splitContainer1.Panel1.Controls.Add(this._ccMazeCanvas);
             this.splitContainer1.Panel1MinSize = 300;
             // 
             // splitContainer1.Panel2
@@ -173,13 +183,23 @@
             this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 0;
             // 
+            // _ccMazeCanvas
+            // 
+            this._ccMazeCanvas.AutoSize = true;
+            this._ccMazeCanvas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._ccMazeCanvas.Location = new System.Drawing.Point(5, 5);
+            this._ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
+            this._ccMazeCanvas.Name = "_ccMazeCanvas";
+            this._ccMazeCanvas.Size = new System.Drawing.Size(43, 43);
+            this._ccMazeCanvas.TabIndex = 0;
+            // 
             // tlpOptionsSidebar
             // 
             this.tlpOptionsSidebar.AutoSize = true;
             this.tlpOptionsSidebar.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpOptionsSidebar.ColumnCount = 1;
             this.tlpOptionsSidebar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptionsSidebar.Controls.Add(this.lbxkAvailableEngines, 0, 3);
+            this.tlpOptionsSidebar.Controls.Add(this.lbxkEnginesToBenchmark, 0, 3);
             this.tlpOptionsSidebar.Controls.Add(this.lblAvailableEngines, 0, 1);
             this.tlpOptionsSidebar.Controls.Add(this.gbOptions, 0, 5);
             this.tlpOptionsSidebar.Controls.Add(this.tlpStartStop, 0, 6);
@@ -198,15 +218,15 @@
             this.tlpOptionsSidebar.Size = new System.Drawing.Size(383, 371);
             this.tlpOptionsSidebar.TabIndex = 0;
             // 
-            // lbxkAvailableEngines
+            // lbxkEnginesToBenchmark
             // 
-            this.lbxkAvailableEngines.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbxkAvailableEngines.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbxkAvailableEngines.FormattingEnabled = true;
-            this.lbxkAvailableEngines.Location = new System.Drawing.Point(3, 30);
-            this.lbxkAvailableEngines.Name = "lbxkAvailableEngines";
-            this.lbxkAvailableEngines.Size = new System.Drawing.Size(377, 164);
-            this.lbxkAvailableEngines.TabIndex = 0;
+            this.lbxkEnginesToBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbxkEnginesToBenchmark.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbxkEnginesToBenchmark.FormattingEnabled = true;
+            this.lbxkEnginesToBenchmark.Location = new System.Drawing.Point(3, 30);
+            this.lbxkEnginesToBenchmark.Name = "lbxkEnginesToBenchmark";
+            this.lbxkEnginesToBenchmark.Size = new System.Drawing.Size(377, 164);
+            this.lbxkEnginesToBenchmark.TabIndex = 0;
             // 
             // lblAvailableEngines
             // 
@@ -232,6 +252,118 @@
             this.gbOptions.TabIndex = 2;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Options:";
+            // 
+            // tlpDummyContainer
+            // 
+            this.tlpDummyContainer.AutoSize = true;
+            this.tlpDummyContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpDummyContainer.ColumnCount = 1;
+            this.tlpDummyContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpDummyContainer.Controls.Add(this.tlpOptionsContainer, 0, 0);
+            this.tlpDummyContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpDummyContainer.Location = new System.Drawing.Point(3, 17);
+            this.tlpDummyContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpDummyContainer.Name = "tlpDummyContainer";
+            this.tlpDummyContainer.RowCount = 1;
+            this.tlpDummyContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpDummyContainer.Size = new System.Drawing.Size(371, 54);
+            this.tlpDummyContainer.TabIndex = 1;
+            // 
+            // tlpOptionsContainer
+            // 
+            this.tlpOptionsContainer.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tlpOptionsContainer.AutoSize = true;
+            this.tlpOptionsContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpOptionsContainer.ColumnCount = 2;
+            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpOptionsContainer.Controls.Add(this.lblIterations, 0, 0);
+            this.tlpOptionsContainer.Controls.Add(this.nudIterations, 1, 0);
+            this.tlpOptionsContainer.Controls.Add(this.nudMovementDelay, 1, 1);
+            this.tlpOptionsContainer.Controls.Add(this.lblMovementDelay, 0, 1);
+            this.tlpOptionsContainer.Location = new System.Drawing.Point(62, 0);
+            this.tlpOptionsContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpOptionsContainer.MaximumSize = new System.Drawing.Size(300, 0);
+            this.tlpOptionsContainer.Name = "tlpOptionsContainer";
+            this.tlpOptionsContainer.RowCount = 2;
+            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpOptionsContainer.Size = new System.Drawing.Size(246, 54);
+            this.tlpOptionsContainer.TabIndex = 0;
+            // 
+            // lblIterations
+            // 
+            this.lblIterations.AutoSize = true;
+            this.lblIterations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIterations.Location = new System.Drawing.Point(3, 0);
+            this.lblIterations.Name = "lblIterations";
+            this.lblIterations.Size = new System.Drawing.Size(115, 27);
+            this.lblIterations.TabIndex = 0;
+            this.lblIterations.Text = "&Iterations:";
+            this.lblIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // nudIterations
+            // 
+            this.nudIterations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudIterations.Location = new System.Drawing.Point(124, 3);
+            this.nudIterations.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.nudIterations.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudIterations.Name = "nudIterations";
+            this.nudIterations.Size = new System.Drawing.Size(119, 21);
+            this.nudIterations.TabIndex = 1;
+            this.nudIterations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudIterations.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // nudMovementDelay
+            // 
+            this.nudMovementDelay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nudMovementDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudMovementDelay.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudMovementDelay.Location = new System.Drawing.Point(124, 30);
+            this.nudMovementDelay.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
+            this.nudMovementDelay.Name = "nudMovementDelay";
+            this.nudMovementDelay.Size = new System.Drawing.Size(119, 21);
+            this.nudMovementDelay.TabIndex = 2;
+            this.nudMovementDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudMovementDelay.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // lblMovementDelay
+            // 
+            this.lblMovementDelay.AutoSize = true;
+            this.lblMovementDelay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMovementDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMovementDelay.Location = new System.Drawing.Point(3, 27);
+            this.lblMovementDelay.Name = "lblMovementDelay";
+            this.lblMovementDelay.Size = new System.Drawing.Size(115, 27);
+            this.lblMovementDelay.TabIndex = 3;
+            this.lblMovementDelay.Text = "&Movement Delay (ms):";
+            this.lblMovementDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tlpStartStop
             // 
@@ -268,6 +400,7 @@
             this.btnStart.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnStart.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // btnStop
             // 
@@ -285,6 +418,7 @@
             this.btnStop.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // tlpLogs
             // 
@@ -325,118 +459,6 @@
             this.lblLogs.TabIndex = 3;
             this.lblLogs.Text = "Logs:";
             // 
-            // lblMovementDelay
-            // 
-            this.lblMovementDelay.AutoSize = true;
-            this.lblMovementDelay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMovementDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMovementDelay.Location = new System.Drawing.Point(3, 27);
-            this.lblMovementDelay.Name = "lblMovementDelay";
-            this.lblMovementDelay.Size = new System.Drawing.Size(115, 27);
-            this.lblMovementDelay.TabIndex = 3;
-            this.lblMovementDelay.Text = "&Movement Delay (ms):";
-            this.lblMovementDelay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // nudMovementDelay
-            // 
-            this.nudMovementDelay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nudMovementDelay.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudMovementDelay.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.nudMovementDelay.Location = new System.Drawing.Point(124, 30);
-            this.nudMovementDelay.Maximum = new decimal(new int[] {
-            276447232,
-            23283,
-            0,
-            0});
-            this.nudMovementDelay.Name = "nudMovementDelay";
-            this.nudMovementDelay.Size = new System.Drawing.Size(119, 21);
-            this.nudMovementDelay.TabIndex = 2;
-            this.nudMovementDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nudMovementDelay.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            // 
-            // nudIterations
-            // 
-            this.nudIterations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nudIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nudIterations.Location = new System.Drawing.Point(124, 3);
-            this.nudIterations.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.nudIterations.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudIterations.Name = "nudIterations";
-            this.nudIterations.Size = new System.Drawing.Size(119, 21);
-            this.nudIterations.TabIndex = 1;
-            this.nudIterations.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nudIterations.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // lblIterations
-            // 
-            this.lblIterations.AutoSize = true;
-            this.lblIterations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblIterations.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIterations.Location = new System.Drawing.Point(3, 0);
-            this.lblIterations.Name = "lblIterations";
-            this.lblIterations.Size = new System.Drawing.Size(115, 27);
-            this.lblIterations.TabIndex = 0;
-            this.lblIterations.Text = "&Iterations:";
-            this.lblIterations.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tlpOptionsContainer
-            // 
-            this.tlpOptionsContainer.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tlpOptionsContainer.AutoSize = true;
-            this.tlpOptionsContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpOptionsContainer.ColumnCount = 2;
-            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptionsContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptionsContainer.Controls.Add(this.lblIterations, 0, 0);
-            this.tlpOptionsContainer.Controls.Add(this.nudIterations, 1, 0);
-            this.tlpOptionsContainer.Controls.Add(this.nudMovementDelay, 1, 1);
-            this.tlpOptionsContainer.Controls.Add(this.lblMovementDelay, 0, 1);
-            this.tlpOptionsContainer.Location = new System.Drawing.Point(62, 0);
-            this.tlpOptionsContainer.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpOptionsContainer.MaximumSize = new System.Drawing.Size(300, 0);
-            this.tlpOptionsContainer.Name = "tlpOptionsContainer";
-            this.tlpOptionsContainer.RowCount = 2;
-            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptionsContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptionsContainer.Size = new System.Drawing.Size(246, 54);
-            this.tlpOptionsContainer.TabIndex = 0;
-            // 
-            // tlpDummyContainer
-            // 
-            this.tlpDummyContainer.AutoSize = true;
-            this.tlpDummyContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpDummyContainer.ColumnCount = 1;
-            this.tlpDummyContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDummyContainer.Controls.Add(this.tlpOptionsContainer, 0, 0);
-            this.tlpDummyContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpDummyContainer.Location = new System.Drawing.Point(3, 17);
-            this.tlpDummyContainer.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpDummyContainer.Name = "tlpDummyContainer";
-            this.tlpDummyContainer.RowCount = 1;
-            this.tlpDummyContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDummyContainer.Size = new System.Drawing.Size(371, 54);
-            this.tlpDummyContainer.TabIndex = 1;
-            // 
             // FormMazeRunnerTester
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -456,6 +478,8 @@
             this.splitBoxHorizontal.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).EndInit();
             this.splitBoxHorizontal.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -464,16 +488,16 @@
             this.tlpOptionsSidebar.PerformLayout();
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
+            this.tlpDummyContainer.ResumeLayout(false);
+            this.tlpDummyContainer.PerformLayout();
+            this.tlpOptionsContainer.ResumeLayout(false);
+            this.tlpOptionsContainer.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudIterations)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).EndInit();
             this.tlpStartStop.ResumeLayout(false);
             this.tlpStartStop.PerformLayout();
             this.tlpLogs.ResumeLayout(false);
             this.tlpLogs.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMovementDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudIterations)).EndInit();
-            this.tlpOptionsContainer.ResumeLayout(false);
-            this.tlpOptionsContainer.PerformLayout();
-            this.tlpDummyContainer.ResumeLayout(false);
-            this.tlpDummyContainer.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -491,7 +515,7 @@
         private System.Windows.Forms.SplitContainer splitBoxHorizontal;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TableLayoutPanel tlpOptionsSidebar;
-        private System.Windows.Forms.CheckedListBox lbxkAvailableEngines;
+        private System.Windows.Forms.CheckedListBox lbxkEnginesToBenchmark;
         private System.Windows.Forms.Label lblAvailableEngines;
         private System.Windows.Forms.GroupBox gbOptions;
         private System.Windows.Forms.TableLayoutPanel tlpStartStop;
@@ -506,6 +530,7 @@
         private System.Windows.Forms.NumericUpDown nudIterations;
         private System.Windows.Forms.NumericUpDown nudMovementDelay;
         private System.Windows.Forms.Label lblMovementDelay;
+        private CompositeControls.CCMazeCanvas _ccMazeCanvas;
     }
 }
 
