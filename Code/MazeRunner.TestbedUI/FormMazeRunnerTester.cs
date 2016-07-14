@@ -28,13 +28,14 @@ namespace MazeRunner.TestbedUI
         }
 
         private BindingList<EngineEntry> _enginesDataSource;
-        protected override void OnShown(EventArgs eawef)
+        protected override void OnLoad(EventArgs eawef)
         {
             _ccMazeCanvas.Maze = _mazesFactory.Random(_lastRandomMazeSettings.Width, _lastRandomMazeSettings.Height, _lastRandomMazeSettings.RoadblockDensity);
 
+            lbxkEnginesToBenchmark.DataSource = _enginesDataSource = new BindingList<EngineEntry>(_enginesFactory.EnginesNames.Select(x => new EngineEntry { Selected = true, Name = x }).ToList()); //order
             lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
             lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
-            lbxkEnginesToBenchmark.DataSource = _enginesDataSource = new BindingList<EngineEntry>(_enginesFactory.EnginesNames.Select(x => new EngineEntry {Selected = true, Name = x}).ToList()); //order
+            
             _enginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
             lbxkEnginesToBenchmark.ItemCheck += (s, eaa) => _enginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
 

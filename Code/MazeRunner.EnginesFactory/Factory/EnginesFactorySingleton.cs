@@ -39,13 +39,15 @@ namespace MazeRunner.EnginesFactory.Factory
             {
                 if (_engines != null) return;
 
-                _engines = Directory.GetFiles(Utilities.ProductInstallationFolderpath_system, "MazeRunner.Engine.*.dll")
+                _engines = Directory.GetFiles(Utilities.ProductInstallationFolderpath_system, "MazeRunner.Engine.*.dll") //1
                     .SelectMany(TryLoadAssemblyAndGetExportedTypes)
                     .Where(x => x.IsClass && !x.IsAbstract && x.GetInterfaces().Contains(TypeOfIMazeRunnerEngine))
                     .ToDictionary(x => x.Name, x => x, StringComparer.InvariantCultureIgnoreCase);
             }
         }
         //0 play it safe in terms of ensuring threadsafe init
+        //1 scan engines dynamically from all dlls that are named after the pattern mazerunner.engine.xyz.dll   if someone wants to add his own engine he can just
+        //  drop his dll into the directory with the rest of the dlls
 
         static private Type[] TryLoadAssemblyAndGetExportedTypes(string filepath)
         {

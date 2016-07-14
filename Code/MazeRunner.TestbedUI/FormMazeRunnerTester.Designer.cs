@@ -232,9 +232,10 @@
             // 
             // lbxkEnginesToBenchmark
             // 
+            this.lbxkEnginesToBenchmark.CheckOnClick = true;
             this.lbxkEnginesToBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbxkEnginesToBenchmark.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbxkEnginesToBenchmark.FormattingEnabled = true;
+            this.lbxkEnginesToBenchmark.FormattingEnabled = false;
             this.lbxkEnginesToBenchmark.Location = new System.Drawing.Point(3, 30);
             this.lbxkEnginesToBenchmark.Name = "lbxkEnginesToBenchmark";
             this.lbxkEnginesToBenchmark.Size = new System.Drawing.Size(377, 164);
