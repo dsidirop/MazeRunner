@@ -4,6 +4,9 @@ Quickstart (Winforms Flavor):
  
 	0. Open the project using Code\MazeRunner.sln (Make sure you have Visual Studio 2015+ installed)
 	1. Open the nuget package manager console (Tools -> Nuget package manager -> Manage NuGet Packages for Solution) and restore all missing packages (NUnit, Castle.Core, Microsoft.Net.Compilers)
+	   Note that C# files inside the solution will appear to have errors in terms of missing dll-references even after you perform step#1. These are phantom errors and will disappear once you build
+	   the project for the first time.
+	   
 	2. Set the project MazeRunner.TestbedUI as your startup project
 	3. Run the solution from within Visual Studio (if all goes as planned you should be presented with the testbed window)
 
@@ -11,6 +14,9 @@ Quickstart (Command Line Flavor):
 
 	0. Open the project using Code\MazeRunner.sln (Make sure you have Visual Studio 2015+ installed)
 	1. Open the nuget package manager console (Tools -> Nuget package manager -> Manage NuGet Packages for Solution) and restore all missing packages (NUnit, Castle.Core, Microsoft.Net.Compilers)
+	   Note that C# files inside the solution will appear to have errors in terms of missing dll-references even after you perform step#1. These are phantom errors and will disappear once you build
+	   the project for the first time. 
+
 	2. Build the project
 	3. Open a command prompt and navigate to <project root>\bin\Debug\
 	4. Generate a maze via (you may edit by hand the generated mazefile once you run this command):
