@@ -19,7 +19,7 @@ namespace MazeRunner.Controller.Engine
 
             return exitcode;
         }
-        static private readonly string nl = Utilities.nl;
+        static private readonly string nl = U.nl;
         static private readonly string nl2 = nl + nl;
     }
 }

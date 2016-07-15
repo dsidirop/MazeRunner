@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using MazeRunner.Shared.Interfaces.Events;
 
 namespace MazeRunner.Shared.Interfaces
 {
@@ -8,8 +9,8 @@ namespace MazeRunner.Shared.Interfaces
     {
         bool Running { get; }
 
-        event EventHandler AllDone;
-        event EventHandler Launching;
+        event EventHandler<AllDoneEventArgs> AllDone;
+        event EventHandler<CommencingEventArgs> Commencing;
         event EventHandler<LapStartingEventArgs> LapStarting;
         event EventHandler<LapConcludedEventArgs> LapConcluded;
         event EventHandler<SingleEngineTestsStartingEventArgs> SingleEngineTestsStarting;

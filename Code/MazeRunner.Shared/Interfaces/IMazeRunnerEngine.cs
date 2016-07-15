@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
+using MazeRunner.Shared.Interfaces.Events;
 
 namespace MazeRunner.Shared.Interfaces
 {

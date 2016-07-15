@@ -57,7 +57,7 @@ namespace MazeRunner.TestbedUI
                 txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
                 OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
             });
-            _enginesTestbench.Launching += (s, eaa) => Post(o => OnComponentStateChanged(new ComponentStateChanged("testbench.launching")));
+            _enginesTestbench.Commencing += (s, eaa) => Post(o => OnComponentStateChanged(new ComponentStateChanged("testbench.launching")));
             _enginesTestbench.LapStarting += (s, eaa) => Post(o =>
             {
                 txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
@@ -66,14 +66,14 @@ namespace MazeRunner.TestbedUI
             _enginesTestbench.LapConcluded += (s, eaa) => Post(o => txtLog.AppendTextAndScrollToBottom(@"✓  "));
             _enginesTestbench.SingleEngineTestsStarting += (s, eaa) =>
             {
-                Post(o => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Completed Laps: ");
+                Post(o => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetEngineName()}'. Completed Laps: ");
                 Thread.Sleep(400);
             };
             _enginesTestbench.SingleEngineTestsCompleted += (s, eaa) =>
             {
                 Post(o => txtLog.AppendTextAndScrollToBottom(
                     $"{nl2}" +
-                    $"Engine: {eaa.Engine.GetType().Name}{nl}" +
+                    $"Engine: {eaa.Engine.GetEngineName()}{nl}" +
                     $"Number of laps: {eaa.Repetitions} (smooth laps: {eaa.Repetitions - eaa.Crashes}, crashes: {eaa.Crashes}){nl}" +
                     $"Path-lengths (Best / Worst / Average): {eaa.BestPathLength} / {eaa.WorstPathLength} / {eaa.AveragePathLength:N2}{nl}" +
                     $"Time-durations (Best / Worst / Average): {eaa.BestTimePerformance.TotalMilliseconds}ms / {eaa.WorstTimePerformance.TotalMilliseconds}ms / {eaa.AverageTimePerformance.TotalMilliseconds:N2}ms{nl}" +
@@ -256,8 +256,8 @@ namespace MazeRunner.TestbedUI
             internal string DebuggerDisplayProxy() => _description;
         }
 
-        static private readonly string nl = Utilities.nl;
-        static private readonly string nl2 = Utilities.nl2;
+        static private readonly string nl = U.nl;
+        static private readonly string nl2 = U.nl2;
         static private readonly string DesktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         static private readonly string MazefileExtension = ".mz";
         static private readonly Color NewTipPositionColor = Color.MediumSeaGreen;

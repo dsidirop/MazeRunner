@@ -6,6 +6,7 @@ using System.Threading;
 using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
+using MazeRunner.Shared.Interfaces.Events;
 
 namespace MazeRunner.Engine.SimpleMazeRunner
 {

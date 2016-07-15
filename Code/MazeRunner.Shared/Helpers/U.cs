@@ -11,16 +11,18 @@ using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Shared.Helpers
 {
-    static public class Utilities
+    static public class U //utilities
     {
         static public readonly string ProductInstallationFolderpath_system;
-        static Utilities()
+        static U()
         {
             var assembly = Assembly.GetExecutingAssembly(); //tried application.startuppath but it didnt work
             var assemblyFilepath = assembly.Location;
 
             ProductInstallationFolderpath_system = Path.GetDirectoryName(assemblyFilepath);
         }
+
+        static public string GetEngineName(this IMazeRunnerEngine engine) => engine?.GetType().Name;
 
         static private readonly Random RandomNumbersEngine = new Random();
         static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive) //max is exclusive here
@@ -51,7 +53,7 @@ namespace MazeRunner.Shared.Helpers
         //
         // adapted for C# which does not have an inclusive Next(..) and to make it from configurable range not just 1
 
-        static public IList<T> Shuffle<T>(this IList<T> list)
+        static public IList<T> Shuffle<T>(this IList<T> list) //fisheryates
         {
             var n = list.Count;
             while (n > 1)

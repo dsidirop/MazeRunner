@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace MazeRunner.Shared.Interfaces
+namespace MazeRunner.Shared.Interfaces.Events
 {
     [Serializable]
     public class SingleEngineTestsCompletedEventArgs : EventArgs
     {
+        public int BenchmarkId;
+
         public IList<Point> ShortestPath;
 
         public IMazeRunnerEngine Engine;
