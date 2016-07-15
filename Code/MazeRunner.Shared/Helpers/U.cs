@@ -23,6 +23,7 @@ namespace MazeRunner.Shared.Helpers
         }
 
         static public string GetEngineName(this IMazeRunnerEngine engine) => engine?.GetType().Name;
+        static public MazeSpecs GetMazeSpecs(this IMaze maze) => new MazeSpecs { Height = maze.Size.Height, Width = maze.Size.Width, RoadblockDensity = maze.RoadblocksCount / (((double)maze.Size.Width) * maze.Size.Height) };
 
         static private readonly Random RandomNumbersEngine = new Random();
         static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive) //max is exclusive here

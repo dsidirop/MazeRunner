@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\MazeSpecs.cs" />
     <Compile Include="Interfaces\Events\AllDoneEventArgs.cs" />
     <Compile Include="Interfaces\Events\CommencingEventArgs.cs" />
     <Compile Include="Interfaces\Events\ConcludedEventArgs.cs" />

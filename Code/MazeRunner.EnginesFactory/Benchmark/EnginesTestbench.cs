@@ -14,7 +14,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
 {
     public class EnginesTestbench : IEnginesTestbench
     {
-        static public readonly TraceSource Tracer = new TraceSource(nameof(EnginesTestbench), SourceLevels.Off);
+        public readonly TraceSource Tracer = new TraceSource(nameof(EnginesTestbench), SourceLevels.Off);
 
         static private int _benchmarkRuns;
 
@@ -227,18 +227,12 @@ namespace MazeRunner.EnginesFactory.Benchmark
 
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea)
         {
-            Tracer.TraceInformation(
-                $"[#{ea.BenchmarkId}] All laps completed for engine '{ea.Engine.GetEngineName()}':{U.nl2}" +
-                $"Engine: {ea.Engine.GetEngineName()}{U.nl}" +
-                $"Number of laps: {ea.Repetitions} (smooth laps: {ea.Repetitions - ea.Crashes}, crashes: {ea.Crashes}){U.nl}" +
-                $"Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength:N2}{U.nl}" +
-                $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds:N2}ms{U.nl}" +
-                $"Best (shortest) Path Found (coordinates are one-based, not zero-based):{U.nl2}{string.Join(" -> ", ea.ShortestPath.Select(p => $"({p.X + 1},{p.Y + 1})"))}{U.nl}");
+            Tracer.TraceInformation(ea.ToString(includeShortestPath: false));
 
             _singleEngineTestsCompleted?.Invoke(this, ea);
         }
 
-        static private void OnException(int benchmarkId, IMazeRunnerEngine failedEngine, int currentLap, Exception ex)
+        private void OnException(int benchmarkId, IMazeRunnerEngine failedEngine, int currentLap, Exception ex)
         {
             if (ex is OperationCanceledException) return; //stop button
 

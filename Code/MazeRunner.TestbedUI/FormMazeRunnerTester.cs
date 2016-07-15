@@ -71,14 +71,7 @@ namespace MazeRunner.TestbedUI
             };
             _enginesTestbench.SingleEngineTestsCompleted += (s, eaa) =>
             {
-                Post(o => txtLog.AppendTextAndScrollToBottom(
-                    $"{nl2}" +
-                    $"Engine: {eaa.Engine.GetEngineName()}{nl}" +
-                    $"Number of laps: {eaa.Repetitions} (smooth laps: {eaa.Repetitions - eaa.Crashes}, crashes: {eaa.Crashes}){nl}" +
-                    $"Path-lengths (Best / Worst / Average): {eaa.BestPathLength} / {eaa.WorstPathLength} / {eaa.AveragePathLength:N2}{nl}" +
-                    $"Time-durations (Best / Worst / Average): {eaa.BestTimePerformance.TotalMilliseconds}ms / {eaa.WorstTimePerformance.TotalMilliseconds}ms / {eaa.AverageTimePerformance.TotalMilliseconds:N2}ms{nl}" +
-                    $"Best (shortest) Path Found (coordinates are one-based, not zero-based):{nl2}{string.Join(" -> ", eaa.ShortestPath.Select(p => $"({p.X + 1},{p.Y + 1})"))}{nl}"));
-
+                Post(o => txtLog.AppendTextAndScrollToBottom($"{nl2}{eaa.ToString(includeShortestPath: true)}{nl}"));
                 Thread.Sleep(1300);
             };
 

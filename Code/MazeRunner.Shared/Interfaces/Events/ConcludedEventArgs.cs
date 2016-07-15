@@ -5,9 +5,9 @@ namespace MazeRunner.Shared.Interfaces.Events
     [Serializable]
     public class ConcludedEventArgs : EventArgs
     {
-        public int BenchmarkId;
-
-        public bool Success;
+        public bool ExitpointReached;
         public ConclusionStatusTypeEnum Status;
+
+        public override string ToString() => $"ConclusionStatus={Status} -> ExitpointReached {(ExitpointReached ? "YES" : "NO")}";
     }
 }

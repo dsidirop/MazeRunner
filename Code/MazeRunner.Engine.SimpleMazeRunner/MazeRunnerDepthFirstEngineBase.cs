@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -12,6 +13,8 @@ namespace MazeRunner.Engine.SimpleMazeRunner
 {
     public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
     {
+        private readonly TraceSource Tracer = new TraceSource(nameof(MazeRunnerDepthFirstEngineBase), SourceLevels.Off); //preferred not to use inheritance for setting this
+
         private event EventHandler _starting;
         public event EventHandler Starting
         {
@@ -61,9 +64,11 @@ namespace MazeRunner.Engine.SimpleMazeRunner
         public IEnumerable<Point> Trajectory => _currentTrajectorySquares.Keys.Cast<Point>(); //no easy way to use ireadonlycollection here
         public IReadOnlyCollection<Point> InvalidatedSquares => _invalidatedSquares;
 
-        protected MazeRunnerDepthFirstEngineBase(IMaze maze, bool avoidPathfolding)
+        protected MazeRunnerDepthFirstEngineBase(IMaze maze, bool avoidPathfolding, TraceSource tracer = null)
         {
             if (maze == null) throw new ArgumentNullException(nameof(maze));
+
+            Tracer = tracer ?? Tracer;
 
             _maze = maze;
             _avoidPathfolding = avoidPathfolding;
@@ -85,6 +90,7 @@ namespace MazeRunner.Engine.SimpleMazeRunner
         {
             var ct = cancellationToken ?? CancellationToken.None;
 
+            var si = 1;
             var conclusionStatusType = ConclusionStatusTypeEnum.Completed;
             try
             {
@@ -92,7 +98,6 @@ namespace MazeRunner.Engine.SimpleMazeRunner
 
                 ct.ThrowIfCancellationRequested();
 
-                var si = 1;
                 var tip = TrajectoryTip = _maze.Entrypoint;
                 OnStateChanged(new StateChangedEventArgs {StepIndex = si++, OldTip = null, NewTip = tip, IsProgressNotBacktracking = true});
                 while (tip != null && _maze.HitTest(tip.Value) != MazeHitTestEnum.Exitpoint)
@@ -135,19 +140,57 @@ namespace MazeRunner.Engine.SimpleMazeRunner
                 }
                 else
                 {
+                    OnException(si, ex);
                     conclusionStatusType = ConclusionStatusTypeEnum.Crashed;
                     throw;
                 }
             }
             finally
             {
-                OnConcluded(new ConcludedEventArgs {Status = conclusionStatusType, Success = conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null});
+                OnConcluded(new ConcludedEventArgs {Status = conclusionStatusType, ExitpointReached = conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null});
             }
             return this;
         }
 
-        protected virtual void OnStarting() => _starting?.Invoke(this, EventArgs.Empty);
-        protected virtual void OnConcluded(ConcludedEventArgs ea) => _concluded?.Invoke(this, ea);
-        protected virtual void OnStateChanged(StateChangedEventArgs ea) => _stateChanged?.Invoke(this, ea);
+        protected virtual void OnStarting()
+        {
+            Tracer.TraceInformation($"Commencing on maze with specs: {_maze}");
+
+            _starting?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnConcluded(ConcludedEventArgs ea)
+        {
+            Tracer.TraceInformation($"{ea}");
+
+            _concluded?.Invoke(this, ea);
+        }
+
+        protected virtual void OnStateChanged(StateChangedEventArgs ea)
+        {
+            Tracer.TraceInformation($"{ea}");
+
+            _stateChanged?.Invoke(this, ea);
+        }
+
+        private void OnException(int stepIndex, Exception ex)
+        {
+            if (ex is OperationCanceledException) return; //stop button
+
+            try
+            {
+                Tracer.TraceEvent(TraceEventType.Error, 0,
+                    $"Engine '{this.GetEngineName()}' crashed:{U.nl2}" +
+                    $"Step# {stepIndex}{U.nl}" +
+                    $"TrajectoryLength: {TrajectoryLength}{U.nl}" +
+                    $"InvalidatedSquares({InvalidatedSquares.Count}): {string.Join(", ", InvalidatedSquares.Select(p => $"({p.X}, {p.Y})"))}{U.nl}" +
+                    $"CurrentTrajectorySquares: {_currentTrajectorySquares.Keys.Cast<Point>().Select(p => $"({p.X}, {p.Y})")}{U.nl2}" +
+                    $"{ex}");
+            }
+            catch (Exception xx)
+            {
+                Tracer.TraceEvent(TraceEventType.Error, 0, $"MRDFEB01 [BUG]: {xx}");
+            }
+        }
     }
 }
