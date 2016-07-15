@@ -1,6 +1,5 @@
 using System;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 using MazeRunner.Shared.Interfaces;
 
@@ -18,9 +17,6 @@ namespace MazeRunner.TestbedUI.Helpers
             textbox.SelectionStart = textbox.TextLength;
             textbox.ScrollToCaret();
         }
-
-        static internal void Post(this SynchronizationContext context, SendOrPostCallback callback) => context.Post(callback, null);
-        static internal void Send(this SynchronizationContext context, SendOrPostCallback callback) => context.Send(callback, null);
 
         static private readonly Regex TrailingNonWhitespaceChars = new Regex(@"[^\s]{1,10}$", RegexOptions.IgnoreCase);
         static private readonly Regex PrependedNonWhitespaceChars = new Regex(@"^[^\s]{1,10}", RegexOptions.IgnoreCase);

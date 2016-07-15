@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -100,22 +101,23 @@ namespace MazeRunner.EnginesFactory.Benchmark
 
                     var crashes = 0;
                     var pathlengths = new List<int>(repetitions);
+                    var shortestpath = (IList<Point>) null;
                     var timedurations = new List<TimeSpan>(repetitions);
 
                     var ii = 0;
-                    var starting = new EventHandler((s, ea) =>
+                    var lapstarting = new EventHandler((s, ea) =>
                     {
                         stopWatch.Restart();
-                        OnlapStarting(new LapStartingEventArgs());
+                        OnLapStarting(new LapStartingEventArgs {LapIndex = ii});
                     });
-                    var concluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
+                    var lapconcluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
                     {
                         try
                         {
                             stopWatch.Stop(); //order
-                            if (ea.Status == ConclusionStatusTypeEnum.Crashed)
+                            if (ea.Status == ConclusionStatusTypeEnum.Cancelled || ea.Status == ConclusionStatusTypeEnum.Crashed)
                             {
-                                crashes++;
+                                if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
                                 return;
                             }
                             timedurations.Add(stopWatch.Elapsed); //order
@@ -123,14 +125,15 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         }
                         finally
                         {
-                            OnlapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
+                            shortestpath = (shortestpath?.Count ?? int.MaxValue) > eng.TrajectoryLength ? eng.Trajectory.ToList() : shortestpath; //0 tolist
+                            OnLapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
                         }
                     });
 
                     try
                     {
-                        eng.Starting += starting;
-                        eng.Concluded += concluded;
+                        eng.Starting += lapstarting;
+                        eng.Concluded += lapconcluded;
                         for (var i = 0; i < repetitions; i++, eng.Reset())
                         {
                             eng.Run(cancellationToken); //safe
@@ -139,8 +142,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
                     }
                     finally
                     {
-                        eng.Starting -= starting;
-                        eng.Concluded -= concluded;
+                        eng.Starting -= lapstarting;
+                        eng.Concluded -= lapconcluded;
                     }
 
                     pathlengths.Sort();
@@ -150,6 +153,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         Engine = eng,
                         Crashes = crashes,
                         Repetitions = repetitions,
+                        ShortestPath = shortestpath ?? new List<Point>(0),
                         BestPathLength = pathlengths.First(),
                         WorstPathLength = pathlengths.Last(),
                         AveragePathLength = pathlengths.Average(),
@@ -164,7 +168,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
                 OnAllDone();
             }
         }
-
+        //0 its crucial to snapshot the bestpath by means of tolist because the engine state gets reseted from one lap to the next and with it the trajectory
+        //  property gets wiped clean
 
         protected virtual void OnAllDone()
         {
@@ -178,8 +183,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
             _launching?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnlapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
-        protected virtual void OnlapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
+        protected virtual void OnLapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
+        protected virtual void OnLapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea) => _singleEngineTestsCompleted?.Invoke(this, ea);
         

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -51,38 +52,41 @@ namespace MazeRunner.TestbedUI
             _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
             lbxkEnginesToBenchmark.ItemCheck += (s, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
 
-            _enginesTestbench.AllDone += (s, eaa) =>
+            _enginesTestbench.AllDone += (s, eaa) => Post(o =>
             {
-                _synchContext.Post(o =>
-                {
-                    txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
-                    UIStateChanged();
-                });
-            };
-            _enginesTestbench.Launching += (s, eaa) => _synchContext.Post(o => UIStateChanged());
-            _enginesTestbench.LapStarting += (s, eaa) => _synchContext.Post(o => ccMazeCanvas.ResetCellsToDefaultColors());
-            _enginesTestbench.LapConcluded += (s, eaa) => _synchContext.Post(o => txtLog.Text += $@"{eaa.LapIndex + 1} ");
+                txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
+                OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
+            });
+            _enginesTestbench.Launching += (s, eaa) => Post(o => OnComponentStateChanged(new ComponentStateChanged("testbench.launching")));
+            _enginesTestbench.LapStarting += (s, eaa) => Post(o =>
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
+                ccMazeCanvas.ResetCellsToDefaultColors();
+            });
+            _enginesTestbench.LapConcluded += (s, eaa) => Post(o => txtLog.AppendTextAndScrollToBottom(@"✓  "));
             _enginesTestbench.SingleEngineTestsStarting += (s, eaa) =>
             {
-                _synchContext.Post(o => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Lap-count: ");
+                Post(o => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetType().Name}'. Completed Laps: ");
                 Thread.Sleep(400);
             };
             _enginesTestbench.SingleEngineTestsCompleted += (s, eaa) =>
             {
-                _synchContext.Post(o => txtLog.AppendTextAndScrollToBottom(
+                Post(o => txtLog.AppendTextAndScrollToBottom(
                     $"{nl2}" +
                     $"Engine: {eaa.Engine.GetType().Name}{nl}" +
-                    $"Number of runs: {eaa.Repetitions} (smooth runs: {eaa.Repetitions - eaa.Crashes}, crashes: {eaa.Crashes}){nl}" +
+                    $"Number of laps: {eaa.Repetitions} (smooth laps: {eaa.Repetitions - eaa.Crashes}, crashes: {eaa.Crashes}){nl}" +
                     $"Path-lengths (Best / Worst / Average): {eaa.BestPathLength} / {eaa.WorstPathLength} / {eaa.AveragePathLength:N2}{nl}" +
-                    $"Time-durations (Best / Worst / Average): {eaa.BestTimePerformance.TotalMilliseconds}ms / {eaa.WorstTimePerformance.TotalMilliseconds}ms / {eaa.AverageTimePerformance.TotalMilliseconds:N2}ms{nl}"));
+                    $"Time-durations (Best / Worst / Average): {eaa.BestTimePerformance.TotalMilliseconds}ms / {eaa.WorstTimePerformance.TotalMilliseconds}ms / {eaa.AverageTimePerformance.TotalMilliseconds:N2}ms{nl}" +
+                    $"Best (shortest) Path Found (coordinates are one-based, not zero-based):{nl2}{string.Join(" -> ", eaa.ShortestPath.Select(p => $"({p.X + 1},{p.Y + 1})"))}{nl}"));
 
                 Thread.Sleep(1300);
             };
 
-            UIStateChanged();
+            OnComponentStateChanged(new ComponentStateChanged("form.onload"));
         }
 
-        private void UIStateChanged()
+        // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
+        private void OnComponentStateChanged(ComponentStateChanged ea)
         {
             var testsUnderway = _enginesTestbench.Running;
 
@@ -119,7 +123,7 @@ namespace MazeRunner.TestbedUI
             {
                 if (!delayIsSmall && !mazeTooLarge) //0
                 {
-                    _synchContext.Post(o =>
+                    Post(o =>
                     {
                         if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
                         if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
@@ -226,10 +230,11 @@ namespace MazeRunner.TestbedUI
             }
         }
 
+        private void Post(SendOrPostCallback callback, object data = null) => _synchContext.Post(callback, data);
+        //private void Send(SendOrPostCallback callback, object data = null) => _synchContext.Send(callback, data);
+
         protected DialogResult ShowMessageSafe(string text, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Error, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Exception ex = null, IWin32Window owner = null)
-        {
-            return MessageBox.Show(owner ?? this, text, caption, buttons, icon, defaultButton);
-        }
+            => MessageBox.Show(owner ?? this, text, caption, buttons, icon, defaultButton);
 
         [Obfuscation(Exclude = true, ApplyToMembers = true)] //0
         private sealed class EngineEntry
@@ -238,6 +243,18 @@ namespace MazeRunner.TestbedUI
             public bool Selected { get; set; }
         }
         //0 we could have reduce this to [Obfuscation] but it wouldnt be that clear what we are after in terms of obfuscation
+
+        [DebuggerDisplay("{DebuggerDisplayProxy,nq}")]
+        internal sealed class ComponentStateChanged
+        {
+            private readonly string _description;
+            public ComponentStateChanged(string description)
+            {
+                _description = description;
+            }
+
+            internal string DebuggerDisplayProxy() => _description;
+        }
 
         static private readonly string nl = Utilities.nl;
         static private readonly string nl2 = Utilities.nl2;
