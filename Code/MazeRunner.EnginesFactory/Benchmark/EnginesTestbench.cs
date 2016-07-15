@@ -106,16 +106,16 @@ namespace MazeRunner.EnginesFactory.Benchmark
                     var starting = new EventHandler((s, ea) =>
                     {
                         stopWatch.Restart();
-                        OnlapStarting(new LapStartingEventArgs());
+                        OnLapStarting(new LapStartingEventArgs {LapIndex = ii});
                     });
                     var concluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
                     {
                         try
                         {
                             stopWatch.Stop(); //order
-                            if (ea.Status == ConclusionStatusTypeEnum.Crashed)
+                            if (ea.Status == ConclusionStatusTypeEnum.Cancelled || ea.Status == ConclusionStatusTypeEnum.Crashed)
                             {
-                                crashes++;
+                                if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
                                 return;
                             }
                             timedurations.Add(stopWatch.Elapsed); //order
@@ -123,7 +123,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         }
                         finally
                         {
-                            OnlapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
+                            OnLapConcluded(new LapConcludedEventArgs { Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng }); //order
                         }
                     });
 
@@ -178,8 +178,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
             _launching?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnlapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
-        protected virtual void OnlapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
+        protected virtual void OnLapStarting(LapStartingEventArgs ea) => _lapStarting?.Invoke(this, ea);
+        protected virtual void OnLapConcluded(LapConcludedEventArgs ea) => _lapConcluded?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea) => _singleEngineTestsStarting?.Invoke(this, ea);
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea) => _singleEngineTestsCompleted?.Invoke(this, ea);
         
