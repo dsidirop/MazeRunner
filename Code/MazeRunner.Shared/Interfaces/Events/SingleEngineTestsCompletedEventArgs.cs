@@ -28,8 +28,7 @@ namespace MazeRunner.Shared.Interfaces.Events
 
         public string ToString(bool includeShortestPath)
         {
-            return $"[#{BenchmarkId}] All laps completed for engine '{Engine.GetEngineName()}':{U.nl2}" +
-                   $"Engine: {Engine.GetEngineName()}{U.nl}" +
+            return $"Engine: {Engine.GetEngineName()}{U.nl}" +
                    $"Number of laps: {Repetitions} (smooth laps: {Repetitions - Crashes}, crashes: {Crashes}){U.nl}" +
                    $"Path-lengths (Best / Worst / Average): {BestPathLength} / {WorstPathLength} / {AveragePathLength:N2}{U.nl}" +
                    $"Time-durations (Best / Worst / Average): {BestTimePerformance.TotalMilliseconds}ms / {WorstTimePerformance.TotalMilliseconds}ms / {AverageTimePerformance.TotalMilliseconds:N2}ms" +

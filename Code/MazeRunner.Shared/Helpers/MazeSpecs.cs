@@ -1,4 +1,4 @@
-namespace MazeRunner.Shared.Helpers
+﻿namespace MazeRunner.Shared.Helpers
 {
     public sealed class MazeSpecs
     {

@@ -227,7 +227,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
 
         protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea)
         {
-            Tracer.TraceInformation(ea.ToString(includeShortestPath: false));
+            Tracer.TraceInformation($"[#{ea.BenchmarkId}] All laps completed for engine '{ea.Engine.GetEngineName()}':{U.nl2}{ea.ToString(includeShortestPath: false)}");
 
             _singleEngineTestsCompleted?.Invoke(this, ea);
         }
