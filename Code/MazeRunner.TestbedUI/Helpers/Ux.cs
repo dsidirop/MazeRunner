@@ -1,14 +1,11 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.TestbedUI.Helpers
 {
-    static internal class UtilsX
+    static internal class Ux //utility extensions
     {
-        static internal MazeSpecs GetMazeSpecs(this IMaze maze) => new MazeSpecs {Height = maze.Size.Height, Width = maze.Size.Width, RoadblockDensity = maze.RoadblocksCount/(((double) maze.Size.Width)*maze.Size.Height)};
-
         static internal void AppendTextAndScrollToBottom(this TextBox textbox, string textToAppend)
         {
             textbox.Text += textToAppend;

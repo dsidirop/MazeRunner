@@ -21,6 +21,75 @@ Quickstart (Command Line Flavor):
 
 	      MazeRunner.Controller.exe  --engines=all  --mazefile=maze10x10.txt  --repeat=30
 
+# Logging / Tracing:
+
+To enable logging simply copy paste the following block into MazeRunner.TestbedUI.exe.config (inside the build directory, after you build the project successfully) replacing its pre-existing contents.
+Just make sure to replace 'C:\path\to\your\Desktop' with your preferred output directory:
+
+    <?xml version="1.0" encoding="utf-8" ?>
+    <configuration>
+      <startup>
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.6.1" />
+      </startup>
+    
+      <!-- quick tip   you may use svctraceviewer to easily inspect any of the generated xml logfiles -->
+      <system.diagnostics>
+        <trace autoflush="true"/>
+        <sources>
+          <source name="EnginesTestbench"
+                  switchName="EnginesTestbenchSwitch"
+                  switchType="System.Diagnostics.SourceSwitch" >
+            <listeners>
+              <clear/>
+              <add name="textwriterListener"
+                   type="System.Diagnostics.XmlWriterTraceListener"
+                   initializeData="C:\path\to\your\Desktop\EnginesTestbenchLog.xml"
+                   traceOutputOptions="DateTime" />
+            </listeners>
+          </source>
+          <source name="EnginesFactorySingleton"
+                  switchName="EnginesFactorySingletonSwitch"
+                  switchType="System.Diagnostics.SourceSwitch" >
+            <listeners>
+              <clear/>
+              <add name="textwriterListener"
+                   type="System.Diagnostics.XmlWriterTraceListener"
+                   initializeData="C:\path\to\your\Desktop\EnginesFactorySingletonLog.xml"
+                   traceOutputOptions="DateTime" />
+            </listeners>
+          </source>
+          <source name="MazeRunnerSimpleDepthFirstEngine"
+                  switchName="MazeRunnerSimpleDepthFirstEngineSwitch"
+                  switchType="System.Diagnostics.SourceSwitch" >
+            <listeners>
+              <clear/>
+              <add name="textwriterListener"
+                   type="System.Diagnostics.XmlWriterTraceListener"
+                   initializeData="C:\path\to\your\Desktop\MazeRunnerSimpleDepthFirstEngineLog.xml"
+                   traceOutputOptions="DateTime" />
+            </listeners>
+          </source>
+          <source name="MazeRunnerDepthFirstAvoidPathfoldingEngine"
+                  switchName="MazeRunnerDepthFirstAvoidPathfoldingEngineSwitch"
+                  switchType="System.Diagnostics.SourceSwitch" >
+            <listeners>
+              <clear/>
+              <add name="textwriterListener"
+                   type="System.Diagnostics.XmlWriterTraceListener"
+                   initializeData="C:\path\to\your\Desktop\MazeRunnerDepthFirstAvoidPathfoldingEngineLog.xml"
+                   traceOutputOptions="DateTime" />
+            </listeners>
+          </source>
+        </sources>
+        <switches>
+          <add name="EnginesTestbenchSwitch" value="Verbose" />
+          <add name="EnginesFactorySingletonSwitch" value="Verbose" />
+          <add name="MazeRunnerSimpleDepthFirstEngineSwitch" value="Verbose" />
+          <add name="MazeRunnerDepthFirstAvoidPathfoldingEngineSwitch" value="Verbose" />
+        </switches>
+      </system.diagnostics>
+    </configuration>
+		  
 # External Dependendencies
 
 	- Moq

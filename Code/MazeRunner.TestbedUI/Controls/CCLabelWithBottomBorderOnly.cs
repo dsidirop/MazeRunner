@@ -10,7 +10,7 @@ namespace MazeRunner.TestbedUI.Controls
     {
         public override string Text
         {
-            set { base.Text = UtilsX.GenerateEllipsisInMiddle(value, maxLength: 50); }
+            set { base.Text = Ux.GenerateEllipsisInMiddle(value, maxLength: 50); }
         }
 
         protected override void OnPaint(PaintEventArgs e)

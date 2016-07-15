@@ -6,7 +6,7 @@ namespace MazeRunner.TestbedUI.Controls
     {
         public CCDoubleBufferedTableLayoutPanel()
         {
-            DoubleBuffered = true;
+            DoubleBuffered = true; //helps alot with performance when it comes to refreshing ccmaze control
         }
     }
 }

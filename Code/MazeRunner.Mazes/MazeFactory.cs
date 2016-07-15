@@ -24,8 +24,8 @@ namespace MazeRunner.Mazes
 
             var roadblocksCount = (int) (totalSquareCount*roadblocksDensity);
             roadblocksCount = Math.Min(roadblocksCount, (int) totalSquareCount - 2); //0
-            var randomIndeces = Utilities.GenerateRandomNumbersWithoutDuplicates(count: roadblocksCount + 2, min: 0, maxExclusive: (int) totalSquareCount); //1
-            var exitAndEntrypointIndeces = Utilities.GenerateRandomNumbersWithoutDuplicates(count: 2, min: 0, maxExclusive: randomIndeces.Count).Values.Cast<int>().ToList(); //2
+            var randomIndeces = U.GenerateRandomNumbersWithoutDuplicates(count: roadblocksCount + 2, min: 0, maxExclusive: (int) totalSquareCount); //1
+            var exitAndEntrypointIndeces = U.GenerateRandomNumbersWithoutDuplicates(count: 2, min: 0, maxExclusive: randomIndeces.Count).Values.Cast<int>().ToList(); //2
 
             var exitPointLinear = randomIndeces[exitAndEntrypointIndeces[0]];
             var exitPointAsCoords = ConvertLinearIndexToCoords(exitPointLinear, width);

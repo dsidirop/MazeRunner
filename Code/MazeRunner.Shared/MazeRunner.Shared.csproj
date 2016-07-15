@@ -43,23 +43,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\ConcludedEventArgs.cs" />
+    <Compile Include="Helpers\MazeSpecs.cs" />
+    <Compile Include="Interfaces\Events\AllDoneEventArgs.cs" />
+    <Compile Include="Interfaces\Events\CommencingEventArgs.cs" />
+    <Compile Include="Interfaces\Events\ConcludedEventArgs.cs" />
     <Compile Include="Interfaces\IEnginesTestbench.cs" />
     <Compile Include="Interfaces\IEnginesFactory.cs" />
     <Compile Include="Interfaces\IMazeRunnerEngine.cs" />
     <Compile Include="Helpers\MazeSquare.cs" />
-    <Compile Include="Interfaces\LapConcludedEventArgs.cs" />
-    <Compile Include="Interfaces\LapStartingEventArgs.cs" />
-    <Compile Include="Interfaces\SingleEngineTestsCompletedEventArgs.cs" />
-    <Compile Include="Interfaces\SingleEngineTestsStartingEventArgs.cs" />
-    <Compile Include="Interfaces\StateChangedEventArgs.cs" />
+    <Compile Include="Interfaces\Events\LapConcludedEventArgs.cs" />
+    <Compile Include="Interfaces\Events\LapStartingEventArgs.cs" />
+    <Compile Include="Interfaces\Events\SingleEngineTestsCompletedEventArgs.cs" />
+    <Compile Include="Interfaces\Events\SingleEngineTestsStartingEventArgs.cs" />
+    <Compile Include="Interfaces\Events\StateChangedEventArgs.cs" />
     <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Properties\CommonAssemblyVersionInfo.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Interfaces\IMaze.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\ReorderableDictionary.cs" />
-    <Compile Include="Helpers\Utilities.cs" />
+    <Compile Include="Helpers\U.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

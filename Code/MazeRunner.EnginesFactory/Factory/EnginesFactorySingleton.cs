@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,8 @@ namespace MazeRunner.EnginesFactory.Factory
 {
     public class EnginesFactorySingleton : IEnginesFactory
     {
+        public readonly TraceSource Tracer = new TraceSource(nameof(EnginesFactorySingleton), SourceLevels.Off);
+
         private Dictionary<string, Type> _engines;
 
         public IReadOnlyCollection<string> EnginesNames
@@ -39,25 +42,29 @@ namespace MazeRunner.EnginesFactory.Factory
             {
                 if (_engines != null) return;
 
-                _engines = Directory.GetFiles(Utilities.ProductInstallationFolderpath_system, "MazeRunner.Engine.*.dll") //1
+                var dllFilesToScan = Directory.GetFiles(U.ProductInstallationFolderpath_system, "MazeRunner.Engine.*.dll");
+
+                _engines = dllFilesToScan //1
                     .SelectMany(TryLoadAssemblyAndGetExportedTypes)
                     .Where(x => x.IsClass && !x.IsAbstract && x.GetInterfaces().Contains(TypeOfIMazeRunnerEngine))
                     .ToDictionary(x => x.Name, x => x, StringComparer.InvariantCultureIgnoreCase);
+
+                Tracer.TraceInformation($"Factory initialization complete. Scanned {dllFilesToScan.Length} dlls:{U.nl2}{string.Join(U.nl, dllFilesToScan)}{U.nl2}Found {_engines.Count} engines:{U.nl2}{string.Join(U.nl, EnginesNames)}");
             }
         }
         //0 play it safe in terms of ensuring threadsafe init
         //1 scan engines dynamically from all dlls that are named after the pattern mazerunner.engine.xyz.dll   if someone wants to add his own engine he can just
         //  drop his dll into the directory with the rest of the dlls
 
-        static private Type[] TryLoadAssemblyAndGetExportedTypes(string filepath)
+        private Type[] TryLoadAssemblyAndGetExportedTypes(string filepath)
         {
             try
             {
                 return Assembly.LoadFrom(filepath).GetExportedTypes();
             }
-            catch
+            catch (Exception ex)
             {
-                //todo log
+                Tracer.TraceInformation($"Failed to load assembly '{filepath}' to scan the engines it provides:{U.nl2}{ex}");
                 return new Type[] {};
             }
         }

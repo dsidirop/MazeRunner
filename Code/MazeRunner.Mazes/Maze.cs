@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using MazeRunner.Shared;
+using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Mazes
@@ -52,5 +53,7 @@ namespace MazeRunner.Mazes
             return _roadblocks.Contains(p) ? MazeHitTestEnum.Roadblock : MazeHitTestEnum.Free;
         }
         //0 its convenient to regard all points outside the confines of the maze as points comprised solely of roadblocks
+
+        public override string ToString() => $"EntryPoint = {Entrypoint}, ExitPoint = {Exitpoint}, RxC = {Size.Height} x {Size.Width}, WallDensity% = {this.GetMazeSpecs().RoadblockDensity}%";
     }
 }
