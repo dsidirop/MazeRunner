@@ -125,7 +125,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         try
                         {
                             stopWatch.Stop(); //order
-                            if (ea.Status == ConclusionStatusTypeEnum.Cancelled || ea.Status == ConclusionStatusTypeEnum.Crashed)
+                            if (ea.Status == ConclusionStatusTypeEnum.Stopped || ea.Status == ConclusionStatusTypeEnum.Crashed)
                             {
                                 if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
                                 return;

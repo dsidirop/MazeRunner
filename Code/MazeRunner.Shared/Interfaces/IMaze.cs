@@ -9,6 +9,7 @@ namespace MazeRunner.Shared.Interfaces
         Point Entrypoint { get; }
         int RoadblocksCount { get; }
 
+        bool Contains(Point p);
         MazeHitTestEnum HitTest(Point p);
 
         string ToString(); //specs

@@ -369,7 +369,7 @@ namespace MazeRunner.TestbedUI
             this.nudMovementDelay.TabIndex = 1;
             this.nudMovementDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudMovementDelay.Value = new decimal(new int[] {
-            30,
+            100,
             0,
             0,
             0});
