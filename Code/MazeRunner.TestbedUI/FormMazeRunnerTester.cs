@@ -96,12 +96,14 @@ namespace MazeRunner.TestbedUI
 
         private const int MaxMazeArea = 800;
         private const int MinDelayThreshold = 20;
-        private void btnStart_Click(object sender, EventArgs ea)
+        private async void btnStart_Click(object sender, EventArgs ea)
         {
             var delay = (int)nudMovementDelay.Value;
 
             var delayIsSmall = delay < MinDelayThreshold;
             var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
+            var performLiveUpdate = !delayIsSmall && !mazeTooLarge;
+
             if (mazeTooLarge)
             {
                 ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -114,7 +116,7 @@ namespace MazeRunner.TestbedUI
             var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
             enginesToBenchmark.ForEach(x => x.StateChanged += (s, eaa) =>
             {
-                if (!delayIsSmall && !mazeTooLarge) //0
+                if (performLiveUpdate) //0
                 {
                     Post(o =>
                     {
@@ -122,13 +124,13 @@ namespace MazeRunner.TestbedUI
                         if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
                     });
                 }
-                
-                if (delay > 0) Thread.Sleep(delay);
+
+                if (!delayIsSmall) Thread.Sleep(delay);
             });
 
             _tokenSource?.Dispose(); //order
             _tokenSource = new CancellationTokenSource(); //order
-            _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token); //order
+            await _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token);
         }
         //0 if the delay is set to low there is no point to try and update the ui because the gdi infstracture simply cant cope to the constant spamming and freezes for quite some time
 
