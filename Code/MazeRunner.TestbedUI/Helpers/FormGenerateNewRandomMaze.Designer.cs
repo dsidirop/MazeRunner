@@ -194,6 +194,11 @@ namespace MazeRunner.TestbedUI.Helpers
             // nudWidth
             // 
             this.nudWidth.Location = new System.Drawing.Point(48, 3);
+            this.nudWidth.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
             this.nudWidth.Name = "nudWidth";
             this.nudWidth.Size = new System.Drawing.Size(80, 21);
             this.nudWidth.TabIndex = 1;
@@ -207,6 +212,11 @@ namespace MazeRunner.TestbedUI.Helpers
             // nudHeight
             // 
             this.nudHeight.Location = new System.Drawing.Point(192, 3);
+            this.nudHeight.Maximum = new decimal(new int[] {
+            276447232,
+            23283,
+            0,
+            0});
             this.nudHeight.Name = "nudHeight";
             this.nudHeight.Size = new System.Drawing.Size(80, 21);
             this.nudHeight.TabIndex = 2;

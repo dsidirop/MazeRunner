@@ -49,17 +49,27 @@ namespace MazeRunner.TestbedUI.Controls
         {
             if (!_maze.Contains(cellCoords)) throw new ArgumentOutOfRangeException(nameof(cellCoords));
 
+            var add = false;
             var label = tlpMesh.GetControlFromPosition(column: cellCoords.X, row: cellCoords.Y);
             if (label == null)
             {
-                label = SpawnCellControl(color, FontForSimpleCells, textToAppend);
-                tlpMesh.Controls.Add(label, column: cellCoords.X, row: cellCoords.Y);
+                add = true;
+                label = SpawnCellControl(color, FontForSimpleCells, "");
+            }
+            else
+            {
+                label.Font = FontForSimpleCells;
+                label.BackColor = color;
             }
 
-            label.BackColor = color;
             if (!string.IsNullOrEmpty(textToAppend))
             {
                 label.Text += $"{(string.IsNullOrEmpty(label.Text) ? "" : (label.Text == StartTag || label.Text == ExitTag ? ": " : ", "))}{textToAppend}";
+            }
+
+            if (add)
+            {
+                tlpMesh.Controls.Add(label, column: cellCoords.X, row: cellCoords.Y); //as an optimization we add the control deadlast after we have set its attributes
             }
 
             return this;
@@ -70,9 +80,14 @@ namespace MazeRunner.TestbedUI.Controls
         {
             try
             {
-                tlpMesh.SuspendLayout();
+                tlpMesh.SuspendDrawing().SuspendLayout(); //0 suspenddrawing
+                Controls.Remove(tlpMesh);
 
-                tlpMesh.Controls.Clear();
+                if (tlpMesh.ColumnStyles.Count > _maze.Size.Width || tlpMesh.RowStyles.Count > _maze.Size.Height)
+                {
+                    tlpMesh.Controls.Clear(); //the only quick and safe way to drop labels in squares which are bound to be cutoff
+                }
+
                 while (tlpMesh.ColumnStyles.Count != _maze.Size.Width)
                 {
                     if (tlpMesh.ColumnStyles.Count < _maze.Size.Width)
@@ -103,9 +118,11 @@ namespace MazeRunner.TestbedUI.Controls
             }
             finally
             {
-                tlpMesh.ResumeLayout(performLayout: true);
+                Controls.Add(tlpMesh);
+                tlpMesh.ResumeDrawing(callUpdate: false).ResumeLayout(performLayout: true);
             }
         }
+        //0 using suspenddrawing is necessary to speed up the drawing process 
 
         public void ResetCellsToDefaultColors()
         {
@@ -113,12 +130,13 @@ namespace MazeRunner.TestbedUI.Controls
 
             try
             {
-                tlpMesh.SuspendLayout();
+                tlpMesh.SuspendDrawing();
                 for (var row = 0; row < _maze.Size.Height; row++)
                 {
                     for (var column = 0; column < _maze.Size.Width; column++)
                     {
                         var hittest = _maze.HitTest(new Point(column, row));
+
                         var preexistingLabel = tlpMesh.GetControlFromPosition(column, row);
                         if (hittest == MazeHitTestEnum.Free)
                         {
@@ -141,7 +159,7 @@ namespace MazeRunner.TestbedUI.Controls
             }
             finally
             {
-                tlpMesh.ResumeLayout(performLayout: true);
+                tlpMesh.ResumeDrawing();
             }
         }
         //0 this method is also being used by setupmaze thus it needs to tread carefully when a cell has not filled yet with a control

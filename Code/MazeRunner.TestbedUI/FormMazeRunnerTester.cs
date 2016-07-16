@@ -78,7 +78,7 @@ namespace MazeRunner.TestbedUI
                 Thread.Sleep(1300);
             };
 
-            OnComponentStateChanged(new ComponentStateChanged("form.onload"));
+            OnComponentStateChanged(new ComponentStateChanged("form.onload")); //initui
         }
 
         // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
@@ -97,48 +97,45 @@ namespace MazeRunner.TestbedUI
             reshuffleCurrentMazeToolStripMenuItem.Enabled = !testsUnderway;
         }
 
-        private const int MaxMazeArea = 800;
-        private const int MinDelayThreshold = 100;
+        private const int MaxMazeArea = 500;
+        private const int MinDelayThreshold = 5;
         private async void btnStart_Click(object sender, EventArgs ea)
         {
             var delay = (int) nudMovementDelay.Value;
 
-            var delayIsSmall = delay <= MinDelayThreshold;
+            var delayIsSmall = delay < MinDelayThreshold;
             var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
-            var performLiveUpdate = !delayIsSmall && !mazeTooLarge;
-
             if (mazeTooLarge)
             {
                 ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else if (delayIsSmall)
-            {
-                ShowMessageSafe($"Live Update of Cells will be disabled because the Delay is set to a value which is too small. Use delay > {MinDelayThreshold}ms to enable live-updating.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            
-            var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
-            enginesToBenchmark.ForEach(x => x.StateChanged += (s, eaa) =>
-            {
-                if (performLiveUpdate) //0
-                {
-                    Post(o =>
-                    {
-                        if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                        if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                    });
-                }
 
-                if (!delayIsSmall) Thread.Sleep(delay);
+            var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
+
+            enginesToBenchmark.ForEach(x =>
+            {
+                x.StateChanged += (s, eaa) =>
+                {
+                    if (!mazeTooLarge)
+                    {
+                        Post(o =>
+                        {
+                            if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                            if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                        });
+                    }
+
+                    if (!delayIsSmall) Thread.Sleep(delay);
+                };
             });
 
             _tokenSource?.Dispose(); //order
             _tokenSource = new CancellationTokenSource(); //order
             await _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token);
         }
-        //0 if the delay is set to low there is no point to try and update the ui because the gdi infstracture simply cant cope to the constant spamming and freezes for quite some time
+        //0 if the delay is set to low there is no point to try and update the ui because the gdi infrastructure simply cant cope to the constant spamming and freezes for quite some time
 
-        private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel();
-        // once a tokensource gets cancelled its all over for it    thus we reinstantiate the tokensource inside btnstart_click
+        private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel(); // once a tokensource instance gets cancelled its all over for said instance    we thus reinstantiate the tokensource inside btnstart_click
 
         private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {

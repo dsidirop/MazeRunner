@@ -66,6 +66,6 @@
 
         #endregion
 
-        private CCDoubleBufferedTableLayoutPanel tlpMesh;
+        public CCDoubleBufferedTableLayoutPanel tlpMesh;
     }
 }
