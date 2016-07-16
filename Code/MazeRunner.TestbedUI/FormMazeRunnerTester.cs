@@ -19,6 +19,7 @@ using MazeRunner.TestbedUI.Helpers;
 
 namespace MazeRunner.TestbedUI
 {
+    //todo  using an actual canvas than tlp based canvas might be a better solution overall
     public partial class FormMazeRunnerTester : Form
     {
         private CancellationTokenSource _tokenSource;

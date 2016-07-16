@@ -69,12 +69,14 @@ namespace MazeRunner.TestbedUI.Controls
 
             if (add)
             {
-                tlpMesh.Controls.Add(label, column: cellCoords.X, row: cellCoords.Y); //as an optimization we add the control deadlast after we have set its attributes
+                tlpMesh.Controls.Add(label, column: cellCoords.X, row: cellCoords.Y); //1
             }
 
             return this;
         }
         //0 we need to force a redraw only of a specific cell in the tlp   thus we calculate its client rectangle and invoke invalidate on it followed by update
+        //1 as an optimization we add the control deadlast after we have set its attributes   this is done because if the control gets added and then its properties
+        //  get tweaked it might cause additional invalidated events to be triggered
 
         private void Reinitialize()
         {
