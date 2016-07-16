@@ -87,8 +87,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
 
         public bool Running { get; private set; }
 
-        public void RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null)
-            => Task.Factory.StartNew(() => Run(enginesToTest, repetitions, cancellationToken), cancellationToken ?? CancellationToken.None);
+        public async Task RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null)
+            => await Task.Factory.StartNew(() => Run(enginesToTest, repetitions, cancellationToken), cancellationToken ?? CancellationToken.None);
 
         public void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
         {
@@ -118,7 +118,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                     var lapstarting = new EventHandler((s, ea) =>
                     {
                         stopWatch.Restart();
-                        OnLapStarting(new LapStartingEventArgs { BenchmarkId = benchmarkId, LapIndex = ii, Engine = eng});
+                        OnLapStarting(new LapStartingEventArgs {BenchmarkId = benchmarkId, LapIndex = ii, Engine = eng});
                     });
                     var lapconcluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
                     {
@@ -136,7 +136,7 @@ namespace MazeRunner.EnginesFactory.Benchmark
                         finally
                         {
                             shortestpath = (shortestpath?.Count ?? int.MaxValue) > eng.TrajectoryLength ? eng.Trajectory.ToList() : shortestpath; //0 tolist
-                            OnLapConcluded(new LapConcludedEventArgs { BenchmarkId = benchmarkId, Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng}); //order
+                            OnLapConcluded(new LapConcludedEventArgs {BenchmarkId = benchmarkId, Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng}); //order
                         }
                     });
 
@@ -177,7 +177,8 @@ namespace MazeRunner.EnginesFactory.Benchmark
             }
             catch (Exception ex)
             {
-                OnException(benchmarkId, failedEngine, currentLap, ex);
+                if (!OnException(benchmarkId, failedEngine, currentLap, ex)) return; //stop request
+
                 throw;
             }
             finally
@@ -232,15 +233,16 @@ namespace MazeRunner.EnginesFactory.Benchmark
             _singleEngineTestsCompleted?.Invoke(this, ea);
         }
 
-        private void OnException(int benchmarkId, IMazeRunnerEngine failedEngine, int currentLap, Exception ex)
+        private bool OnException(int benchmarkId, IMazeRunnerEngine failedEngine, int currentLap, Exception ex)
         {
-            if (ex is OperationCanceledException) return; //stop button
+            if (ex is OperationCanceledException) return false; //stop button
 
             Tracer.TraceEvent(TraceEventType.Error, 0,
                 $"[#{benchmarkId}] Benchmark crashed:{U.nl2}" +
                 $"Lap# {currentLap}{U.nl}" +
                 $"Engine being benchmarked: {failedEngine.GetEngineName()}{U.nl}" +
                 $"{ex}");
+            return true;
         }
     }
 }
