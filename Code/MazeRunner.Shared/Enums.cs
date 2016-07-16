@@ -11,7 +11,7 @@
     public enum ConclusionStatusTypeEnum
     {
         Crashed = 0,
-        Cancelled = 1,
+        Stopped = 1,
         Completed = 2
     }
 }

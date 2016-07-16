@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using MazeRunner.Mazes;
+using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 using MazeRunner.TestbedUI.Helpers;
@@ -63,7 +66,7 @@ namespace MazeRunner.TestbedUI
                 txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
                 ccMazeCanvas.ResetCellsToDefaultColors();
             });
-            _enginesTestbench.LapConcluded += (s, eaa) => Post(o => txtLog.AppendTextAndScrollToBottom(@"✓  "));
+            _enginesTestbench.LapConcluded += (s, eaa) => Post(o => txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[eaa.Status]}  "));
             _enginesTestbench.SingleEngineTestsStarting += (s, eaa) =>
             {
                 Post(o => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetEngineName()}'. Completed Laps: ");
@@ -95,12 +98,12 @@ namespace MazeRunner.TestbedUI
         }
 
         private const int MaxMazeArea = 800;
-        private const int MinDelayThreshold = 20;
+        private const int MinDelayThreshold = 100;
         private async void btnStart_Click(object sender, EventArgs ea)
         {
-            var delay = (int)nudMovementDelay.Value;
+            var delay = (int) nudMovementDelay.Value;
 
-            var delayIsSmall = delay < MinDelayThreshold;
+            var delayIsSmall = delay <= MinDelayThreshold;
             var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
             var performLiveUpdate = !delayIsSmall && !mazeTooLarge;
 
@@ -259,5 +262,11 @@ namespace MazeRunner.TestbedUI
         static private readonly Color TrajectorySquareColor = Color.DarkGreen;
         static private readonly Color InvalidatedSquareColor = Color.Gray;
         static private readonly MazeSpecs KickstartMazeSpecs = new MazeSpecs {Width = 10, Height = 10, RoadblockDensity = 0.1};
+        static private readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new ReadOnlyDictionary<ConclusionStatusTypeEnum, string>(new Dictionary<ConclusionStatusTypeEnum, string>
+        {
+            { ConclusionStatusTypeEnum.Crashed, "⚠" },
+            { ConclusionStatusTypeEnum.Completed, "✓" },
+            { ConclusionStatusTypeEnum.Stopped, "✋" }
+        });
     }
 }

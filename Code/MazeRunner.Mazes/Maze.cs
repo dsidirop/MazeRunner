@@ -21,6 +21,8 @@ namespace MazeRunner.Mazes
         public Point Entrypoint { get; }
         public int RoadblocksCount => _roadblocks.Count;
 
+        public bool Contains(Point p) => _rectangle.Contains(p);
+
         public Maze(Size size, Point entrypoint, Point exitpoint, HashSet<Point> roadblocks)
         {
             if (roadblocks == null) throw new ArgumentNullException(nameof(roadblocks)); //0 order

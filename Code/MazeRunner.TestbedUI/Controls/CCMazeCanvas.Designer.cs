@@ -28,26 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tlpMesh = new CCDoubleBufferedTableLayoutPanel();
-            this.tlpMesh.SuspendLayout();
+            this.tlpMesh = new MazeRunner.TestbedUI.Controls.CCDoubleBufferedTableLayoutPanel();
             this.SuspendLayout();
             // 
             // tlpMesh
             // 
             this.tlpMesh.AutoSize = true;
             this.tlpMesh.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpMesh.BackColor = System.Drawing.Color.Transparent;
+            this.tlpMesh.BackColor = System.Drawing.Color.White;
             this.tlpMesh.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tlpMesh.ColumnCount = 2;
             this.tlpMesh.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMesh.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tlpMesh.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tlpMesh.Location = new System.Drawing.Point(0, 0);
             this.tlpMesh.Margin = new System.Windows.Forms.Padding(0);
             this.tlpMesh.Name = "tlpMesh";
             this.tlpMesh.RowCount = 2;
             this.tlpMesh.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMesh.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMesh.Size = new System.Drawing.Size(58, 43);
+            this.tlpMesh.Size = new System.Drawing.Size(59, 43);
             this.tlpMesh.TabIndex = 0;
             // 
             // CCMazeCanvas
@@ -59,9 +58,7 @@
             this.Controls.Add(this.tlpMesh);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CCMazeCanvas";
-            this.Size = new System.Drawing.Size(58, 43);
-            this.tlpMesh.ResumeLayout(false);
-            this.tlpMesh.PerformLayout();
+            this.Size = new System.Drawing.Size(59, 43);
             this.ResumeLayout(false);
             this.PerformLayout();
 

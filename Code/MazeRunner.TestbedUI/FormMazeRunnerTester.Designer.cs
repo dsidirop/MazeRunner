@@ -368,11 +368,6 @@ namespace MazeRunner.TestbedUI
             this.nudMovementDelay.Size = new System.Drawing.Size(119, 21);
             this.nudMovementDelay.TabIndex = 1;
             this.nudMovementDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nudMovementDelay.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
             // 
             // lblMovementDelay
             // 

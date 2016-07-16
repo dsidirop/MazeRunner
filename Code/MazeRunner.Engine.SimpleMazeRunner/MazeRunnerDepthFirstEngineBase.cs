@@ -136,7 +136,7 @@ namespace MazeRunner.Engine.SimpleMazeRunner
             {
                 if (ex is OperationCanceledException)
                 {
-                    conclusionStatusType = ConclusionStatusTypeEnum.Cancelled;
+                    conclusionStatusType = ConclusionStatusTypeEnum.Stopped;
                 }
                 else
                 {

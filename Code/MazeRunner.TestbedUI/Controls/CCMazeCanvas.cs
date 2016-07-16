@@ -47,8 +47,14 @@ namespace MazeRunner.TestbedUI.Controls
 
         public CCMazeCanvas CustomizeCell(Point cellCoords, Color color, string textToAppend = null)
         {
-            var label = tlpMesh.GetControlFromPosition(cellCoords.X, cellCoords.Y);
-            if (label == null) throw new ArgumentOutOfRangeException(nameof(cellCoords));
+            if (!_maze.Contains(cellCoords)) throw new ArgumentOutOfRangeException(nameof(cellCoords));
+
+            var label = tlpMesh.GetControlFromPosition(column: cellCoords.X, row: cellCoords.Y);
+            if (label == null)
+            {
+                label = SpawnCellControl(color, FontForSimpleCells, textToAppend);
+                tlpMesh.Controls.Add(label, column: cellCoords.X, row: cellCoords.Y);
+            }
 
             label.BackColor = color;
             if (!string.IsNullOrEmpty(textToAppend))
@@ -112,17 +118,24 @@ namespace MazeRunner.TestbedUI.Controls
                 {
                     for (var column = 0; column < _maze.Size.Width; column++)
                     {
-                        var properColorAndText = HitTestToColorAndText[_maze.HitTest(new Point(column, row))];
-                        var preexistingControl = tlpMesh.GetControlFromPosition(column, row);
-                        if (preexistingControl == null) //0
+                        var hittest = _maze.HitTest(new Point(column, row));
+                        var preexistingLabel = tlpMesh.GetControlFromPosition(column, row);
+                        if (hittest == MazeHitTestEnum.Free)
+                        {
+                            if (preexistingLabel != null) tlpMesh.Controls.Remove(preexistingLabel);
+                            continue;
+                        }
+
+                        var properColorAndText = HitTestToColorAndText[hittest];
+                        if (preexistingLabel == null) //0
                         {
                             tlpMesh.Controls.Add(SpawnCellControl(properColorAndText.Item1, properColorAndText.Item2, properColorAndText.Item3), column, row);
                             continue;
                         }
 
-                        preexistingControl.Text = properColorAndText.Item3;
-                        preexistingControl.Font = properColorAndText.Item2;
-                        preexistingControl.BackColor = properColorAndText.Item1;
+                        preexistingLabel.Text = properColorAndText.Item3;
+                        preexistingLabel.Font = properColorAndText.Item2;
+                        preexistingLabel.BackColor = properColorAndText.Item1;
                     }
                 }
             }
@@ -133,31 +146,28 @@ namespace MazeRunner.TestbedUI.Controls
         }
         //0 this method is also being used by setupmaze thus it needs to tread carefully when a cell has not filled yet with a control
 
-        static private Label SpawnCellControl(Color color, Font font, string text)
+        static private Label SpawnCellControl(Color color, Font font, string text) => new Label
         {
-            return new Label
-            {
-                Text = text,
-                Font = font,
-                Name = "dummyLabel",
-                Dock = DockStyle.Fill,
-                Size = new Size(20, 20),
-                Margin = new Padding(0),
-                TabIndex = 0,
-                AutoSize = true,
-                Location = new Point(1, 1),
-                BackColor = color,
-                ForeColor = White,
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-        }
+            Text = text,
+            Font = font,
+            Name = "dummyLabel",
+            Dock = DockStyle.Fill,
+            Size = new Size(20, 20),
+            Margin = new Padding(0),
+            TabIndex = 0,
+            AutoSize = true,
+            Location = new Point(1, 1),
+            BackColor = color,
+            ForeColor = White,
+            TextAlign = ContentAlignment.MiddleCenter
+        };
 
         static private readonly Color White = Color.White;
         static private readonly Font FontForSimpleCells = new Font("Tahoma", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
         static private readonly Font FontForStartAndEndCells = new Font("Tahoma", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
         static public readonly Dictionary<MazeHitTestEnum, Tuple<Color, Font, string>> HitTestToColorAndText = new Dictionary<MazeHitTestEnum, Tuple<Color, Font, string>>
         {
-            {MazeHitTestEnum.Free, new Tuple<Color, Font, string>(White, FontForSimpleCells, "")},
+            //{MazeHitTestEnum.Free, new Tuple<Color, Font, string>(White, FontForSimpleCells, "")}, //not needded
             {MazeHitTestEnum.Roadblock, new Tuple<Color, Font, string>(Color.Black, FontForSimpleCells, "")},
             {MazeHitTestEnum.Exitpoint, new Tuple<Color, Font, string>(Color.Green, FontForStartAndEndCells, ExitTag)},
             {MazeHitTestEnum.Entrypoint, new Tuple<Color, Font, string>(Color.Goldenrod, FontForStartAndEndCells, StartTag)}
