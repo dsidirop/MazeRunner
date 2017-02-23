@@ -1,7 +1,4 @@
-﻿using System;
-using System.Dynamic;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MazeRunner.Controller.Engine;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Benchmark;
@@ -10,6 +7,9 @@ using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
+using System;
+using System.Dynamic;
+using System.IO;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -90,7 +90,7 @@ namespace MazeRunner.Tests.IntegrationTests
         [Test]
         [TestCaseSource(nameof(Cases))]
         [Category("Unit.ControllerIntegrationTests")]
-        public void ControllerIntegrationTests_Help_ShouldPass(Tuple<string, string[], int> @case)
+        public void ControllerIntegrationTests_TestCasesSource_ShouldPass(Tuple<string, string[], int> @case)
         {
             // Arrange
             var exitcode = 0;

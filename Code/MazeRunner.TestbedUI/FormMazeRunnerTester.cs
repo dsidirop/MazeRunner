@@ -1,4 +1,9 @@
-﻿using System;
+﻿using MazeRunner.Mazes;
+using MazeRunner.Shared;
+using MazeRunner.Shared.Helpers;
+using MazeRunner.Shared.Interfaces;
+using MazeRunner.TestbedUI.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,11 +14,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
-using MazeRunner.Mazes;
-using MazeRunner.Shared;
-using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Interfaces;
-using MazeRunner.TestbedUI.Helpers;
 
 // ReSharper disable NotAccessedField.Local
 
@@ -43,8 +43,6 @@ namespace MazeRunner.TestbedUI
             lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
             lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
         }
-        //0 the property enginesnames will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
-        //  time consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
 
         protected override void OnLoad(EventArgs ea)
         {
@@ -52,7 +50,7 @@ namespace MazeRunner.TestbedUI
 
             lnkClearLogs.LinkClicked += (s, eaa) => txtLog.Clear();
 
-            _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //order
+            _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //0 enginesnames order
             _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
             lbxkEnginesToBenchmark.ItemCheck += (s, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
 
@@ -81,6 +79,8 @@ namespace MazeRunner.TestbedUI
 
             OnComponentStateChanged(new ComponentStateChanged("form.onload")); //initui
         }
+        //0 the property enginesnames will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
+        //  time consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
 
         // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
         private void OnComponentStateChanged(ComponentStateChanged ea)
@@ -126,7 +126,7 @@ namespace MazeRunner.TestbedUI
                         });
                     }
 
-                    if (!delayIsSmall) Thread.Sleep(delay);
+                    if (!delayIsSmall) Thread.Sleep(delay); //1 todo  github#22
                 };
             });
 
@@ -135,6 +135,7 @@ namespace MazeRunner.TestbedUI
             await _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token);
         }
         //0 if the delay is set to low there is no point to try and update the ui because the gdi infrastructure simply cant cope to the constant spamming and freezes for quite some time
+        //1 todo  githubticket#22  using threadsleep causes the engine performance to degrade and the results reported to be distorted    read the ticket on some possible solutions for this issue
 
         private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel(); // once a tokensource instance gets cancelled its all over for said instance    we thus reinstantiate the tokensource inside btnstart_click
 
@@ -144,8 +145,8 @@ namespace MazeRunner.TestbedUI
             using (var saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Title = @"Save Maze as";
-                saveFileDialog.Filter = $"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
-                saveFileDialog.FileName = $"mazemap_{DateTime.Now.ToString("yyyyMMddHHmmss")}_{ccMazeCanvas.Maze.Size.Height:D5}x{ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
+                saveFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
+                saveFileDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{ccMazeCanvas.Maze.Size.Height:D5}x{ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
                 saveFileDialog.AddExtension = true;
                 saveFileDialog.ValidateNames = true;
                 saveFileDialog.CheckPathExists = true;
@@ -181,7 +182,7 @@ namespace MazeRunner.TestbedUI
                 using (var openFileDialog = new OpenFileDialog())
                 {
                     openFileDialog.Title = @"Select existing backup file";
-                    openFileDialog.Filter = $"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
+                    openFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
                     openFileDialog.ValidateNames = true;
                     openFileDialog.CheckPathExists = true;
                     openFileDialog.CheckFileExists = true;

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Dynamic;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
+using System;
+using System.Drawing;
+using System.Dynamic;
+using System.IO;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -76,7 +76,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
 
         [Test]
         [Category("Unit.MazeFactory")]
-        public void MazeFactory_FromFileInvalidPathBubbleExceptions_BubbleExceptions_ShouldThrowDirectoryNotFoundException()
+        public void MazeFactory_FromFileInvalidPath_BubbleExceptions_ShouldThrowDirectoryNotFoundException()
         {
             // Arrange
             var dubiouspath = "/something/that/doesnt/exist";

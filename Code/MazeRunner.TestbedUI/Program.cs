@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MazeRunner.EnginesFactory.Benchmark;
+﻿using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.TestbedUI.Helpers;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MazeRunner.TestbedUI
 {
