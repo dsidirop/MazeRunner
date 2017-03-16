@@ -8,11 +8,7 @@ namespace MazeRunner.TestbedUI.Helpers
     {
         static internal void AppendTextAndScrollToBottom(this TextBox textbox, string textToAppend)
         {
-            textbox.Text += textToAppend;
-            if (!textbox.Visible) return;
-
-            textbox.SelectionStart = textbox.TextLength;
-            textbox.ScrollToCaret();
+            textbox.AppendText(textToAppend);
         }
 
         static private readonly Regex TrailingNonWhitespaceChars = new Regex(@"[^\s]{1,10}$", RegexOptions.IgnoreCase);

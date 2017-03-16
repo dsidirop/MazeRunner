@@ -1,13 +1,14 @@
-﻿using System;
+﻿using MazeRunner.Shared.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using MazeRunner.Shared.Interfaces;
 
 namespace MazeRunner.Shared.Helpers
 {
@@ -142,6 +143,14 @@ namespace MazeRunner.Shared.Helpers
             foreach (var e in en) action(e, i++);
         }
         // ReSharper restore LoopCanBeConvertedToQuery
+
+
+        static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new ReadOnlyDictionary<ConclusionStatusTypeEnum, string>(new Dictionary<ConclusionStatusTypeEnum, string>
+        {
+            { ConclusionStatusTypeEnum.Crashed, "⚠" },
+            { ConclusionStatusTypeEnum.Completed, "✓" },
+            { ConclusionStatusTypeEnum.Stopped, "✋" }
+        });
 
         static public readonly string nl = Environment.NewLine;
         static public readonly string nl2 = nl + nl;

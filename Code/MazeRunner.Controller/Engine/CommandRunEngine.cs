@@ -26,7 +26,7 @@ namespace MazeRunner.Controller.Engine
                 var maze = _mazesFactory.FromFile(mazefile, suppressExceptions: false);
                 var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToList();
 
-                _enginesBenchmarker.LapConcluded += (s, ea) => //per lap
+                _enginesTestbench.LapConcluded += (s, ea) => //per lap
                 {
                     if (!verbose) return;
 
@@ -36,7 +36,7 @@ namespace MazeRunner.Controller.Engine
                         $"{solution}{nl2}" +
                         $"X=wall, *=trajectory, #=visited{nl}");
                 };
-                _enginesBenchmarker.SingleEngineTestsCompleted += (s, ea) => //final
+                _enginesTestbench.SingleEngineTestsCompleted += (s, ea) => //final
                 {
                     _standardOutput.WriteLine(
                         $"{nl}" +
@@ -46,7 +46,7 @@ namespace MazeRunner.Controller.Engine
                         $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
                 };
 
-                _enginesBenchmarker.Run(enginesToBenchmark, repetitions);
+                _enginesTestbench.Run(enginesToBenchmark, repetitions);
             }
             catch (Exception ex)
             {

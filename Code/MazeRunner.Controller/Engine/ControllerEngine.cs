@@ -1,6 +1,6 @@
-﻿using System.IO;
-using MazeRunner.Mazes;
+﻿using MazeRunner.Mazes;
 using MazeRunner.Shared.Interfaces;
+using System.IO;
 
 namespace MazeRunner.Controller.Engine
 {
@@ -10,15 +10,15 @@ namespace MazeRunner.Controller.Engine
         private readonly TextWriter _standardOutput;
         private readonly IMazesFactory _mazesFactory;
         private readonly IEnginesFactory _enginesFactory;
-        private readonly IEnginesTestbench _enginesBenchmarker;
+        private readonly IEnginesTestbench _enginesTestbench;
 
-        public ControllerEngine(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesBenchmarker, TextWriter standardOutput, TextWriter standardError)
+        public ControllerEngine(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesTestbench, TextWriter standardOutput, TextWriter standardError)
         {
             _mazesFactory = mazesFactory;
             _standardError = standardError;
             _standardOutput = standardOutput;
             _enginesFactory = enginesFactory;
-            _enginesBenchmarker = enginesBenchmarker;
+            _enginesTestbench = enginesTestbench;
         }
 
         public int Run(string[] args)

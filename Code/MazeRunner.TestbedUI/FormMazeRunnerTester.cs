@@ -4,8 +4,6 @@ using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 using MazeRunner.TestbedUI.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -65,7 +63,7 @@ namespace MazeRunner.TestbedUI
                 txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
                 ccMazeCanvas.ResetCellsToDefaultColors();
             });
-            _enginesTestbench.LapConcluded += (s, eaa) => Post(o => txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[eaa.Status]}  "));
+            _enginesTestbench.LapConcluded += (s, eaa) => Post(o => txtLog.AppendTextAndScrollToBottom($@"{U.ConclusionToSymbol[eaa.Status]}  "));
             _enginesTestbench.SingleEngineTestsStarting += (s, eaa) =>
             {
                 Post(o => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetEngineName()}'. Completed Laps: ");
@@ -261,11 +259,5 @@ namespace MazeRunner.TestbedUI
         static private readonly Color TrajectorySquareColor = Color.DarkGreen;
         static private readonly Color InvalidatedSquareColor = Color.Gray;
         static private readonly MazeSpecs KickstartMazeSpecs = new MazeSpecs {Width = 10, Height = 10, RoadblockDensity = 0.1};
-        static private readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new ReadOnlyDictionary<ConclusionStatusTypeEnum, string>(new Dictionary<ConclusionStatusTypeEnum, string>
-        {
-            { ConclusionStatusTypeEnum.Crashed, "⚠" },
-            { ConclusionStatusTypeEnum.Completed, "✓" },
-            { ConclusionStatusTypeEnum.Stopped, "✋" }
-        });
     }
 }
