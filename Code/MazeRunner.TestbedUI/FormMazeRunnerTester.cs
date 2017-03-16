@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Mazes;
-using MazeRunner.Shared;
 using MazeRunner.Shared.Helpers;
 using MazeRunner.Shared.Interfaces;
 using MazeRunner.TestbedUI.Helpers;
@@ -17,7 +16,7 @@ using System.Windows.Forms;
 
 namespace MazeRunner.TestbedUI
 {
-    //todo  using an actual canvas than tlp based canvas might be a better solution overall
+    //todo  using an actual canvas than a tlp based canvas might be a better solution overall
     public partial class FormMazeRunnerTester : Form
     {
         private CancellationTokenSource _tokenSource;
