@@ -1,3 +1,7 @@
+<h1 align=center>
+<img src="Graphics/maze_runner.png" width=50%>
+</h1>
+
 # MazeRunner
 
 Quickstart (Winforms Flavor):
