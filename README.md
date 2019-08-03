@@ -2,7 +2,7 @@
 <img src="Graphics/maze_runner.png" width=50%>
 </h1>
 
-[[AppVeyor]](https://ci.appveyor.com/project/dsidirop/mazerunner-6gvdh)
+# [AppVeyor CI](https://ci.appveyor.com/project/dsidirop/mazerunner-6gvdh)
 
 ![Build status](https://ci.appveyor.com/api/projects/status/github/dsidirop/mazerunner?svg=true)
 
