@@ -10,9 +10,11 @@
 
 # MazeRunner
 
+You will need dotnet9 to be installed on your system.
+
 Quickstart (WinForms Flavor):
  
-	0. Open the project using Code\MazeRunner.sln (Make sure you have Visual Studio 2015+ installed)
+	0. Open the project using Code\MazeRunner.slnx (Make sure you have Visual Studio 2015+ installed)
 	1. Open the nuget package manager console (Tools -> Nuget package manager -> Manage NuGet Packages for Solution) and restore all missing packages (NUnit, Castle.Core, Microsoft.Net.Compilers)
 	   Note that C# files inside the solution will appear to have errors in terms of missing dll-references even after you perform step#1. These are phantom errors and will disappear once you build
 	   the project for the first time.
@@ -22,7 +24,7 @@ Quickstart (WinForms Flavor):
 
 Quickstart (Command Line Flavor):
 
-	0. Open the project using Code\MazeRunner.sln (Make sure you have Visual Studio 2015+ installed)
+	0. Open the project using Code\MazeRunner.slnx (Make sure you have Visual Studio 2015+ installed)
 	1. Open the nuget package manager console (Tools -> Nuget package manager -> Manage NuGet Packages for Solution) and restore all missing packages (NUnit, Castle.Core, Microsoft.Net.Compilers)
 	   Note that C# files inside the solution will appear to have errors in terms of missing dll-references even after you perform step#1. These are phantom errors and will disappear once you build
 	   the project for the first time. 
