@@ -23,8 +23,8 @@ namespace MazeRunner.TestbedUI
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormMazeRunnerTester(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench()));
         }
-        //0 as a small optimization we force the factory to load and scan assemblies asynchronously so that the form may have the enginenames readily available a bit down the road
-        //  without stalling
+        //0 as a small optimization we force the factory to load and scan assemblies asynchronously so that the form may have the enginenames
+        //  readily available a bit down the road without stalling
 
         private class ThreadExceptionHandler
         {
@@ -32,11 +32,8 @@ namespace MazeRunner.TestbedUI
             {
                 var oex = ea.Exception;
                 if (oex is OperationCanceledException) return; //stop button
-
-                var ex = oex as Exception;
-                var exceptionData = ex == null ? $"Exception = {oex.GetType()}{U.nl}FullText = {oex}{U.nl}" : $"Exception = {ex.GetType()}{U.nl}Message = {ex.Message}{U.nl}FullText = {ex}{U.nl}";
                 
-                using (var form = new FormUnhandledException(exceptionData))
+                using (var form = new FormUnhandledException(oex))
                 {
                     form.ShowDialog();
                 }
