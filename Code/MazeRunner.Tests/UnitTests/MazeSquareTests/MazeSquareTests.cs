@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using FluentAssertions;
-using MazeRunner.Shared.Helpers;
+using MazeRunner.Utils;
 using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -41,13 +41,13 @@ namespace MazeRunner.Tests.UnitTests.MazeSquareTests
             {
                 new Point(x: -1, y: 0), new Point(x: 0, y: -1),
                 new Point(x: 1, y: 0), new Point(x: 0, y: 1)
-            }.OrderBy(p => p.Value.X).ThenBy(p => p.Value.Y);
+            }.OrderBy(p => p!.Value.X).ThenBy(p => p.Value.Y);
 
             // Act
             var mazesquare = new MazeSquare(Point.Empty);
 
             // Assert
-            mazesquare.AdjacentSquares.OrderBy(p => p.Value.X).ThenBy(p => p.Value.Y).ShouldBeEquivalentTo(expectedAdjacentPoints);
+            mazesquare.AdjacentSquares.OrderBy(p => p!.Value.X).ThenBy(p => p.Value.Y).Should().BeEquivalentTo(expectedAdjacentPoints);
         }
 
         [Test]
@@ -203,12 +203,14 @@ namespace MazeRunner.Tests.UnitTests.MazeSquareTests
             var point2 = new MazeSquare(new Point(100, 100));
 
             // Act
-            var squareset = new HashSet<MazeSquare>();
-            squareset.Add(point1);
-            squareset.Add(point2); //addifnotpresent
+            var squareset = new HashSet<MazeSquare>
+            {
+                point1,
+                point2 //addifnotpresent
+            };
 
             // Assert
-            squareset.ShouldAllBeEquivalentTo(new[] {point1});
+            squareset.Should().BeEquivalentTo([point1]);
         }
 
         [Test]
@@ -255,7 +257,7 @@ namespace MazeRunner.Tests.UnitTests.MazeSquareTests
             var squareset = new HashSet<MazeSquare> {point1, point2};
 
             // Assert
-            squareset.ShouldAllBeEquivalentTo(new[] {point1, point2});
+            squareset.Should().BeEquivalentTo([point1, point2]);
         }
 
         [Test]
@@ -332,7 +334,7 @@ namespace MazeRunner.Tests.UnitTests.MazeSquareTests
             var squaredict = new ReorderableDictionary<MazeSquare, MazeSquare> {{point1, point1}, {point2, point2}};
 
             // Assert
-            squaredict.Keys.Cast<MazeSquare>().ShouldAllBeEquivalentTo(new[] {point1Clone, point2Clone});
+            squaredict.Keys.Cast<MazeSquare>().Should().BeEquivalentTo([point1Clone, point2Clone]);
         }
 
         [Test]

@@ -10,7 +10,7 @@
 
 # MazeRunner
 
-Quickstart (Winforms Flavor):
+Quickstart (WinForms Flavor):
  
 	0. Open the project using Code\MazeRunner.sln (Make sure you have Visual Studio 2015+ installed)
 	1. Open the nuget package manager console (Tools -> Nuget package manager -> Manage NuGet Packages for Solution) and restore all missing packages (NUnit, Castle.Core, Microsoft.Net.Compilers)
@@ -39,7 +39,7 @@ Quickstart (Command Line Flavor):
 
 # Logging / Tracing:
 
-To enable logging simply copy paste the following block into MazeRunner.TestbedUI.exe.config (inside the build directory, after you build the project successfully) replacing its pre-existing contents.
+To enable logging simply copy-paste the following block into MazeRunner.TestbedUI.exe.config (inside the build directory, after you build the project successfully) replacing its pre-existing contents.
 Just make sure to replace 'C:\path\to\your\Desktop' with your preferred output directory:
 
     <?xml version="1.0" encoding="utf-8" ?>
@@ -106,12 +106,11 @@ Just make sure to replace 'C:\path\to\your\Desktop' with your preferred output d
       </system.diagnostics>
     </configuration>
 		  
-# External Dependendencies
+# External Dependencies
 
 	- Moq
 	- NUnit
 	- Castle.Core
 	- FluentAssertions
-	- Microsoft.Net.Compilers
 
 All these libraries are needed for unit testing except the last one which is there to ensure that the solution will build just fine even in platforms that do not have the latest and greatest C# 6.0 compiler installed (typically build servers that lack the latest version of visual studio).

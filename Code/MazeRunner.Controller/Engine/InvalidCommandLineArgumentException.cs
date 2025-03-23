@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace MazeRunner.Controller.Engine
+namespace MazeRunner.Controller.Engine;
+
+internal class InvalidCommandLineArgumentException : Exception
 {
-    internal class InvalidCommandLineArgumentException : Exception
+    internal InvalidCommandLineArgumentException(string message) : base(message)
     {
-        internal InvalidCommandLineArgumentException(string message) : base(message)
-        {
-        }
     }
 }

@@ -4,13 +4,12 @@ using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 
-namespace MazeRunner.Controller
+namespace MazeRunner.Controller;
+
+internal class Program
 {
-    internal class Program
+    static public void Main(string[] args)
     {
-        static public void Main(string[] args)
-        {
-            Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), Console.Out, Console.Error).Run(args);
-        }
+        Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), Console.Out, Console.Error).Run(args);
     }
 }

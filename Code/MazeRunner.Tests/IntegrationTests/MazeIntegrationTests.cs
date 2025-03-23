@@ -5,8 +5,8 @@ using System.Linq;
 using FluentAssertions;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
-using MazeRunner.Shared.Helpers;
 using MazeRunner.Tests.Properties;
+using MazeRunner.Utils;
 using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -67,10 +67,9 @@ namespace MazeRunner.Tests.IntegrationTests
             });
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.TrajectoryTip.Should().NotBe(null);
         }
-        // Console.WriteLine(printedsolution + $@"{Utilities.nl}------------");
 
         [Test]
         [Repeat(30)]
@@ -89,8 +88,7 @@ namespace MazeRunner.Tests.IntegrationTests
             });
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
         }
-        // Console.WriteLine(printedsolution + $@"{Utilities.nl}------------");
     }
 }

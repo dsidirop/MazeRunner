@@ -1,7 +1,6 @@
-﻿using MazeRunner.Shared;
-using MazeRunner.Shared.Interfaces;
+﻿using System.Drawing;
+using MazeRunner.Contracts;
 using Moq;
-using System.Drawing;
 
 namespace MazeRunner.Tests.TestArtifacts
 {

@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using MazeRunner.Mazes;
-using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Interfaces;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
 using System;
 using System.Drawing;
 using System.Dynamic;
 using System.IO;
+using MazeRunner.Contracts;
+using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -71,7 +71,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: true));
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: false));
 
             // Assert
-            action.ShouldThrow<DirectoryNotFoundException>();
+            action.Should().Throw<DirectoryNotFoundException>();
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidChars, suppressExceptions: false); });
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("Invalid character ! at line 1 column 4");
+            action.Should().Throw<InvalidDataException>().WithMessage("Invalid character ! at line 1 column 4");
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.StrayNewLines, suppressExceptions: false); });
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("Line 2 is empty (only the very last line is allowed to be empty)");
+            action.Should().Throw<InvalidDataException>().WithMessage("Line 2 is empty (only the very last line is allowed to be empty)");
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.Empty, suppressExceptions: false); });
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("Empty");
+            action.Should().Throw<InvalidDataException>().WithMessage("Empty");
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.NoEntrypoint, suppressExceptions: false); });
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("No entrypoint specified");
+            action.Should().Throw<InvalidDataException>().WithMessage("No entrypoint specified");
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.NoExitpoint, suppressExceptions: false); });
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("No exitpoint specified");
+            action.Should().Throw<InvalidDataException>().WithMessage("No exitpoint specified");
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.JaggedMaze, suppressExceptions: false); });
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("Line 2 has different number of columns (7) than the first line (which has 8)");
+            action.Should().Throw<InvalidDataException>().WithMessage("Line 2 has different number of columns (7) than the first line (which has 8)");
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.MinValid1x2, suppressExceptions: false); });
             
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             result.Size.Should().Be(new Size(width: 2, height: 1));
             result.Exitpoint.Should().Be(new Point(x: 1, y: 0));
             result.Entrypoint.Should().Be(new Point(x: 0, y: 0));
@@ -195,12 +195,12 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.Valid3x4, suppressExceptions: false); });
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             result.ToAsciiMap(linesSeparator: U.nl).Should().Be(desired); //0
         }
-        //0 We force the lineseparator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
-        //  If we omit this sort of enforcement then the line seperator that will be used will be \n instead of \r\n which will cause the comparison to fail
-        //  Also bare in mind that git likes to normalize newlines into unixstyle \n newlines which also causes problems all by its own
+        //0 We force the line-separator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
+        //  If we omit this sort of enforcement then the line separator that will be used will be \n instead of \r\n which will cause the comparison to fail
+        //  Also bare in mind that git likes to normalize newlines into unix-style \n newlines which also causes problems all by its own
 
         [Test]
         [Category("Unit.MazeFactory")]
@@ -212,7 +212,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidDoubleEntryPoints, suppressExceptions: false));
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("Maze has two Entry points");
+            action.Should().Throw<InvalidDataException>().WithMessage("Maze has two Entry points");
         }
 
         [Test]
@@ -225,7 +225,7 @@ namespace MazeRunner.Tests.UnitTests.MazeFactoryTests
             var action = new Action(() => new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidDoubleExitPoints, suppressExceptions: false));
 
             // Assert
-            action.ShouldThrow<InvalidDataException>().WithMessage("Maze has two exit points");
+            action.Should().Throw<InvalidDataException>().WithMessage("Maze has two exit points");
         }
     }
 }

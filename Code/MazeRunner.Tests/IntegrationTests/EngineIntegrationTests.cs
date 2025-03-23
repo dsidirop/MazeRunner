@@ -3,9 +3,9 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using MazeRunner.Contracts;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
-using MazeRunner.Shared.Interfaces;
 using MazeRunner.Tests.Properties;
 using NUnit.Framework;
 
@@ -70,7 +70,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var action = new Action(() => engine.Run());
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.TrajectoryTip.Should().NotBe(null);
         }
 
@@ -86,7 +86,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var action = new Action(() => engine.Run());
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.InvalidatedSquares.Any().Should().Be(false);
             engine.TrajectoryTip.Should().Be(maze.Exitpoint);
         }
@@ -103,7 +103,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var action = new Action(() => engine.Run());
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.InvalidatedSquares.Any().Should().Be(false);
             engine.TrajectoryTip.Should().Be(maze.Exitpoint);
         }
@@ -120,7 +120,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var action = new Action(() => engine.Run());
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.InvalidatedSquares.Any().Should().Be(false);
             engine.TrajectoryTip.Should().Be(maze.Exitpoint);
         }
@@ -138,7 +138,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var action = new Action(() => engine.Run());
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.TrajectoryTip.Should().Be(maze.Exitpoint);
         }
 
@@ -155,7 +155,7 @@ namespace MazeRunner.Tests.IntegrationTests
             var action = new Action(() => engine.Run());
 
             // Assert
-            action.ShouldNotThrow();
+            action.Should().NotThrow();
             engine.TrajectoryTip.Should().Be(null);
         }
     }

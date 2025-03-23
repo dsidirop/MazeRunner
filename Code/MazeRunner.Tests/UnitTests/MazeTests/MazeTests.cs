@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using FluentAssertions;
+using MazeRunner.Contracts;
 using MazeRunner.Mazes;
-using MazeRunner.Shared;
-using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Interfaces;
+using MazeRunner.Utils;
 using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -43,10 +42,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(0, 10), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -56,10 +55,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(10, 0), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(10, 0), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -69,10 +68,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(-1, 2), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(-1, 2), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -82,10 +81,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(2, -1), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(2, -1), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -95,10 +94,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(-1, -1), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(-1, -1), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -108,10 +107,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(1, 1), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(1, 1), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -121,10 +120,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(int.MaxValue, int.MaxValue), Point.Empty, new Point(1, 1), new HashSet<Point>()); });
+            var action = new Action(() => { new Maze(new Size(int.MaxValue, int.MaxValue), Point.Empty, new Point(1, 1), []); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("size");
+            action.Should().Throw<ArgumentException>().WithMessage("size");
         }
 
         [Test]
@@ -134,10 +133,10 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             // Arrange
 
             // Act
-            var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, new Point(x: 1, y: 0), new HashSet<Point> {new Point(x: 2, y: 0)}); });
+            var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, new Point(x: 1, y: 0), [new Point(x: 2, y: 0)]); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("roadblocks");
+            action.Should().Throw<ArgumentException>().WithMessage("*roadblocks*");
         }
 
         [Test]
@@ -152,7 +151,7 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             var action = new Action(() => { new Maze(new Size(2, 1), entrypoint, new Point(x: 1, y: 0), roadblocks); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("entrypoint");
+            action.Should().Throw<ArgumentException>().WithMessage("*entrypoint*");
         }
 
         [Test]
@@ -167,7 +166,7 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, exitpoint, roadblocks); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("exitpoint");
+            action.Should().Throw<ArgumentException>().WithMessage("*exitpoint*");
         }
 
         [Test]
@@ -182,7 +181,7 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             var action = new Action(() => { new Maze(new Size(2, 1), entrypoint, new Point(x: 1, y: 0), roadblocks); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("entrypoint");
+            action.Should().Throw<ArgumentException>().WithMessage("*entrypoint*");
         }
 
         [Test]
@@ -197,7 +196,7 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, exitpoint, roadblocks); });
 
             // Assert
-            action.ShouldThrow<ArgumentException>().WithMessage("exitpoint");
+            action.Should().Throw<ArgumentException>().WithMessage("*exitpoint*");
         }
 
         [Test]
@@ -210,15 +209,15 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
             var entrypoint = Point.Empty;
 
             // Act
-            var maze = new Maze(size, entrypoint, exitpoint, new HashSet<Point>()) as IMaze;
+            var maze = new Maze(size, entrypoint, exitpoint, []) as IMaze;
 
             // Assert
             maze.Size.Should().Be(size);
             maze.Exitpoint.Should().Be(exitpoint);
             maze.Entrypoint.Should().Be(entrypoint);
-            maze.HitTest(maze.Exitpoint).ShouldBeEquivalentTo(MazeHitTestEnum.Exitpoint);
-            maze.HitTest(maze.Entrypoint).ShouldBeEquivalentTo(MazeHitTestEnum.Entrypoint);
-            maze.HitTest(new Point(-1, -1)).ShouldBeEquivalentTo(MazeHitTestEnum.Roadblock);
+            maze.HitTest(maze.Exitpoint).Should().Be(MazeHitTestEnum.Exitpoint);
+            maze.HitTest(maze.Entrypoint).Should().Be(MazeHitTestEnum.Entrypoint);
+            maze.HitTest(new Point(-1, -1)).Should().Be(MazeHitTestEnum.Roadblock);
         }
 
         [Test]
@@ -257,7 +256,7 @@ namespace MazeRunner.Tests.UnitTests.MazeTests
                     expectedHittestResult = MazeHitTestEnum.Roadblock;
                 }
 
-                maze.HitTest(x).ShouldBeEquivalentTo(expectedHittestResult, "Square ({0}) was expected to hittest as '{1}' but was found to hittest as '{2}'", x, expectedHittestResult, maze.HitTest(x));
+                maze.HitTest(x).Should().Be(expectedHittestResult, "Square ({0}) was expected to hittest as '{1}' but was found to hittest as '{2}'", x, expectedHittestResult, maze.HitTest(x));
             });
         }
     }
