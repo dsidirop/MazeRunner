@@ -1,4 +1,5 @@
-﻿using MazeRunner.TestbedUI.Controls;
+﻿using System.Windows.Forms;
+using MazeRunner.TestbedUI.Controls;
 
 namespace MazeRunner.TestbedUI
 {

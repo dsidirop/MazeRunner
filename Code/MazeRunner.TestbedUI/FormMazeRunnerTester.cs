@@ -23,14 +23,14 @@ namespace MazeRunner.TestbedUI
         private readonly IMazesFactory _mazesFactory;
         private readonly IEnginesFactory _enginesFactory;
         private readonly IEnginesTestbench _enginesTestbench;
-        private readonly SynchronizationContext _synchContext;
+        private readonly SynchronizationContext _syncContext;
         private readonly BindingList<EngineEntry> _mazeRunnersEnginesDataSource;
 
         public FormMazeRunnerTester(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesTestbench)
         {
             InitializeComponent();
 
-            _synchContext = SynchronizationContext.Current ?? new SynchronizationContext();
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
             _mazesFactory = mazesFactory;
             _enginesFactory = enginesFactory;
             _enginesTestbench = enginesTestbench;
@@ -76,8 +76,8 @@ namespace MazeRunner.TestbedUI
 
             OnComponentStateChanged(new ComponentStateChanged("form.onload")); //initui
         }
-        //0 the property enginesnames will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
-        //  time consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
+        //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
+        //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
 
         // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
         private void OnComponentStateChanged(ComponentStateChanged ea)
@@ -99,42 +99,52 @@ namespace MazeRunner.TestbedUI
         private const int MinDelayThreshold = 5;
         private async void btnStart_Click(object sender, EventArgs ea)
         {
-            var delay = (int) nudMovementDelay.Value;
-
-            var delayIsSmall = delay < MinDelayThreshold;
-            var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
-            if (mazeTooLarge)
+            try
             {
-                ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+                var delay = (int)nudMovementDelay.Value;
 
-            var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
-
-            enginesToBenchmark.ForEach(x =>
-            {
-                x.StateChanged += (s, eaa) =>
+                var delayIsSmall = delay < MinDelayThreshold;
+                var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
+                if (mazeTooLarge)
                 {
-                    if (!mazeTooLarge)
+                    ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
+
+                enginesToBenchmark.ForEach(x =>
+                {
+                    x.StateChanged += (s, eaa) =>
                     {
-                        Post(o =>
+                        if (!mazeTooLarge)
                         {
-                            if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                            if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                        });
-                    }
+                            Post(o =>
+                            {
+                                if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                                if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                            });
+                        }
 
-                    if (!delayIsSmall) Thread.Sleep(delay); //1 todo  github#22
-                };
-            });
+                        if (!delayIsSmall) Thread.Sleep(delay); //1 todo  github#22
+                    };
+                });
 
-            _tokenSource?.Dispose(); //order
-            _tokenSource = new CancellationTokenSource(); //order
-            await _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token);
+                _tokenSource?.Dispose(); //order
+                _tokenSource = new CancellationTokenSource(); //order
+                await _enginesTestbench.RunAsync(enginesToBenchmark, (int)nudIterations.Value, _tokenSource.Token);
+            }
+            catch (Exception ex)
+            {
+                using (var form = new FormUnhandledException(ex))
+                {
+                    form.ShowDialog();
+                }
+            }
         }
         //0 if the delay is set to low there is no point to try and update the ui because the gdi infrastructure simply cant cope to the constant spamming and freezes for quite some time
-        //1 todo  githubticket#22  using threadsleep causes the engine performance to degrade and the results reported to be distorted    read the ticket on some possible solutions for this issue
+        //1 todo  githubticket#22  using thread-sleep causes the engine performance to degrade and the results reported to be distorted    read the ticket on some possible solutions for this issue
 
-        private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel(); // once a tokensource instance gets cancelled its all over for said instance    we thus reinstantiate the tokensource inside btnstart_click
+        private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel(); // once a token-source instance gets cancelled it is all over for said instance    we thus reinstantiate the token-source inside btnstart_click
 
         private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
         {
@@ -224,8 +234,8 @@ namespace MazeRunner.TestbedUI
             }
         }
 
-        private void Post(SendOrPostCallback callback, object data = null) => _synchContext.Post(callback, data);
-        //private void Send(SendOrPostCallback callback, object data = null) => _synchContext.Send(callback, data);
+        private void Post(SendOrPostCallback callback, object data = null) => _syncContext.Post(callback, data);
+        //private void Send(SendOrPostCallback callback, object data = null) => _syncContext.Send(callback, data);
 
         protected DialogResult ShowMessageSafe(string text, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Error, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Exception ex = null, IWin32Window owner = null)
             => MessageBox.Show(owner ?? this, text, caption, buttons, icon, defaultButton);
@@ -236,7 +246,7 @@ namespace MazeRunner.TestbedUI
             public string Name { get; set; }
             public bool Selected { get; set; }
         }
-        //0 we could have reduce this to [Obfuscation] but it wouldnt be that clear what we are after in terms of obfuscation
+        //0 we could have reduced this to [Obfuscation] but it wouldnt be that clear what we are after in terms of obfuscation
 
         [DebuggerDisplay("{DebuggerDisplayProxy,nq}")]
         internal sealed class ComponentStateChanged
