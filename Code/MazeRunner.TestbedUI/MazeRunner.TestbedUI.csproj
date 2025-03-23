@@ -117,16 +117,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj">
-      <Project>{D264CDC6-B5CD-4146-B056-7D22BFE10F75}</Project>
-      <Name>MazeRunner.Mazes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Shared\MazeRunner.Shared.csproj">
-      <Project>{DFD6EB8C-9033-42EC-AE63-803D07DECA2A}</Project>
-      <Name>MazeRunner.Shared</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

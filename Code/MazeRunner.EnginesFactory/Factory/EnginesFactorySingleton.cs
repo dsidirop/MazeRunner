@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using MazeRunner.Contracts;
+using MazeRunner.Utils;
 
 namespace MazeRunner.EnginesFactory.Factory;
 
@@ -26,8 +29,8 @@ public class EnginesFactorySingleton : IEnginesFactory
     {
         EnsureInit();
 
-        var type = (Type) null;
-        if (!_engines.TryGetValue(enginename?.Trim() ?? "", out type)) throw new ArgumentOutOfRangeException(nameof(enginename));
+        if (!_engines.TryGetValue(enginename?.Trim() ?? "", out var type))
+            throw new ArgumentOutOfRangeException(nameof(enginename));
 
         return Activator.CreateInstance(type, maze) as IMazeRunnerEngine;
     }
@@ -63,7 +66,7 @@ public class EnginesFactorySingleton : IEnginesFactory
         catch (Exception ex)
         {
             Tracer.TraceInformation($"Failed to load assembly '{filepath}' to scan the engines it provides:{U.nl2}{ex}");
-            return new Type[] {};
+            return [];
         }
     }
 
@@ -75,5 +78,5 @@ public class EnginesFactorySingleton : IEnginesFactory
     static private readonly Lazy<EnginesFactorySingleton> _lazyInstance = new Lazy<EnginesFactorySingleton>(() => new EnginesFactorySingleton());
     static private readonly Type TypeOfIMazeRunnerEngine = typeof(IMazeRunnerEngine);
 
-    private readonly object _locker = new object();
+    private readonly Lock _locker = new Lock();
 }

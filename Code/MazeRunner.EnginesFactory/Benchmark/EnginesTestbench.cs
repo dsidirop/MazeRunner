@@ -5,10 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MazeRunner.Shared;
-using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Interfaces;
-using MazeRunner.Shared.Interfaces.Events;
+using MazeRunner.Contracts;
+using MazeRunner.Contracts.Events;
+using MazeRunner.Utils;
 
 namespace MazeRunner.EnginesFactory.Benchmark;
 
@@ -110,17 +109,17 @@ public class EnginesTestbench : IEnginesTestbench
                 OnSingleEngineTestsStarting(new SingleEngineTestsStartingEventArgs {BenchmarkId = benchmarkId, Engine = eng});
 
                 var crashes = 0;
-                var pathlengths = new List<int>(repetitions);
-                var shortestpath = (IList<Point>) null;
-                var timedurations = new List<TimeSpan>(repetitions);
+                var pathLengths = new List<int>(repetitions);
+                var shortestPath = (IList<Point>) null;
+                var timeDurations = new List<TimeSpan>(repetitions);
 
                 var ii = 0;
-                var lapstarting = new EventHandler((s, ea) =>
+                var lapStarting = new EventHandler((_, _) =>
                 {
                     stopWatch.Restart();
                     OnLapStarting(new LapStartingEventArgs {BenchmarkId = benchmarkId, LapIndex = ii, Engine = eng});
                 });
-                var lapconcluded = new EventHandler<ConcludedEventArgs>((s, ea) =>
+                var lapConcluded = new EventHandler<ConcludedEventArgs>((_, ea) =>
                 {
                     try
                     {
@@ -130,20 +129,20 @@ public class EnginesTestbench : IEnginesTestbench
                             if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
                             return;
                         }
-                        timedurations.Add(stopWatch.Elapsed); //order
-                        pathlengths.Add(eng.TrajectoryLength); //order
+                        timeDurations.Add(stopWatch.Elapsed); //order
+                        pathLengths.Add(eng.TrajectoryLength); //order
                     }
                     finally
                     {
-                        shortestpath = (shortestpath?.Count ?? int.MaxValue) > eng.TrajectoryLength ? eng.Trajectory.ToList() : shortestpath; //0 tolist
+                        shortestPath = (shortestPath?.Count ?? int.MaxValue) > eng.TrajectoryLength ? eng.Trajectory.ToList() : shortestPath; //0 tolist
                         OnLapConcluded(new LapConcludedEventArgs {BenchmarkId = benchmarkId, Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng}); //order
                     }
                 });
 
                 try
                 {
-                    eng.Starting += lapstarting;
-                    eng.Concluded += lapconcluded;
+                    eng.Starting += lapStarting;
+                    eng.Concluded += lapConcluded;
                     for (var i = 0; i < repetitions; i++, eng.Reset())
                     {
                         currentLap = i;
@@ -153,25 +152,25 @@ public class EnginesTestbench : IEnginesTestbench
                 }
                 finally
                 {
-                    eng.Starting -= lapstarting;
-                    eng.Concluded -= lapconcluded;
+                    eng.Starting -= lapStarting;
+                    eng.Concluded -= lapConcluded;
                 }
 
-                pathlengths.Sort();
-                timedurations.Sort();
+                pathLengths.Sort();
+                timeDurations.Sort();
                 OnSingleEngineTestsCompleted(new SingleEngineTestsCompletedEventArgs
                 {
                     Engine = eng,
                     Crashes = crashes,
                     BenchmarkId = benchmarkId,
                     Repetitions = repetitions,
-                    ShortestPath = shortestpath ?? new List<Point>(0),
-                    BestPathLength = pathlengths.First(),
-                    WorstPathLength = pathlengths.Last(),
-                    AveragePathLength = pathlengths.Average(),
-                    BestTimePerformance = timedurations.First(),
-                    WorstTimePerformance = timedurations.Last(),
-                    AverageTimePerformance = new TimeSpan(Convert.ToInt64(timedurations.Average(timeSpan => timeSpan.Ticks)))
+                    ShortestPath = shortestPath ?? new List<Point>(0),
+                    BestPathLength = pathLengths.First(),
+                    WorstPathLength = pathLengths.Last(),
+                    AveragePathLength = pathLengths.Average(),
+                    BestTimePerformance = timeDurations.First(),
+                    WorstTimePerformance = timeDurations.Last(),
+                    AverageTimePerformance = new TimeSpan(Convert.ToInt64(timeDurations.Average(timeSpan => timeSpan.Ticks)))
                 });
             });
         }
@@ -186,7 +185,7 @@ public class EnginesTestbench : IEnginesTestbench
             OnAllDone(new AllDoneEventArgs {BenchmarkId = benchmarkId});
         }
     }
-    //0 its crucial to snapshot the bestpath by means of tolist because the engine state gets reseted from one lap to the next and with it the trajectory
+    //0 it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory
     //  property gets wiped clean
 
     protected virtual void OnAllDone(AllDoneEventArgs ea)
@@ -228,7 +227,7 @@ public class EnginesTestbench : IEnginesTestbench
 
     protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] All laps completed for engine '{ea.Engine.GetEngineName()}':{U.nl2}{ea.ToString(includeShortestPath: false)}");
+        Tracer.TraceInformation($"[#{ea.BenchmarkId}] All laps completed for engine '{ea.Engine.GetEngineName()}':{U.nl2}{ea.ToStringy(includeShortestPath: false)}");
 
         _singleEngineTestsCompleted?.Invoke(this, ea);
     }

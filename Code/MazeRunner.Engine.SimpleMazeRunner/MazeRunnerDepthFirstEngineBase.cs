@@ -4,10 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
-using MazeRunner.Shared;
-using MazeRunner.Shared.Helpers;
-using MazeRunner.Shared.Interfaces;
-using MazeRunner.Shared.Interfaces.Events;
+using MazeRunner.Contracts;
+using MazeRunner.Contracts.Events;
+using MazeRunner.Utils;
 
 namespace MazeRunner.Engine.SimpleMazeRunner;
 
@@ -55,8 +54,8 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
     public Point? TrajectoryTip
     {
-        get { return _currentTrajectorySquares.Any() ? _currentTrajectorySquares[_currentTrajectorySquares.Count - 1] : (Point?) null; }
-        private set { _currentTrajectorySquares.Add(value.Value, value.Value); }
+        get { return _currentTrajectorySquares.Any() ? _currentTrajectorySquares[_currentTrajectorySquares.Count - 1] : null; }
+        private set { _currentTrajectorySquares.Add(value!.Value, value!.Value); }
     }
 
     public IMaze Maze => _maze;
@@ -66,16 +65,14 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
     protected MazeRunnerDepthFirstEngineBase(IMaze maze, bool avoidPathfolding, TraceSource tracer = null)
     {
-        if (maze == null) throw new ArgumentNullException(nameof(maze));
-
         Tracer = tracer ?? Tracer;
 
-        _maze = maze;
+        _maze = maze ?? throw new ArgumentNullException(nameof(maze));
         _avoidPathfolding = avoidPathfolding;
         _invalidatedSquares = new HashSet<Point>();
         _currentTrajectorySquares = new ReorderableDictionary<Point, Point>(); //0
     }
-    //0 Currenttrajectorysquares is based on a reorderabledictionary so that the insertion order will be available at all times  A simple dictionary wouldnt
+    //0 current-trajectory-squares is based on a reorderable-dictionary so that the insertion order will be available at all times  A simple dictionary wouldnt
     //  cut it because according to ms documentation plain old dictionaries give no guarantees in terms of reporting their items based on their insertion order
 
     public IMazeRunnerEngine Reset()
@@ -85,6 +82,8 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
         return this;
     }
+
+    public abstract string GetEngineName();
 
     public IMazeRunnerEngine Run(CancellationToken? cancellationToken = null)
     {
@@ -104,12 +103,12 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
             {
                 ct.ThrowIfCancellationRequested();
 
-                var randomValidAdjacentSquare = tip.Value.GetAdjacentPoints().Shuffle().FirstOrDefault(candidateSquare => //enforce depthfirst-prone logic on random adjacent square
+                var randomValidAdjacentSquare = tip.Value.GetAdjacentPoints().ToArray().Shuffle().Cast<Point?>().FirstOrDefault(candidateSquare => //enforce depth-first-prone logic on random adjacent square
                 {
-                    return _maze.HitTest(candidateSquare.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
+                    return _maze.HitTest(candidateSquare!.Value) != MazeHitTestEnum.Roadblock //roadblock or out of maze
                            && !_currentTrajectorySquares.Contains(candidateSquare) //already in trajectory
                            && !_invalidatedSquares.Contains(candidateSquare.Value) //ReSharper disable once AssignNullToNotNullAttribute  already invalidated
-                           && (!_avoidPathfolding || candidateSquare.Value.GetAdjacentPoints().Except(new[] {tip}).All(z => !_currentTrajectorySquares.Contains(z))); //to avoid pathfolding we check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
+                           && (!_avoidPathfolding || candidateSquare.Value.GetAdjacentPoints().Except([tip.Value]).All(z => !_currentTrajectorySquares.Contains(z))); //to avoid pathfolding we check if the adjacent square is next to a square of the current trajectory other than the current trajectorytip
                 });
 
                 var newSquareFound = randomValidAdjacentSquare != null;
@@ -119,7 +118,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
                 }
                 else
                 {
-                    _invalidatedSquares.Add(tip.Value); //current trajectorytip has no unvisited adjacent squares that match our
+                    _invalidatedSquares.Add(tip.Value); //current trajectory-tip has no unvisited adjacent squares that match our
                     _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
                 }
 

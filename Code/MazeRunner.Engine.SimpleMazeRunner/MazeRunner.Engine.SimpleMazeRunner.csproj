@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <LangVersion>14</LangVersion>
+        <LangVersion>13</LangVersion>
         <TargetFramework>net9.0</TargetFramework>
         
         <Nullable>disable</Nullable>
         <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
+      <ProjectReference Include="..\MazeRunner.Utils\MazeRunner.Utils.csproj" />
+    </ItemGroup>
 
 </Project>

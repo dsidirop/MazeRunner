@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using MazeRunner.Shared.Interfaces;
+using MazeRunner.Contracts;
 
 namespace MazeRunner.Engine.SimpleMazeRunner;
 
@@ -9,5 +9,10 @@ public class MazeRunnerDepthFirstAvoidPathfoldingEngine : MazeRunnerDepthFirstEn
 
     public MazeRunnerDepthFirstAvoidPathfoldingEngine(IMaze maze) : base(maze, avoidPathfolding: true, tracer: Tracer)
     {
+    }
+
+    public override string GetEngineName()
+    {
+        return nameof(MazeRunnerDepthFirstAvoidPathfoldingEngine);
     }
 }

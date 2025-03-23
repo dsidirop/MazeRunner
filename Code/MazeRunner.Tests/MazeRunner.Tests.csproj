@@ -100,14 +100,6 @@
       <Project>{acda8e1e-d162-48bc-aa4f-66204cc7ae27}</Project>
       <Name>MazeRunner.Controller</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj">
-      <Project>{d264cdc6-b5cd-4146-b056-7d22bfe10f75}</Project>
-      <Name>MazeRunner.Mazes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Shared\MazeRunner.Shared.csproj">
-      <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
-      <Name>MazeRunner.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestArtifacts\MFT_StrayNewLines.txt" />
