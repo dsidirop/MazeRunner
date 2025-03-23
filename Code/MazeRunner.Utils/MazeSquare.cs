@@ -33,5 +33,5 @@ public class MazeSquare
     public override bool Equals(object obj) => Equals(obj as MazeSquare);
     protected bool Equals(MazeSquare other) => ReferenceEquals(this, other) || (!ReferenceEquals(other, null) && Coords.Equals(other.Coords));
 
-    static private readonly List<Point> Offsets = new List<Point> {new Point(x: 0, y: -1), new Point(x: 1, y: 0), new Point(x: 0, y: 1), new Point(x: -1, y: 0)};
+    static private readonly List<Point> Offsets = new() {new Point(x: 0, y: -1), new Point(x: 1, y: 0), new Point(x: 0, y: 1), new Point(x: -1, y: 0)};
 }

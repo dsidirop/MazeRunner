@@ -43,7 +43,7 @@ public class MazesFactory : IMazesFactory
     //2 we need to pick two random indeces for the entry and exit points   we could have picked the first two random linear indeces but that would yield slightly less
     //  random results than the current approach
 
-    static private Point ConvertLinearIndexToCoords(int linearIndex, int lineWidth) => new Point(x: linearIndex % lineWidth, y: linearIndex / lineWidth);
+    static private Point ConvertLinearIndexToCoords(int linearIndex, int lineWidth) => new(x: linearIndex % lineWidth, y: linearIndex / lineWidth);
 
     public IMaze FromFile(string path, bool suppressExceptions = true)
     {

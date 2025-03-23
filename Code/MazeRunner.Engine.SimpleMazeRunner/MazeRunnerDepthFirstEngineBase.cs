@@ -12,7 +12,7 @@ namespace MazeRunner.Engine.SimpleMazeRunner;
 
 public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 {
-    private readonly TraceSource Tracer = new TraceSource(nameof(MazeRunnerDepthFirstEngineBase), SourceLevels.Off); //preferred not to use inheritance for setting this
+    private readonly TraceSource Tracer = new(nameof(MazeRunnerDepthFirstEngineBase), SourceLevels.Off); //preferred not to use inheritance for setting this
 
     private event EventHandler _starting;
     public event EventHandler Starting

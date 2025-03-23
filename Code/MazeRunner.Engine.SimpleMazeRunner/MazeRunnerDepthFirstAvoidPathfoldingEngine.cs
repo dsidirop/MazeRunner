@@ -5,7 +5,7 @@ namespace MazeRunner.Engine.SimpleMazeRunner;
 
 public class MazeRunnerDepthFirstAvoidPathfoldingEngine : MazeRunnerDepthFirstEngineBase
 {
-    static public readonly TraceSource Tracer = new TraceSource(nameof(MazeRunnerDepthFirstAvoidPathfoldingEngine), SourceLevels.Off);
+    static public readonly TraceSource Tracer = new(nameof(MazeRunnerDepthFirstAvoidPathfoldingEngine), SourceLevels.Off);
 
     public MazeRunnerDepthFirstAvoidPathfoldingEngine(IMaze maze) : base(maze, avoidPathfolding: true, tracer: Tracer)
     {

@@ -13,7 +13,7 @@ namespace MazeRunner.EnginesFactory.Benchmark;
 
 public class EnginesTestbench : IEnginesTestbench
 {
-    public readonly TraceSource Tracer = new TraceSource(nameof(EnginesTestbench), SourceLevels.Off);
+    public readonly TraceSource Tracer = new(nameof(EnginesTestbench), SourceLevels.Off);
 
     static private int _benchmarkRuns;
 

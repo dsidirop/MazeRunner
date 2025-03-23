@@ -13,8 +13,8 @@ public partial class CCMazeCanvas : UserControl
 {
     private const int CellEdgeLength = 80;
 
-    private RowStyle StandardRowStyle => new RowStyle(SizeType.Absolute, height: CellEdgeLength);
-    private ColumnStyle StandardColumnStyle => new ColumnStyle(SizeType.Absolute, width: CellEdgeLength);
+    private RowStyle StandardRowStyle => new(SizeType.Absolute, height: CellEdgeLength);
+    private ColumnStyle StandardColumnStyle => new(SizeType.Absolute, width: CellEdgeLength);
 
     private IMaze _maze;
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -171,7 +171,7 @@ public partial class CCMazeCanvas : UserControl
     }
     //0 this method is also being used by setupmaze thus it needs to tread carefully when a cell has not filled yet with a control
 
-    static private Label SpawnCellControl(Color color, Font font, string text) => new Label
+    static private Label SpawnCellControl(Color color, Font font, string text) => new()
     {
         Text = text,
         Font = font,
@@ -188,9 +188,9 @@ public partial class CCMazeCanvas : UserControl
     };
 
     static private readonly Color White = Color.White;
-    static private readonly Font FontForSimpleCells = new Font("Tahoma", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-    static private readonly Font FontForStartAndEndCells = new Font("Tahoma", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-    static public readonly Dictionary<MazeHitTestEnum, Tuple<Color, Font, string>> HitTestToColorAndText = new Dictionary<MazeHitTestEnum, Tuple<Color, Font, string>>
+    static private readonly Font FontForSimpleCells = new("Tahoma", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+    static private readonly Font FontForStartAndEndCells = new("Tahoma", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+    static public readonly Dictionary<MazeHitTestEnum, Tuple<Color, Font, string>> HitTestToColorAndText = new()
     {
         //{MazeHitTestEnum.Free, new Tuple<Color, Font, string>(White, FontForSimpleCells, "")}, //not needed
         {MazeHitTestEnum.Roadblock, new Tuple<Color, Font, string>(Color.Black, FontForSimpleCells, "")},

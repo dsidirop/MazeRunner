@@ -158,7 +158,7 @@ public class MazeSquareTests
         // Arrange
 
         // Act
-        var squareset = new HashSet<MazeSquare> {new MazeSquare(new Point(100, 100))};
+        var squareset = new HashSet<MazeSquare> {new(new Point(100, 100))};
 
         // Assert
         squareset.Contains(squareset.First()).Should().Be(true);

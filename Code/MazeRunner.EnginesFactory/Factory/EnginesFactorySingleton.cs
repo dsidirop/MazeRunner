@@ -12,7 +12,7 @@ namespace MazeRunner.EnginesFactory.Factory;
 
 public class EnginesFactorySingleton : IEnginesFactory
 {
-    public readonly TraceSource Tracer = new TraceSource(nameof(EnginesFactorySingleton), SourceLevels.Off);
+    public readonly TraceSource Tracer = new(nameof(EnginesFactorySingleton), SourceLevels.Off);
 
     private Dictionary<string, Type> _engines;
 
@@ -74,9 +74,9 @@ public class EnginesFactorySingleton : IEnginesFactory
     {
     }
 
-    static public EnginesFactorySingleton I => _lazyInstance.Value;
-    static private readonly Lazy<EnginesFactorySingleton> _lazyInstance = new Lazy<EnginesFactorySingleton>(() => new EnginesFactorySingleton());
+    static public EnginesFactorySingleton I => LazyInstance.Value;
+    static private readonly Lazy<EnginesFactorySingleton> LazyInstance = new(() => new EnginesFactorySingleton());
     static private readonly Type TypeOfIMazeRunnerEngine = typeof(IMazeRunnerEngine);
 
-    private readonly Lock _locker = new Lock();
+    private readonly Lock _locker = new();
 }

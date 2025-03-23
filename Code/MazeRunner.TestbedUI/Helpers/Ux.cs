@@ -11,8 +11,8 @@ static internal class Ux //utility extensions
         textbox.AppendText(textToAppend);
     }
 
-    static private readonly Regex TrailingNonWhitespaceChars = new Regex(@"[^\s]{1,10}$", RegexOptions.IgnoreCase);
-    static private readonly Regex PrependedNonWhitespaceChars = new Regex(@"^[^\s]{1,10}", RegexOptions.IgnoreCase);
+    static private readonly Regex TrailingNonWhitespaceChars = new(@"[^\s]{1,10}$", RegexOptions.IgnoreCase);
+    static private readonly Regex PrependedNonWhitespaceChars = new(@"^[^\s]{1,10}", RegexOptions.IgnoreCase);
     static public string GenerateEllipsisInMiddle(string text, int maxLength = 50, int prefixMaxLength = 0, int postfixMaxLength = 0)
     {
         if (string.IsNullOrEmpty(text) || text.Length < maxLength) return text;

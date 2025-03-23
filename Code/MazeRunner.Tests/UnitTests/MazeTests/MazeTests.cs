@@ -228,7 +228,7 @@ public class MazeTests
         var size = new Size(width: 6, height: 6);
         var exitpoint = new Point(x: 4, y: 4);
         var entrypoint = new Point(x: 2, y: 2);
-        var roadblocks = new HashSet<Point> { new Point(x: 0, y: 0), new Point(x: 1, y: 1), new Point(x: 3, y: 3) };
+        var roadblocks = new HashSet<Point> { new(x: 0, y: 0), new(x: 1, y: 1), new(x: 3, y: 3) };
 
         // Act
         var maze = new Maze(size, entrypoint, exitpoint, roadblocks) as IMaze;

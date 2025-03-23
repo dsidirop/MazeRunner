@@ -25,14 +25,14 @@ static public class U //utilities
 
     // static public string GetEngineName(this IMazeRunnerEngine engine) => engine?.GetType().Name;
 
-    static public MazeSpecs GetMazeSpecs(this IMaze maze) => new MazeSpecs
+    static public MazeSpecs GetMazeSpecs(this IMaze maze) => new()
     {
         Width = maze.Size.Width,
         Height = maze.Size.Height,
         RoadblockDensity = maze.RoadblocksCount / (((double)maze.Size.Width) * maze.Size.Height)
     };
 
-    static private readonly Random RandomNumbersEngine = new Random();
+    static private readonly Random RandomNumbersEngine = new();
     static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive) //max is exclusive here
     {
         if (maxExclusive <= min || count < 0 || (count > maxExclusive - min && maxExclusive - min > 0)) throw new ArgumentOutOfRangeException($"Range {min} to {maxExclusive} ({maxExclusive - (long) min} values) or count {count} is illegal"); //need to use 64bit to support big ranges negative min positive max
@@ -93,10 +93,10 @@ static public class U //utilities
 
     static private readonly Point[] Offsets =
     [
-        new Point(x: 0, y: -1),
-        new Point(x: 1, y: 0),
-        new Point(x: 0, y: 1),
-        new Point(x: -1, y: 0)
+        new(x: 0, y: -1),
+        new(x: 1, y: 0),
+        new(x: 0, y: 1),
+        new(x: -1, y: 0)
     ];
 
     static public string NormalizeNewlines(this string input, string newlineToUse) => Regex.Replace(input, @"\r\n|\n\r|\n|\r", newlineToUse); //the order \r\n|\n\r|\n|\r is important
@@ -171,7 +171,7 @@ static public class U //utilities
     // ReSharper restore LoopCanBeConvertedToQuery
 
 
-    static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new ReadOnlyDictionary<ConclusionStatusTypeEnum, string>(new Dictionary<ConclusionStatusTypeEnum, string>
+    static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new(new Dictionary<ConclusionStatusTypeEnum, string>
     {
         { ConclusionStatusTypeEnum.Crashed, "⚠" },
         { ConclusionStatusTypeEnum.Completed, "✓" },

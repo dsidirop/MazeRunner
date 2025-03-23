@@ -274,5 +274,5 @@ public partial class FormMazeRunnerTester : Form
     static private readonly Color NewTipPositionColor = Color.MediumSeaGreen;
     static private readonly Color TrajectorySquareColor = Color.DarkGreen;
     static private readonly Color InvalidatedSquareColor = Color.Gray;
-    static private readonly MazeSpecs KickstartMazeSpecs = new MazeSpecs {Width = 10, Height = 10, RoadblockDensity = 0.1};
+    static private readonly MazeSpecs KickstartMazeSpecs = new() {Width = 10, Height = 10, RoadblockDensity = 0.1};
 }

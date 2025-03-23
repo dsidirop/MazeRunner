@@ -44,5 +44,5 @@ static internal class CommandUtilsX
 
         return result.Item2;
     }
-    static private readonly Regex SimpleValueParser = new Regex("""^.*?[=]"?(?<Value>.+?)"?$""");
+    static private readonly Regex SimpleValueParser = new("""^.*?[=]"?(?<Value>.+?)"?$""");
 }
