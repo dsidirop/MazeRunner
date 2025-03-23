@@ -100,10 +100,6 @@
       <Project>{acda8e1e-d162-48bc-aa4f-66204cc7ae27}</Project>
       <Name>MazeRunner.Controller</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj">
-      <Project>{6D0F8024-9281-43C3-9B02-9D8C832C3E0F}</Project>
-      <Name>MazeRunner.EnginesFactory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj">
       <Project>{d264cdc6-b5cd-4146-b056-7d22bfe10f75}</Project>
       <Name>MazeRunner.Mazes</Name>
@@ -111,10 +107,6 @@
     <ProjectReference Include="..\MazeRunner.Shared\MazeRunner.Shared.csproj">
       <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
       <Name>MazeRunner.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj">
-      <Project>{00ba4d89-486d-4806-80c5-dc7135960c9a}</Project>
-      <Name>MazeRunner.Engine.SimpleMazeRunner</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
