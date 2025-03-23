@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRunner.TestbedUI", "MazeRunner.TestbedUI\MazeRunner.TestbedUI.csproj", "{FF909708-3A9C-4DF2-9C4F-F2E601DA7957}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EndPoints", "EndPoints", "{4A48FCFE-4776-49FA-8388-81206D29D662}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controllers", "Controllers", "{4A48FCFE-4776-49FA-8388-81206D29D662}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engines", "Engines", "{9CFAAF30-E267-44AD-B4BE-01765D97BF6F}"
 EndProject
