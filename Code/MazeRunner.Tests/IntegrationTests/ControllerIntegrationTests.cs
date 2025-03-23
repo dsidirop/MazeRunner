@@ -1,14 +1,13 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Dynamic;
+using System.IO;
+using FluentAssertions;
 using MazeRunner.Cli.Engine;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Properties;
-using NUnit.Framework;
-using System;
-using System.Dynamic;
-using System.IO;
 using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement

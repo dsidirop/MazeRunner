@@ -31,11 +31,11 @@ Quickstart (Command Line Flavor):
 	3. Open a command prompt and navigate to <project root>\bin\Debug\
 	4. Generate a maze via (you may edit by hand the generated mazefile once you run this command):
 
-	      MazeRunner.Controller.exe  --generatemaze  --width=10  --height=10   --walldensity=0.03  --output=maze10x10.txt
+	      MazeRunner.Cli.exe  --generatemaze  --width=10  --height=10   --walldensity=0.03  --output=maze10x10.txt
 
 	5. Use the maze you just generated to benchmark the engines:
 
-	      MazeRunner.Controller.exe  --engines=all  --mazefile=maze10x10.txt  --repeat=30
+	      MazeRunner.Cli.exe  --engines=all  --mazefile=maze10x10.txt  --repeat=30
 
 # Logging / Tracing:
 

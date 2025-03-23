@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.Name = "🐞 Bug 🐞";
             this.lblOopsThatWasUnexpected = new System.Windows.Forms.Label();
             this.txtExceptionData = new System.Windows.Forms.TextBox();
             this.btnClose = new System.Windows.Forms.Button();
@@ -88,8 +89,7 @@
             this.lblTheApplicationWillNowTerminate.Name = "lblTheApplicationWillNowTerminate";
             this.lblTheApplicationWillNowTerminate.Size = new System.Drawing.Size(935, 13);
             this.lblTheApplicationWillNowTerminate.TabIndex = 3;
-            this.lblTheApplicationWillNowTerminate.Text = "An unexpected exception occurred. The application could now terminate. Report thi" +
-    "s bug at github.com/dsidirop.";
+            this.lblTheApplicationWillNowTerminate.Text = "An unexpected exception occurred. The application could now terminate. Report this bug at github.com/dsidirop.";
             // 
             // lblTechnicalDetails
             // 

@@ -1,23 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-
     <PropertyGroup>
         <LangVersion>13</LangVersion>
         <TargetFramework>net9.0</TargetFramework>
 
         <Nullable>disable</Nullable>
+        <OutputType>Exe</OutputType>
         <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-      <None Include="..\..\README.md">
-        <Link>README.md</Link>
-      </None>
+        <None Include="..\..\README.md">
+            <Link>README.md</Link>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" />
-      <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj" />
+        <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj"/>
+        <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
+
+        <!-- it is necessary to include this reference to force the project to spawn its dll under the output folder so that we can scan the engines it provides upon launching -->
+        <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
     </ItemGroup>
 
 </Project>
