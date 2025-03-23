@@ -14,15 +14,15 @@ public sealed partial class FormNotificationAboutFileOperation : Form
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string FileGeneratedSuccessfullyMessage
     {
-        get { return _fileGeneratedSuccessfullyMessage; }
-        set { _fileGeneratedSuccessfullyMessage = value; }
+        get => _fileGeneratedSuccessfullyMessage;
+        set => _fileGeneratedSuccessfullyMessage = value;
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string FilePath
     {
-        get { return _filePath; }
-        set { _filePath = value; }
+        get => _filePath;
+        set => _filePath = value;
     }
 
     public FormNotificationAboutFileOperation()

@@ -12,7 +12,7 @@ public sealed class CCLabelWithBottomBorderOnly : Label
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public override string Text
     {
-        set { base.Text = Ux.GenerateEllipsisInMiddle(value, maxLength: 50); }
+        set => base.Text = Ux.GenerateEllipsisInMiddle(value, maxLength: 50);
     }
 
     protected override void OnPaint(PaintEventArgs e)

@@ -22,7 +22,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
             _starting -= value;
             _starting += value;
         }
-        remove { _starting -= value; }
+        remove => _starting -= value;
     }
 
     private event EventHandler<ConcludedEventArgs> _concluded;
@@ -33,7 +33,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
             _concluded -= value;
             _concluded += value;
         }
-        remove { _concluded -= value; }
+        remove => _concluded -= value;
     }
 
     private event EventHandler<StateChangedEventArgs> _stateChanged;
@@ -44,7 +44,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
             _stateChanged -= value;
             _stateChanged += value;
         }
-        remove { _stateChanged -= value; }
+        remove => _stateChanged -= value;
     }
 
     private readonly IMaze _maze;
@@ -54,8 +54,8 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
     public Point? TrajectoryTip
     {
-        get { return _currentTrajectorySquares.Any() ? _currentTrajectorySquares[_currentTrajectorySquares.Count - 1] : null; }
-        private set { _currentTrajectorySquares.Add(value!.Value, value!.Value); }
+        get => _currentTrajectorySquares.Any() ? _currentTrajectorySquares[^1] : null;
+        private set => _currentTrajectorySquares.Add(value!.Value, value!.Value);
     }
 
     public IMaze Maze => _maze;

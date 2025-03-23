@@ -139,8 +139,8 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
 
     object IDictionary.this[object key]
     {
-        get { return OrderedDictionaryAsIDictionary[key]; }
-        set { OrderedDictionaryAsIDictionary[key] = value; }
+        get => OrderedDictionaryAsIDictionary[key];
+        set => OrderedDictionaryAsIDictionary[key] = value;
     }
 
     private sealed class ProxyEnumerator : IEnumerator<KeyValuePair<TKey, TValue>>
@@ -262,14 +262,14 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
 
     public TValue this[int index]
     {
-        get { return (TValue)_orderedDictionary[index]; }
-        set { _orderedDictionary[index] = value; }
+        get => (TValue)_orderedDictionary[index];
+        set => _orderedDictionary[index] = value;
     }
 
     public TValue this[TKey key]
     {
-        get { return (TValue)_orderedDictionary[key]; }
-        set { _orderedDictionary[key] = value; }
+        get => (TValue)_orderedDictionary[key];
+        set => _orderedDictionary[key] = value;
     }
 
     public ICollection Keys => _orderedDictionary.Keys;

@@ -35,6 +35,7 @@ public class EnginesFactorySingleton : IEnginesFactory
         return Activator.CreateInstance(type, maze) as IMazeRunnerEngine;
     }
 
+#pragma warning disable CA1508
     public void EnsureInit() //0
     {
         if (_engines != null) return;
@@ -52,10 +53,12 @@ public class EnginesFactorySingleton : IEnginesFactory
 
             Tracer.TraceInformation($"Factory initialization complete. Scanned {dllFilesToScan.Length} dlls:{U.nl2}{string.Join(U.nl, dllFilesToScan)}{U.nl2}Found {_engines.Count} engines:{U.nl2}{string.Join(U.nl, EnginesNames)}");
         }
+        
+        //0 play it safe in terms of ensuring threadsafe init
+        //1 scan engines dynamically from all dlls that are named after the pattern mazerunner.engine.xyz.dll   if someone wants to add his own engine he can just
+        //  drop his dll into the directory with the rest of the dlls
     }
-    //0 play it safe in terms of ensuring threadsafe init
-    //1 scan engines dynamically from all dlls that are named after the pattern mazerunner.engine.xyz.dll   if someone wants to add his own engine he can just
-    //  drop his dll into the directory with the rest of the dlls
+#pragma warning restore CA1508
 
     private Type[] TryLoadAssemblyAndGetExportedTypes(string filepath)
     {

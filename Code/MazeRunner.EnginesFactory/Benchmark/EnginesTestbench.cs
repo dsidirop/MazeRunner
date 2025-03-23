@@ -25,7 +25,7 @@ public class EnginesTestbench : IEnginesTestbench
             _allDone -= value;
             _allDone += value;
         }
-        remove { _allDone -= value; }
+        remove => _allDone -= value;
     }
 
 
@@ -37,7 +37,7 @@ public class EnginesTestbench : IEnginesTestbench
             _commencing -= value;
             _commencing += value;
         }
-        remove { _commencing -= value; }
+        remove => _commencing -= value;
     }
 
     private event EventHandler<LapStartingEventArgs> _lapStarting;
@@ -48,7 +48,7 @@ public class EnginesTestbench : IEnginesTestbench
             _lapStarting -= value;
             _lapStarting += value;
         }
-        remove { _lapStarting -= value; }
+        remove => _lapStarting -= value;
     }
 
     private event EventHandler<LapConcludedEventArgs> _lapConcluded;
@@ -59,7 +59,7 @@ public class EnginesTestbench : IEnginesTestbench
             _lapConcluded -= value;
             _lapConcluded += value;
         }
-        remove { _lapConcluded -= value; }
+        remove => _lapConcluded -= value;
     }
 
     private event EventHandler<SingleEngineTestsStartingEventArgs> _singleEngineTestsStarting;
@@ -70,7 +70,7 @@ public class EnginesTestbench : IEnginesTestbench
             _singleEngineTestsStarting -= value;
             _singleEngineTestsStarting += value;
         }
-        remove { _singleEngineTestsStarting -= value; }
+        remove => _singleEngineTestsStarting -= value;
     }
 
     private event EventHandler<SingleEngineTestsCompletedEventArgs> _singleEngineTestsCompleted;
@@ -81,7 +81,7 @@ public class EnginesTestbench : IEnginesTestbench
             _singleEngineTestsCompleted -= value;
             _singleEngineTestsCompleted += value;
         }
-        remove { _singleEngineTestsCompleted -= value; }
+        remove => _singleEngineTestsCompleted -= value;
     }
 
     public bool Running { get; private set; }

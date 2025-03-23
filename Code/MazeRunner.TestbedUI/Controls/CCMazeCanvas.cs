@@ -27,7 +27,7 @@ public partial class CCMazeCanvas : UserControl
             _maze = value; //order
             Reinitialize(); //order
         }
-        get { return _maze; }
+        get => _maze;
     }
 
     public CCMazeCanvas()
