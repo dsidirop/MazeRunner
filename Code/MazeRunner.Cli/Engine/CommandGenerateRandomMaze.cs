@@ -2,7 +2,7 @@
 using System.IO;
 using MazeRunner.Utils;
 
-namespace MazeRunner.Controller.Engine;
+namespace MazeRunner.Cli.Engine;
 
 public partial class ControllerEngine
 {

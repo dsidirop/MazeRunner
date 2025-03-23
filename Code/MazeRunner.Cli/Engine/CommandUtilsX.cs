@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using MazeRunner.Contracts;
 
-namespace MazeRunner.Controller.Engine;
+namespace MazeRunner.Cli.Engine;
 
 static internal class CommandUtilsX
 {

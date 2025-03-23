@@ -1,10 +1,10 @@
 ﻿using System;
-using MazeRunner.Controller.Engine;
+using MazeRunner.Cli.Engine;
 using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 
-namespace MazeRunner.Controller;
+namespace MazeRunner.Cli;
 
 internal class Program
 {

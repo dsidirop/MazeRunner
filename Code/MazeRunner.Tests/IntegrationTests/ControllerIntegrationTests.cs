@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using MazeRunner.Controller.Engine;
+using MazeRunner.Cli.Engine;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;

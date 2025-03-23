@@ -1,4 +1,4 @@
-﻿namespace MazeRunner.Controller.Engine;
+﻿namespace MazeRunner.Cli.Engine;
 
 public partial class ControllerEngine
 {

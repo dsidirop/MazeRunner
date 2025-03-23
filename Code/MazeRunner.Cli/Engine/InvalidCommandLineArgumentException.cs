@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MazeRunner.Controller.Engine;
+namespace MazeRunner.Cli.Engine;
 
 internal class InvalidCommandLineArgumentException : Exception
 {

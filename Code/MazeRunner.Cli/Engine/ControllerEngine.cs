@@ -2,7 +2,7 @@
 using MazeRunner.Contracts;
 using MazeRunner.Mazes;
 
-namespace MazeRunner.Controller.Engine;
+namespace MazeRunner.Cli.Engine;
 
 public partial class ControllerEngine
 {

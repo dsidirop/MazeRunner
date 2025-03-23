@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRunner.Contracts", "Maz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRunner.Tests", "MazeRunner.Tests\MazeRunner.Tests.csproj", "{48BF2ADB-CB42-4272-834D-4329AD55002E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRunner.Controller", "MazeRunner.Controller\MazeRunner.Controller.csproj", "{0F48B759-37A5-40FC-9082-4E7419D192D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeRunner.Cli", "MazeRunner.Cli\MazeRunner.Cli.csproj", "{0F48B759-37A5-40FC-9082-4E7419D192D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

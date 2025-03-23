@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace MazeRunner.Controller.Engine;
+namespace MazeRunner.Cli.Engine;
 
 public partial class ControllerEngine
 {
@@ -9,7 +9,7 @@ public partial class ControllerEngine
     {
         var exitcode = args.Length == 0 || args.Length == 1 && args.FindParameter("help") != null ? 0 : 1;
 
-        const string programName = "MazeRunner.Controller";
+        const string programName = "MazeRunner.Cli";
         _standardOutput.WriteLine(
             $"Usage:{nl2}" +
             $"{programName} --help{nl}" +

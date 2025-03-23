@@ -50,7 +50,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj"/>
-        <ProjectReference Include="..\MazeRunner.Controller\MazeRunner.Controller.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Cli\MazeRunner.Cli.csproj" />
         <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
         <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
         <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj"/>
