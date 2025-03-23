@@ -1,168 +1,59 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE3176E8-D6D3-4D59-9F91-D41FF0C388B8}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MazeRunner.Tests</RootNamespace>
-    <AssemblyName>MazeRunner.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.11.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.11.0\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.11.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.11.0\lib\net45\FluentAssertions.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Moq, Version=4.5.13.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.5.13\lib\net45\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\MazeRunner.Shared\Properties\CommonAssemblyVersionInfo.cs">
-      <Link>Properties\CommonAssemblyVersionInfo.cs</Link>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="TestArtifacts\Artifacts.cs" />
-    <Compile Include="IntegrationTests\ControllerIntegrationTests.cs" />
-    <Compile Include="IntegrationTests\MazeIntegrationTests.cs" />
-    <Compile Include="IntegrationTests\EngineIntegrationTests.cs" />
-    <Compile Include="UnitTests\MazeFactoryTests\MazeFactoryTests.cs" />
-    <Compile Include="UnitTests\MazeRunnerEnginesTests\MazeRunnerEnginesTests.cs" />
-    <Compile Include="UnitTests\MazeSquareTests\MazeSquareTests.cs" />
-    <EmbeddedResource Include="TestArtifacts\MFT_InvalidChars.txt" />
-    <Compile Include="UnitTests\MazeTests\MazeTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MazeRunner.Controller\MazeRunner.Controller.csproj">
-      <Project>{acda8e1e-d162-48bc-aa4f-66204cc7ae27}</Project>
-      <Name>MazeRunner.Controller</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj">
-      <Project>{6D0F8024-9281-43C3-9B02-9D8C832C3E0F}</Project>
-      <Name>MazeRunner.EnginesFactory</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj">
-      <Project>{d264cdc6-b5cd-4146-b056-7d22bfe10f75}</Project>
-      <Name>MazeRunner.Mazes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Shared\MazeRunner.Shared.csproj">
-      <Project>{dfd6eb8c-9033-42ec-ae63-803d07deca2a}</Project>
-      <Name>MazeRunner.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj">
-      <Project>{00ba4d89-486d-4806-80c5-dc7135960c9a}</Project>
-      <Name>MazeRunner.Engine.SimpleMazeRunner</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_StrayNewLines.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_Empty.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_NoExitpoint.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_NoEntrypoint.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_JaggedMaze.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_MinValid_1x2.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestArtifacts\MFT_MinValid_2x1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestArtifacts\00_DO_NOT_RENAME_THIS_FOLDER_TO_MERELY_ARTIFACTS.txt" />
-    <EmbeddedResource Include="TestArtifacts\EIT_Maze005_LabyrinthUnsolvable.txt" />
-    <EmbeddedResource Include="TestArtifacts\EIT_Maze004_LabyrinthSolvable.txt" />
-    <EmbeddedResource Include="TestArtifacts\EIT_Maze003_GEscape.txt" />
-    <EmbeddedResource Include="TestArtifacts\EIT_Maze002_GTrap.txt" />
-    <EmbeddedResource Include="TestArtifacts\EIT_Maze001_Diagonal.txt" />
-    <EmbeddedResource Include="TestArtifacts\MFT_Invalid_DoubleEntryPoint.txt" />
-    <EmbeddedResource Include="TestArtifacts\MFT_Invalid_DoubleExitPoint.txt" />
-    <EmbeddedResource Include="TestArtifacts\MFT_Valid_3x4.txt" />
-    <Content Include="README.txt" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+        <LangVersion>13</LangVersion>
+        <TargetFramework>net9.0</TargetFramework>
+
+        <Nullable>disable</Nullable>
+        <IsTestProject>true</IsTestProject>
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+    <ItemGroup>
+        <Using Include="NUnit.Framework"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="TestArtifacts\**\*"/>
+        <EmbeddedResource Update="Properties\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <SubType>Designer</SubType>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Moq" Version="4.20.72"/>
+        <PackageReference Include="Castle.Core" Version="5.2.1"/>
+        <PackageReference Include="FluentAssertions" Version="[7.2.0, 8)"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+
+        <PackageReference Include="NUnit" Version="4.3.2" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.6.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Properties\Resources.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Cli\MazeRunner.Cli.csproj" />
+        <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
+        <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj"/>
+    </ItemGroup>
+
 </Project>

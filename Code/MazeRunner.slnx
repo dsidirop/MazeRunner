@@ -1,0 +1,23 @@
+﻿<Solution>
+  <Folder Name="/Controllers/">
+    <Project Path="MazeRunner.Cli\MazeRunner.Cli.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.TestbedUI\MazeRunner.TestbedUI.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/Engines/">
+    <Project Path="MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/_Misc/">
+    <File Path="..\.gitignore" />
+    <File Path="..\appveyor.yml" />
+    <File Path="..\LICENSE" />
+    <File Path="..\README.md" />
+    <File Path="..\global.json" />
+  </Folder>
+  <Folder Name="/_Testbeds/">
+    <Project Path="MazeRunner.Tests\MazeRunner.Tests.csproj" Type="Classic C#" />
+  </Folder>
+  <Project Path="MazeRunner.Contracts\MazeRunner.Contracts.csproj" Type="Classic C#" />
+  <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="Classic C#" />
+  <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="Classic C#" />
+  <Project Path="MazeRunner.Utils\MazeRunner.Utils.csproj" Type="Classic C#" />
+</Solution>
