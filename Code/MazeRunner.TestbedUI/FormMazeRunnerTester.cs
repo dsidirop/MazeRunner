@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
@@ -41,6 +40,22 @@ public partial class FormMazeRunnerTester : Form
         lbxkEnginesToBenchmark.DataSource = _mazeRunnersEnginesDataSource; //order
         lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
         lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
+    }
+    
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        _tokenSource?.Dispose();
+            
+        if (disposing && components != null)
+        {
+            components.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     protected override void OnLoad(EventArgs ea)
@@ -267,10 +282,11 @@ public partial class FormMazeRunnerTester : Form
         internal string DebuggerDisplayProxy() => _description;
     }
 
+    private const string MazefileExtension = ".mz";
+    
     static private readonly string nl = U.nl;
     static private readonly string nl2 = U.nl2;
     static private readonly string DesktopDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-    static private readonly string MazefileExtension = ".mz";
     static private readonly Color NewTipPositionColor = Color.MediumSeaGreen;
     static private readonly Color TrajectorySquareColor = Color.DarkGreen;
     static private readonly Color InvalidatedSquareColor = Color.Gray;

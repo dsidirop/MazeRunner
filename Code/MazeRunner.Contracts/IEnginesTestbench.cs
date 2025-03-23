@@ -17,6 +17,5 @@ public interface IEnginesTestbench
     event EventHandler<SingleEngineTestsStartingEventArgs> SingleEngineTestsStarting;
     event EventHandler<SingleEngineTestsCompletedEventArgs> SingleEngineTestsCompleted;
 
-    void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null);
     Task RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null);
 }

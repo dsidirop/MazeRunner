@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Properties;
-using NUnit.Framework;
 using System;
 using System.Drawing;
 using System.Dynamic;
@@ -14,7 +13,7 @@ using MazeRunner.Utils;
 namespace MazeRunner.Tests.UnitTests.MazeFactoryTests;
 
 [TestFixture]
-public class MazeFactoryTests
+public class MazeFactoryTestbed
 {
     private readonly dynamic _filepathOfArtifactFiles = new ExpandoObject();
 

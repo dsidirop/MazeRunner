@@ -89,8 +89,7 @@ public class EnginesTestbench : IEnginesTestbench
     public async Task RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null)
         => await Task.Run(() => Run(enginesToTest, repetitions, cancellationToken), cancellationToken ?? CancellationToken.None);
 
-    //todo   once the cli can work with runasync we can make this method private
-    public void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
+    private void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
     {
         if (repetitions <= 0) throw new ArgumentOutOfRangeException(nameof(repetitions));
         if (enginesToTest?.Any(x => x == null) ?? true) throw new ArgumentNullException(nameof(enginesToTest));

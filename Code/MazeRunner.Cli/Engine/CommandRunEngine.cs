@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using MazeRunner.Utils;
 
 namespace MazeRunner.Cli.Engine;
 
 public partial class ControllerEngine
 {
-    internal int? TryRunEngine(string[] args)
+    internal async Task<int?> TryRunEngineAsync(string[] args)
     {
         if (args.Length is < 2 or > 4
             || args.FindParameter("engines=") == null
@@ -54,7 +55,7 @@ public partial class ControllerEngine
                     $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
             };
 
-            _enginesTestbench.Run(enginesToBenchmark, repetitions);
+            await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions);
         }
         catch (Exception ex)
         {

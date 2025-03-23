@@ -6,14 +6,13 @@ using FluentAssertions;
 using MazeRunner.Contracts;
 using MazeRunner.Mazes;
 using MazeRunner.Utils;
-using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
 
 namespace MazeRunner.Tests.UnitTests.MazeTests;
 
 [TestFixture]
-public class MazeTests
+public class MazeTestbed
 {
     [OneTimeSetUp]
     public void TestFixtureSetUp()

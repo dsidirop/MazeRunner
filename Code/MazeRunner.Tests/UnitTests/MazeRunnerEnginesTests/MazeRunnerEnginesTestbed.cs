@@ -5,7 +5,6 @@ using System.Reflection;
 using FluentAssertions;
 using MazeRunner.Contracts;
 using MazeRunner.Engine.SimpleMazeRunner;
-using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -13,7 +12,7 @@ namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesTests;
 
 [TestFixture(typeof(MazeRunnerSimpleDepthFirstEngine))]
 [TestFixture(typeof(MazeRunnerDepthFirstAvoidPathfoldingEngine))]
-public class MazeRunnerEnginesTests<TEngine> where TEngine : IMazeRunnerEngine
+public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
 {
     static private IMazeRunnerEngine SpawnEngine(IMaze maze) => (TEngine) Activator.CreateInstance(typeof (TEngine), maze);
 

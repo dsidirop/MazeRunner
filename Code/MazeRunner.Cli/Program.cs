@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MazeRunner.Cli.Engine;
 using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.EnginesFactory.Factory;
@@ -6,10 +7,10 @@ using MazeRunner.Mazes;
 
 namespace MazeRunner.Cli;
 
-internal class Program
+static internal class Program
 {
-    static public void Main(string[] args)
+    static public async Task Main(string[] args)
     {
-        Environment.ExitCode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), Console.Out, Console.Error).Run(args);
+        Environment.ExitCode = await new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), Console.Out, Console.Error).RunAsync(args);
     }
 }

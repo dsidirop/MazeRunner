@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
@@ -15,13 +16,20 @@ public sealed class CCLabelWithBottomBorderOnly : Label
         set => base.Text = Ux.GenerateEllipsisInMiddle(value, maxLength: 50);
     }
 
-    protected override void OnPaint(PaintEventArgs e)
+    protected override void OnPaint(PaintEventArgs ea)
     {
-        base.OnPaint(e);
-        ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
+        ArgumentNullException.ThrowIfNull(ea);
+
+        base.OnPaint(ea);
+        ControlPaint.DrawBorder(
+            ea.Graphics,
+            ClientRectangle,
             Color.Black, 0, ButtonBorderStyle.Inset,
             Color.Black, 0, ButtonBorderStyle.Inset,
             Color.Black, 0, ButtonBorderStyle.Inset,
-            bottomColor: Color.Black, bottomWidth: 1, bottomStyle: ButtonBorderStyle.Inset);
+            bottomColor: Color.Black,
+            bottomWidth: 1,
+            bottomStyle: ButtonBorderStyle.Inset
+        );
     }
 }

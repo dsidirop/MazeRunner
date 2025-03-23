@@ -69,7 +69,7 @@ public partial class CCMazeCanvas : UserControl
 
         if (!string.IsNullOrEmpty(textToAppend))
         {
-            label.Text += $"{(string.IsNullOrEmpty(label.Text) ? "" : (label.Text == StartTag || label.Text == ExitTag ? ": " : ", "))}{textToAppend}";
+            label.Text += $@"{(string.IsNullOrEmpty(label.Text) ? "" : (label.Text == StartTag || label.Text == ExitTag ? ": " : ", "))}{textToAppend}";
         }
 
         if (add)

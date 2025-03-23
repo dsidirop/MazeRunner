@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Dynamic;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using MazeRunner.Cli.Engine;
 using MazeRunner.Engine.SimpleMazeRunner;
@@ -89,20 +90,20 @@ public class ControllerIntegrationTests
     [Test]
     [TestCaseSource(nameof(Cases))]
     [Category("Unit.ControllerIntegrationTests")]
-    public void ControllerIntegrationTests_TestCasesSource_ShouldPass(Tuple<string, string[], int> @case)
+    public async Task ControllerIntegrationTests_TestCasesSource_ShouldPass(Tuple<string, string[], int> @case)
     {
         // Arrange
         var exitcode = 0;
-        var standardError = new StringWriter();
-        var standardOutput = new StringWriter();
         var desiredExitCode = @case.Item3;
         var commandLineParams = @case.Item2;
+        var standardError = new StringWriter();
+        var standardOutput = new StringWriter();
 
         // Act
-        var action = new Action(() => exitcode = new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), standardOutput, standardError).Run(commandLineParams));
+        var action = new Func<Task>(async () => exitcode = await new ControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), standardOutput, standardError).RunAsync(commandLineParams));
 
         // Assert
-        action.Should().NotThrow();
+        await action.Should().NotThrowAsync();
         exitcode.Should().Be(desiredExitCode);
     }
 }

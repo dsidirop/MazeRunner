@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using MazeRunner.Contracts;
 using MazeRunner.Mazes;
 
@@ -21,10 +22,10 @@ public partial class ControllerEngine
         _enginesTestbench = enginesTestbench;
     }
 
-    public int Run(string[] args)
+    public async Task<int> RunAsync(string[] args)
     {
         var exitcode = (int?) 0;
-        if ((exitcode = TryRunEngine(args)) != null) return exitcode.Value;
+        if ((exitcode = await TryRunEngineAsync(args)) != null) return exitcode.Value;
         if ((exitcode = TryListEngines(args)) != null) return exitcode.Value;
         if ((exitcode = TryGenerateRandomMaze(args)) != null) return exitcode.Value;
 
