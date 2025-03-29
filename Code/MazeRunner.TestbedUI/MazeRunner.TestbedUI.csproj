@@ -9,6 +9,7 @@
         <OutputType>WinExe</OutputType>
         <ImplicitUsings>disable</ImplicitUsings>
         <UseWindowsForms>true</UseWindowsForms>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
     <ItemGroup>
