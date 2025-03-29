@@ -195,7 +195,7 @@ public class MazeFactoryTestbed
 
         // Assert
         action.Should().NotThrow();
-        result.ToAsciiMap(linesSeparator: U.nl).Should().Be(desired); //0
+        result.ToAsciiMap(linesSeparator: "\r\n").Should().Be(desired); //0
     }
     //0 We force the line-separator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
     //  If we omit this sort of enforcement then the line separator that will be used will be \n instead of \r\n which will cause the comparison to fail

@@ -7,5 +7,6 @@ public interface IEnginesFactory
     IReadOnlyCollection<string> EnginesNames { get; }
 
     void EnsureInit();
+    
     IMazeRunnerEngine Spawn(string enginename, IMaze maze);
 }

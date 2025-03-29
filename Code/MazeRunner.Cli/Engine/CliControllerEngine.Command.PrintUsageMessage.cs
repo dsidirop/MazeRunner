@@ -1,12 +1,15 @@
 ﻿using System;
+using MazeRunner.Cli.Enums;
 
 namespace MazeRunner.Cli.Engine;
 
-public partial class ControllerEngine
+public partial class CliControllerEngine
 {
-    internal int PrintUsageMessage(string[] args)
+    internal EExitCodes PrintUsageMessage(string[] args)
     {
-        var exitcode = args.Length == 0 || args.Length == 1 && args.FindParameter("help") != null ? 0 : 1;
+        var exitcode = args.Length == 0 || args.Length == 1 && args.FindParameter("help") != null
+            ? EExitCodes.Success
+            : EExitCodes.InvalidCommandLineArguments;
 
         const string programName = "MazeRunner.Cli";
         _standardOutput.WriteLine(
@@ -18,6 +21,7 @@ public partial class ControllerEngine
 
         return exitcode;
     }
+
     static private readonly string nl = Environment.NewLine;
     static private readonly string nl2 = nl + nl;
 }

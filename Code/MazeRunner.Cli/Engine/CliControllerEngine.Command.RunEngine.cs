@@ -1,15 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MazeRunner.Cli.Engine.Exceptions;
+using MazeRunner.Cli.Enums;
 using MazeRunner.Utils;
 
 namespace MazeRunner.Cli.Engine;
 
-public partial class ControllerEngine
+public partial class CliControllerEngine
 {
-    internal async Task<int?> TryRunEngineAsync(string[] args)
+    internal async Task<EExitCodes?> TryRunEngineAsync(string[] args, CancellationToken? cancellationToken = null)
     {
+        var ct = cancellationToken ?? CancellationToken.None;
+        
         if (args.Length is < 2 or > 4
             || args.FindParameter("engines=") == null
             || args.FindParameter("mazefile=") == null
@@ -17,7 +22,7 @@ public partial class ControllerEngine
             || (args.Length == 4 && (args.FindParameter("repeat=") == null || args.FindParameter("verbose") == null)))
             return null;
 
-        var exitcode = 0;
+        var exitcode = EExitCodes.Success;
         try
         {
             var verbose = args.FindParameter("verbose") != null;
@@ -26,7 +31,7 @@ public partial class ControllerEngine
             var enginenames = args.FindParameter("engines=").TryGetParameterValueString().ParseEngineNames(_enginesFactory);
 
             var maze = _mazesFactory.FromFile(mazefile, suppressExceptions: false);
-            var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToList();
+            var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToArray();
 
             _enginesTestbench.LapConcluded += (_, ea) => //per lap
             {
@@ -55,20 +60,38 @@ public partial class ControllerEngine
                     $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
             };
 
-            await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions);
+            ct.ThrowIfCancellationRequested();
+
+            await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
         }
         catch (Exception ex)
         {
-            exitcode = ex switch //mazefactory vs engine error
-            {
-                InvalidCommandLineArgumentException => 1,
-                InvalidDataException => 2,
-                _ => 3
-            };
+            exitcode = GetProperExitCodeBasedOnException_(ex);
 
-            _standardError.WriteLine($@"Failed to run. Reason: {ex.Message}");
+            if (ex is OperationCanceledException)
+            {
+                await _standardOutput.WriteLineAsync("Benchmarking run cancelled ...");
+            }
+            else
+            {
+                await _standardError.WriteLineAsync($"Failed to run. Reason: {ex.Message}");
+            }
         }
 
         return exitcode;
+        
+        static EExitCodes GetProperExitCodeBasedOnException_(Exception ex)
+        {
+            return ex switch //mazefactory vs engine error
+            {
+                InvalidDataException => EExitCodes.InvalidMazeFile,
+                OperationCanceledException => EExitCodes.Cancelled,
+                FileNotFoundException
+                    or ArgumentException //invalid maze dimensions
+                    or ArgumentOutOfRangeException //engine name doesnt correspond to any engine
+                    or InvalidCommandLineArgumentException => EExitCodes.InvalidCommandLineArguments,
+                _ => EExitCodes.InternalError
+            };
+        }
     }
 }

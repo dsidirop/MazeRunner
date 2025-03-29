@@ -129,10 +129,7 @@ public partial class FormMazeRunnerTester : Form
 
             var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
 
-            enginesToBenchmark.ForEach(x =>
-            {
-                x.StateChanged += Engine_OnStateChanged_;
-            });
+            enginesToBenchmark.ForEach(x => x.StateChanged += Engine_OnStateChanged_);
 
             _tokenSource?.Dispose(); //order
             _tokenSource = new CancellationTokenSource(); //order
