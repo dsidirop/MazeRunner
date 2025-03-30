@@ -10,7 +10,7 @@ namespace MazeRunner.Cli;
 
 static internal class Program
 {
-    static public async Task Main(string[] args)
+    static public async Task<int> Main(string[] args)
     {
         var hasCancellationBeenRequestedOnce = false;
 
@@ -31,24 +31,26 @@ static internal class Program
                 cancellationToken: cancellationTokenSource.Token
             );
 
-        Environment.ExitCode = (int) exitCode;
-
-        return;
+        return Environment.ExitCode = (int) exitCode;
 
         void Console_CancelKeyComboPressed_(object sender, ConsoleCancelEventArgs ea)
         {
             if (hasCancellationBeenRequestedOnce)
+            {
+                ea.Cancel = false;
+                Console.Out.WriteAsync("Exiting immediately ... ");
                 return; //30
+            }
 
             ea.Cancel = true; //35
             hasCancellationBeenRequestedOnce = true;
 
-            Console.Out.WriteLineAsync("Cancelling ...");
-                  
+            Console.Out.WriteAsync("Cancelling ... ");
+
             // ReSharper disable once AccessToDisposedClosure
             cancellationTokenSource.Cancel();
         }
-        
+
         //30   if the user presses Ctrl+C twice we want to exit the program immediately
         //35   prevent the process from terminating because we want to exit smoothly in our own accord
     }
