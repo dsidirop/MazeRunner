@@ -55,7 +55,7 @@ public class MazeIntegrationTests
     public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze4x4_ShouldFindPath()
     {
         // Arrange
-        var maze = new MazesFactory().Random(4, 4, 0.1);
+        var maze = new MazesFactory().SpawnRandom(4, 4, 0.1);
         var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
 
         // Act
@@ -76,7 +76,7 @@ public class MazeIntegrationTests
     public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze10x10_ShouldFindPath()
     {
         // Arrange
-        var maze = new MazesFactory().Random(10, 10, 0.1);
+        var maze = new MazesFactory().SpawnRandom(10, 10, 0.1);
         var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
 
         // Act

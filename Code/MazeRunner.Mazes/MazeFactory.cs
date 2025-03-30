@@ -14,7 +14,7 @@ namespace MazeRunner.Mazes;
 
 public class MazesFactory : IMazesFactory
 {
-    public IMaze Random(int width, int height, double roadblocksDensity = 0.5, CancellationToken? cancellationToken = null)
+    public IMaze SpawnRandom(int width, int height, double roadblocksDensity = 0.5, CancellationToken? cancellationToken = null)
     {
         var ct = cancellationToken ?? CancellationToken.None;
         

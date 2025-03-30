@@ -7,5 +7,5 @@ namespace MazeRunner.Mazes;
 public interface IMazesFactory
 {
     Task<IMaze> FromFileAsync(string path, bool suppressExceptions = true);
-    IMaze Random(int width, int height, double roadblocksDensity = 0.5, CancellationToken? cancellationToken = null);
+    IMaze SpawnRandom(int width, int height, double roadblocksDensity = 0.5, CancellationToken? cancellationToken = null);
 }

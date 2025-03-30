@@ -110,8 +110,17 @@ static public class U //utilities
 
     static public string NormalizeNewlines(this string input, string newlineToUse) => Regex.Replace(input, @"\r\n|\n\r|\n|\r", newlineToUse); //the order \r\n|\n\r|\n|\r is important
 
-    static public string ToAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null, string linesSeparator = null)
+    static public string ToAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null, string linesSeparator = null, CancellationToken? cancellationToken = null)
     {
+        return string
+            .Join(linesSeparator, maze.ToStreamedAsciiMap(freepointEvaluator, linesSeparator, cancellationToken))
+            .Trim();
+    }
+    
+    static public IEnumerable<string> ToStreamedAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null, string linesSeparator = null, CancellationToken? cancellationToken = null)
+    {
+        var ct = cancellationToken ?? CancellationToken.None;
+
         linesSeparator ??= nl;
 
         var sb = new StringBuilder();
@@ -119,29 +128,34 @@ static public class U //utilities
         {
             for (var x = 0; x < maze.Size.Width; x++)
             {
+                ct.ThrowIfCancellationRequested();
+                
                 var p = new Point(x, y);
                 var hitTest = maze.HitTest(p);
-                if (hitTest == MazeHitTestEnum.Free)
+                switch (hitTest)
                 {
-                    sb.Append(freepointEvaluator?.Invoke(p) ?? '_');
-                }
-                else if (hitTest == MazeHitTestEnum.Entrypoint)
-                {
-                    sb.Append('S');
-                }
-                else if (hitTest == MazeHitTestEnum.Exitpoint)
-                {
-                    sb.Append('G');
-                }
-                else if (hitTest == MazeHitTestEnum.Roadblock)
-                {
-                    sb.Append('X');
+                    case MazeHitTestEnum.Free:
+                        sb.Append(freepointEvaluator?.Invoke(p) ?? '_');
+                        break;
+                    case MazeHitTestEnum.Entrypoint:
+                        sb.Append('S');
+                        break;
+                    case MazeHitTestEnum.Exitpoint:
+                        sb.Append('G');
+                        break;
+                    case MazeHitTestEnum.Roadblock:
+                        sb.Append('X');
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(hitTest), hitTest, "Invalid hit-test result");
                 }
             }
+            
             sb.Append(linesSeparator);
-        }
+            yield return sb.ToString();
 
-        return sb.ToString().Trim();
+            sb.Clear();
+        }
     }
 
     static public string Quotify(string input, bool doubleInsteadOfSingleQuotes = true, bool wrapInQuotes = true)
