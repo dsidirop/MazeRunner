@@ -31,7 +31,7 @@ public partial class CliControllerEngine
             var walldensity = args.FindParameter("walldensity=").TryGetParameterValueDouble();
 
             var asciiMazeString = _mazesFactory
-                .Random(width, height, walldensity)
+                .Random(width, height, walldensity, ct)
                 .ToAsciiMap();
             
             await File.WriteAllTextAsync(outputfile, asciiMazeString, ct);

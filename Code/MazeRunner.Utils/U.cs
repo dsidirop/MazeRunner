@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using MazeRunner.Contracts;
 
 namespace MazeRunner.Utils;
@@ -36,13 +37,17 @@ static public class U //utilities
     };
 
     static private readonly Random RandomNumbersEngine = new();
-    static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive) //max is exclusive here
+    static public ReorderableDictionary<int, int> GenerateRandomNumbersWithoutDuplicates(int count, int min, int maxExclusive, CancellationToken? cancellationToken = null) //max is exclusive here
     {
         if (maxExclusive <= min || count < 0 || (count > maxExclusive - min && maxExclusive - min > 0)) throw new ArgumentOutOfRangeException($"Range {min} to {maxExclusive} ({maxExclusive - (long) min} values) or count {count} is illegal"); //need to use 64bit to support big ranges negative min positive max
+        
+        var ct = cancellationToken ?? CancellationToken.None;
             
         var candidates = new ReorderableDictionary<int, int>(); //start count values before max and end at max
         for (var top = maxExclusive - count; top < maxExclusive; top++)
         {
+            ct.ThrowIfCancellationRequested();
+            
             var random = RandomNumbersEngine.Next(min, top + 1);
             if (!candidates.Contains(random)) // May strike a duplicate  Need to add +1 to make inclusive generator  +1 is safe even for MaxVal max value because top < max
             {
@@ -52,6 +57,7 @@ static public class U //utilities
 
             candidates.Add(top, top); // collision add inclusive max which could not possibly have been added before
         }
+
         return candidates;
     }
     //  initialize set S to empty
