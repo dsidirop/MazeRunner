@@ -41,7 +41,7 @@ Quickstart (Command Line Flavor):
 
 	5. Use the maze you just generated to benchmark the engines:
 
-	      ./MazeRunner.Cli  --engines=all  --mazefile=maze10x10.txt  --repeat=30
+	      ./MazeRunner.Cli  --engines=all  --mazefile=maze10x10.txt  --repeat=30  [--verbose]
 
 # Logging / Tracing:
 
