@@ -90,8 +90,8 @@ public class ControllerIntegrationTests
 
     [Test]
     [TestCaseSource(nameof(Cases))]
-    [Category("Unit.ControllerIntegrationTests")]
-    public async Task ControllerIntegrationTests_TestCasesSource_ShouldPass(Tuple<string, string[], EExitCodes> @case)
+    [Category("Unit.CliControllerIntegrationTests")]
+    public async Task ProcessCliArgsAsync_TestCasesSource_ShouldPass(Tuple<string, string[], EExitCodes> @case)
     {
         // Arrange
         var exitcode = EExitCodes.Success;
@@ -101,7 +101,7 @@ public class ControllerIntegrationTests
         var standardOutput = new StringWriter();
 
         // Act
-        var action = new Func<Task>(async () => exitcode = await new CliControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), standardOutput, standardError).RunAsync(commandLineParams));
+        var action = new Func<Task>(async () => exitcode = await new CliControllerEngine(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench(), standardOutput, standardError).ProcessCliArgsAsync(commandLineParams));
 
         // Assert
         await action.Should().NotThrowAsync();
