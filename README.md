@@ -2,7 +2,7 @@
 <img src="Graphics/maze_runner.png" width=50%>
 </h1>
 
-# [AppVeyor CI](https://ci.appveyor.com/project/dsidirop/mazerunner-6gvdh)
+# [![🏗 📦 Build, Pack & Deploy Nugets](https://github.com/dsidirop/MazeRunner/actions/workflows/github-actions.yml/badge.svg)](https://github.com/dsidirop/MazeRunner/actions/workflows/github-actions.yml)
 
 ![Build status](https://ci.appveyor.com/api/projects/status/github/dsidirop/mazerunner?svg=true)
 
@@ -41,7 +41,7 @@ Quickstart (Command Line Flavor):
 
 	5. Use the maze you just generated to benchmark the engines:
 
-	      ./MazeRunner.Cli  --engines=all  --mazefile=maze10x10.txt  --repeat=30
+	      ./MazeRunner.Cli  --engines=all  --mazefile=maze10x10.txt  --repeat=30  [--verbose]
 
 # Logging / Tracing:
 
