@@ -2,7 +2,7 @@
 <img src="Graphics/maze_runner.png" width=50%>
 </h1>
 
-# [AppVeyor CI](https://ci.appveyor.com/project/dsidirop/mazerunner-6gvdh)
+# [![🏗 📦 Build, Pack & Deploy Nugets](https://github.com/dsidirop/MazeRunner/actions/workflows/github-actions.yml/badge.svg)](https://github.com/dsidirop/MazeRunner/actions/workflows/github-actions.yml)
 
 ![Build status](https://ci.appveyor.com/api/projects/status/github/dsidirop/mazerunner?svg=true)
 
