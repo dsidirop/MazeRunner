@@ -50,8 +50,8 @@ if [ $exitCode != 0 ]; then
   echo "##vso[task.logissue type=error]Failed to cd to 'Code' folder."
   exit 65
 fi
-sudo         dotnet                                      \
-             workload                                    \
+dotnet                                       \
+             workload                        \
              restore
 declare exitCode=$?
 if [ $exitCode != 0 ]; then
