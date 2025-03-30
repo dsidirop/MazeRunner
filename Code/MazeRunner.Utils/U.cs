@@ -113,7 +113,7 @@ static public class U //utilities
     static public string ToAsciiMap(this IMaze maze, Func<Point, char?> freepointEvaluator = null, string linesSeparator = null, CancellationToken? cancellationToken = null)
     {
         return string
-            .Join(linesSeparator, maze.ToStreamedAsciiMap(freepointEvaluator, linesSeparator, cancellationToken))
+            .Join("", maze.ToStreamedAsciiMap(freepointEvaluator, linesSeparator, cancellationToken))
             .Trim();
     }
     

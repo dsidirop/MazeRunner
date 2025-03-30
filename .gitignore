@@ -252,4 +252,6 @@ _Pvt_Extensions
 .idea/
 *.sln.iml
 
+# the cyclonedx cli executable
+cyclonedx
 
