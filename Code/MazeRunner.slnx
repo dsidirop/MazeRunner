@@ -8,10 +8,18 @@
   </Folder>
   <Folder Name="/_Misc/">
     <File Path="..\.gitignore" />
-    <File Path="..\appveyor.yml" />
     <File Path="..\LICENSE" />
     <File Path="..\README.md" />
     <File Path="..\global.json" />
+  </Folder>
+  <Folder Name="/_Misc/Ci/">
+    <File Path="..\Ci\MazeRunner.GenerateSignAndUploadSbom.sh" />
+    <File Path="..\Ci\MazeRunner.CreateNewReleaseInGithub.sh" />
+    <File Path="..\Ci\MazeRunner.SetupBuildEnvironment.sh" />
+    <File Path="..\Ci\MazeRunner.Version.sh" />
+    <File Path="..\Ci\MazeRunner.Builder.targets" />
+    <File Path="..\.github\workflows\github-actions.yml" />
+    <File Path="..\.github\dependabot.yml" />
   </Folder>
   <Folder Name="/_Testbeds/">
     <Project Path="MazeRunner.Tests\MazeRunner.Tests.csproj" Type="Classic C#" />
