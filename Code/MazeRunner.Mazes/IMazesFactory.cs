@@ -1,10 +1,11 @@
-﻿using MazeRunner.Shared.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MazeRunner.Contracts;
 
-namespace MazeRunner.Mazes
+namespace MazeRunner.Mazes;
+
+public interface IMazesFactory
 {
-    public interface IMazesFactory
-    {
-        IMaze FromFile(string path, bool suppressExceptions = true);
-        IMaze Random(int width, int height, double roadblocksDensity = 0.5);
-    }
+    Task<IMaze> FromFileAsync(string path, bool suppressExceptions = true);
+    IMaze SpawnRandom(int width, int height, double roadblocksDensity = 0.5, CancellationToken? cancellationToken = null);
 }

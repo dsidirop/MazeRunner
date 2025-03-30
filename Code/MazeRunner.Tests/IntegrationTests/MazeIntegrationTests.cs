@@ -5,92 +5,88 @@ using System.Linq;
 using FluentAssertions;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
-using MazeRunner.Shared.Helpers;
 using MazeRunner.Tests.Properties;
-using NUnit.Framework;
+using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement
 
-namespace MazeRunner.Tests.IntegrationTests
+namespace MazeRunner.Tests.IntegrationTests;
+
+[TestFixture]
+public class MazeIntegrationTests
 {
-    [TestFixture]
-    public class MazeIntegrationTests
+    private readonly dynamic _filepathOfArtifactFiles = new ExpandoObject();
+
+    [OneTimeSetUp]
+    public void TestFixtureSetUp()
     {
-        private readonly dynamic _filepathOfArtifactFiles = new ExpandoObject();
+        _filepathOfArtifactFiles.EITMaze004LabyrinthSolvable = SpawnTempFile(Resources.EIT_Maze004_LabyrinthSolvable);
+    }
 
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
+    static private string SpawnTempFile(string contents)
+    {
+        var tmpfile = Path.GetTempFileName();
+        File.WriteAllText(tmpfile, contents);
+        return tmpfile;
+    }
+
+    [SetUp]
+    public void SetUp()
+    {
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+    }
+
+    [OneTimeTearDown]
+    public void TestFixtureTearDown()
+    {
+        foreach (var kvp in _filepathOfArtifactFiles)
         {
-            _filepathOfArtifactFiles.EITMaze004LabyrinthSolvable = SpawnTempFile(Resources.EIT_Maze004_LabyrinthSolvable);
+            File.Delete(kvp.Value);
         }
+    }
 
-        static private string SpawnTempFile(string contents)
+    [Test]
+    [Repeat(30)]
+    [Category("Unit.MazeIntegrationTests")]
+    public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze4x4_ShouldFindPath()
+    {
+        // Arrange
+        var maze = new MazesFactory().SpawnRandom(4, 4, 0.1);
+        var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
+
+        // Act
+        var action = new Action(() =>
         {
-            var tmpfile = Path.GetTempFileName();
-            File.WriteAllText(tmpfile, contents);
-            return tmpfile;
-        }
+            engine.Run();
+            maze.ToAsciiMap(p => engine.Trajectory.Contains(p) ? '*' : (engine.InvalidatedSquares.Contains(p) ? (char?) '#' : null));
+        });
 
-        [SetUp]
-        public void SetUp()
+        // Assert
+        action.Should().NotThrow();
+        engine.TrajectoryTip.Should().NotBe(null);
+    }
+
+    [Test]
+    [Repeat(30)]
+    [Category("Unit.MazeIntegrationTests")]
+    public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze10x10_ShouldFindPath()
+    {
+        // Arrange
+        var maze = new MazesFactory().SpawnRandom(10, 10, 0.1);
+        var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
+
+        // Act
+        var action = new Action(() =>
         {
-        }
+            engine.Run();
+            maze.ToAsciiMap(p => engine.Trajectory.Contains(p) ? '*' : (engine.InvalidatedSquares.Contains(p) ? (char?)'#' : null));
+        });
 
-        [TearDown]
-        public void TearDown()
-        {
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            foreach (var kvp in _filepathOfArtifactFiles)
-            {
-                File.Delete(kvp.Value);
-            }
-        }
-
-        [Test]
-        [Repeat(30)]
-        [Category("Unit.MazeIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze4x4_ShouldFindPath()
-        {
-            // Arrange
-            var maze = new MazesFactory().Random(4, 4, 0.1);
-            var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
-
-            // Act
-            var action = new Action(() =>
-            {
-                engine.Run();
-                maze.ToAsciiMap(p => engine.Trajectory.Contains(p) ? '*' : (engine.InvalidatedSquares.Contains(p) ? (char?) '#' : null));
-            });
-
-            // Assert
-            action.ShouldNotThrow();
-            engine.TrajectoryTip.Should().NotBe(null);
-        }
-        // Console.WriteLine(printedsolution + $@"{Utilities.nl}------------");
-
-        [Test]
-        [Repeat(30)]
-        [Category("Unit.MazeIntegrationTests")]
-        public void MazeRunnerEngineDepthFirstPolicy_PrintSolvedRandomMaze10x10_ShouldFindPath()
-        {
-            // Arrange
-            var maze = new MazesFactory().Random(10, 10, 0.1);
-            var engine = new MazeRunnerDepthFirstAvoidPathfoldingEngine(maze);
-
-            // Act
-            var action = new Action(() =>
-            {
-                engine.Run();
-                maze.ToAsciiMap(p => engine.Trajectory.Contains(p) ? '*' : (engine.InvalidatedSquares.Contains(p) ? (char?)'#' : null));
-            });
-
-            // Assert
-            action.ShouldNotThrow();
-        }
-        // Console.WriteLine(printedsolution + $@"{Utilities.nl}------------");
+        // Assert
+        action.Should().NotThrow();
     }
 }
