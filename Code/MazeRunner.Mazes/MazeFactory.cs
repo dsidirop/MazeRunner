@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Contracts;
 using MazeRunner.Utils;
@@ -13,8 +14,10 @@ namespace MazeRunner.Mazes;
 
 public class MazesFactory : IMazesFactory
 {
-    public IMaze Random(int width, int height, double roadblocksDensity = 0.5)
+    public IMaze SpawnRandom(int width, int height, double roadblocksDensity = 0.5, CancellationToken? cancellationToken = null)
     {
+        var ct = cancellationToken ?? CancellationToken.None;
+        
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
 
@@ -25,8 +28,8 @@ public class MazesFactory : IMazesFactory
 
         var roadblocksCount = (int) (totalSquareCount*roadblocksDensity);
         roadblocksCount = Math.Min(roadblocksCount, (int) totalSquareCount - 2); //0
-        var randomIndexes = U.GenerateRandomNumbersWithoutDuplicates(count: roadblocksCount + 2, min: 0, maxExclusive: (int) totalSquareCount); //1
-        var exitAndEntrypointIndexes = U.GenerateRandomNumbersWithoutDuplicates(count: 2, min: 0, maxExclusive: randomIndexes.Count).Values.Cast<int>().ToList(); //2
+        var randomIndexes = U.GenerateRandomNumbersWithoutDuplicates(count: roadblocksCount + 2, min: 0, maxExclusive: (int) totalSquareCount, ct); //1
+        var exitAndEntrypointIndexes = U.GenerateRandomNumbersWithoutDuplicates(count: 2, min: 0, maxExclusive: randomIndexes.Count, ct).Values.Cast<int>().ToArray(); //2
 
         var exitPointLinear = randomIndexes[exitAndEntrypointIndexes[0]];
         var exitPointAsCoords = ConvertLinearIndexToCoords(exitPointLinear, width);
@@ -36,8 +39,20 @@ public class MazesFactory : IMazesFactory
 
         randomIndexes.Remove(exitPointLinear);
         randomIndexes.Remove(entryPointLinear);
+        
+        var roadblockPoints = randomIndexes
+            .UnderCancellationToken(ct)
+            .Select(x => ConvertLinearIndexToCoords(x.Value, width))
+            .ToHashSet();
 
-        return new Maze(new Size(width, height), entryPointAsCoords, exitPointAsCoords, new HashSet<Point>(randomIndexes.Select(x => ConvertLinearIndexToCoords(x.Value, width))));
+        ct.ThrowIfCancellationRequested();
+
+        return new Maze(
+            size: new Size(width, height),
+            exitpoint: exitPointAsCoords,
+            entrypoint: entryPointAsCoords,
+            roadblocks: roadblockPoints
+        );
     }
     //0 we make sure that two squares will be available for the entry and exit points even if roadblock density is set close to a hundred percent
     //1 we need to generate roadblocks coordinates plus two more square coordinates   the two extra coordinates are meant for entry and exit squares

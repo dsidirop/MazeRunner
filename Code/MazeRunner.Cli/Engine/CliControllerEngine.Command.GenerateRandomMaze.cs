@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Cli.Engine.Exceptions;
@@ -30,11 +31,18 @@ public partial class CliControllerEngine
             var outputfile = args.FindParameter("output=").TryGetParameterValueString();
             var walldensity = args.FindParameter("walldensity=").TryGetParameterValueDouble();
 
-            var asciiMazeString = _mazesFactory
-                .Random(width, height, walldensity)
-                .ToAsciiMap();
-            
-            await File.WriteAllTextAsync(outputfile, asciiMazeString, ct);
+            await using var fileWriter = new StreamWriter(outputfile, Encoding.ASCII, new FileStreamOptions
+            {
+                Mode = FileMode.Create,
+                Access = FileAccess.Write,
+                Options = FileOptions.Asynchronous | FileOptions.SequentialScan,
+                BufferSize = 4096,
+            });
+
+            foreach (var x in _mazesFactory.SpawnRandom(width, height, walldensity, ct).ToStreamedAsciiMap(cancellationToken: ct))
+            {
+                await fileWriter.WriteAsync(x);
+            }
         }
         catch (OperationCanceledException)
         {

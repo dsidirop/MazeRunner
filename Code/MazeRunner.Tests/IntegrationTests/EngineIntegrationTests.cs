@@ -63,7 +63,7 @@ public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
     public void EngineIntegrationTests_RandomMaze4x4_ShouldFindPath()
     {
         // Arrange
-        var maze = new MazesFactory().Random(4, 4, 0.1); //1 roadblock
+        var maze = new MazesFactory().SpawnRandom(4, 4, 0.1); //1 roadblock
         var engine = SpawnEngine(maze);
 
         // Act

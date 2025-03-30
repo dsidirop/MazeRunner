@@ -60,7 +60,7 @@ public partial class FormMazeRunnerTester : Form
 
     protected override void OnLoad(EventArgs ea)
     {
-        ccMazeCanvas.Maze = _mazesFactory.Random(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
+        ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
 
         lnkClearLogs.LinkClicked += (_, _) => txtLog.Clear();
 
@@ -250,7 +250,7 @@ public partial class FormMazeRunnerTester : Form
     private void reshuffleCurrentMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var mazespecs = ccMazeCanvas.Maze.GetMazeSpecs();
-        ccMazeCanvas.Maze = _mazesFactory.Random(mazespecs.Width, mazespecs.Height, mazespecs.RoadblockDensity);
+        ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(mazespecs.Width, mazespecs.Height, mazespecs.RoadblockDensity);
     }
 
     private void generateRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
@@ -263,7 +263,7 @@ public partial class FormMazeRunnerTester : Form
             generateMazeDialog.MazeDensity = mazespecs.RoadblockDensity;
             if (generateMazeDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            ccMazeCanvas.Maze = _mazesFactory.Random(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
+            ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
         }
     }
 
