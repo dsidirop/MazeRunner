@@ -16,6 +16,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Files dependent on eachother -->
+        <Compile Update="**\CliControllerEngine.*.cs">
+            <DependentUpon>CliControllerEngine.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    
+
+    <ItemGroup>
         <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj"/>
         <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
 

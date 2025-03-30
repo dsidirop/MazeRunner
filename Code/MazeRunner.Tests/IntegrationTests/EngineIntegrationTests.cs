@@ -2,6 +2,7 @@
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using MazeRunner.Contracts;
 using MazeRunner.Engine.SimpleMazeRunner;
@@ -75,10 +76,10 @@ public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
 
     [Test]
     [Category("Unit.EngineIntegrationTests")]
-    public void EngineIntegrationTests_EITMaze001Diagonal_ShouldFindPath()
+    public async Task EngineIntegrationTests_EITMaze001Diagonal_ShouldFindPath()
     {
         // Arrange
-        var maze = (IMaze) new MazesFactory().FromFile(_filepathOfArtifactFiles.EITMaze001Diagonal);
+        var maze = (IMaze) await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.EITMaze001Diagonal);
         var engine = SpawnEngine(maze);
 
         // Act
@@ -92,10 +93,10 @@ public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
 
     [Test]
     [Category("Unit.EngineIntegrationTests")]
-    public void EngineIntegrationTests_EITMaze002GTrap_ShouldFindPath()
+    public async Task EngineIntegrationTests_EITMaze002GTrap_ShouldFindPath()
     {
         // Arrange
-        var maze = (IMaze) new MazesFactory().FromFile(_filepathOfArtifactFiles.EITMaze002GTrap);
+        var maze = (IMaze) await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.EITMaze002GTrap);
         var engine = SpawnEngine(maze);
 
         // Act
@@ -109,10 +110,10 @@ public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
 
     [Test]
     [Category("Unit.EngineIntegrationTests")]
-    public void EngineIntegrationTests_EITMaze003GEscape_ShouldFindPath()
+    public async Task EngineIntegrationTests_EITMaze003GEscape_ShouldFindPath()
     {
         // Arrange
-        var maze = (IMaze) new MazesFactory().FromFile(_filepathOfArtifactFiles.EITMaze003GEscape);
+        var maze = (IMaze) await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.EITMaze003GEscape);
         var engine = SpawnEngine(maze);
 
         // Act
@@ -127,10 +128,10 @@ public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
     [Test]
     [Repeat(1000)]
     [Category("Unit.EngineIntegrationTests")]
-    public void EngineIntegrationTests_EITMaze004LabyrinthSolvable_ShouldFindPath()
+    public async Task EngineIntegrationTests_EITMaze004LabyrinthSolvable_ShouldFindPath()
     {
         // Arrange
-        var maze = (IMaze) new MazesFactory().FromFile(_filepathOfArtifactFiles.EITMaze004LabyrinthSolvable);
+        var maze = (IMaze) await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.EITMaze004LabyrinthSolvable);
         var engine = SpawnEngine(maze);
 
         // Act
@@ -144,10 +145,10 @@ public class EngineIntegrationTests<TEngine> where TEngine : IMazeRunnerEngine
     [Test]
     [Repeat(1000)]
     [Category("Unit.EngineIntegrationTests")]
-    public void EngineIntegrationTests_EITMaze005LabyrinthUnsolvable_ShouldFailToFindPath()
+    public async Task EngineIntegrationTests_EITMaze005LabyrinthUnsolvable_ShouldFailToFindPath()
     {
         // Arrange
-        var maze = (IMaze) new MazesFactory().FromFile(_filepathOfArtifactFiles.EITMaze005LabyrinthUnsolvable);
+        var maze = (IMaze) await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.EITMaze005LabyrinthUnsolvable);
         var engine = SpawnEngine(maze);
 
         // Act

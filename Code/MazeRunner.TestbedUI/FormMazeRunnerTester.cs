@@ -118,7 +118,7 @@ public partial class FormMazeRunnerTester : Form
     {
         try
         {
-            var delay = (int)nudMovementDelay.Value;
+            var delay = (int) nudMovementDelay.Value;
 
             var delayIsSmall = delay < MinDelayThreshold;
             var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
@@ -127,17 +127,28 @@ public partial class FormMazeRunnerTester : Form
                 ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            var enginesToBenchmark = _mazeRunnersEnginesDataSource.Where(x => x.Selected).Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze)).ToList();
-
-            enginesToBenchmark.ForEach(x =>
-            {
-                x.StateChanged += Engine_OnStateChanged_;
-            });
-
             _tokenSource?.Dispose(); //order
             _tokenSource = new CancellationTokenSource(); //order
-            await _enginesTestbench.RunAsync(enginesToBenchmark, (int)nudIterations.Value, _tokenSource.Token);
-                
+
+            var enginesToBenchmark = _mazeRunnersEnginesDataSource
+                .Where(x => x.Selected)
+                .Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze))
+                .Select(x =>
+                {
+                    x.StateChanged += Engine_OnStateChanged_;
+                    return x;
+                })
+                .ToArray();
+
+            try
+            {
+                await _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token);
+            }
+            finally
+            {
+                enginesToBenchmark.ForEach(x => x.StateChanged -= Engine_OnStateChanged_);
+            }
+
             void Engine_OnStateChanged_(object _, StateChangedEventArgs eaa)
             {
                 if (!mazeTooLarge)
@@ -156,7 +167,7 @@ public partial class FormMazeRunnerTester : Form
         {
             if (ex is OperationCanceledException)
                 return;
-                
+
             using (var form = new FormUnhandledException(ex))
             {
                 form.ShowDialog();
@@ -203,7 +214,7 @@ public partial class FormMazeRunnerTester : Form
         }
     }
 
-    private void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         try
         {
@@ -223,7 +234,7 @@ public partial class FormMazeRunnerTester : Form
 
             try
             {
-                ccMazeCanvas.Maze = _mazesFactory.FromFile(filepath);
+                ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
             }
             catch (Exception ex)
             {

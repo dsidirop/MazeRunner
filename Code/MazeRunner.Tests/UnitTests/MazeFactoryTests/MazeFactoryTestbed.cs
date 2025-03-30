@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Dynamic;
 using System.IO;
+using System.Threading.Tasks;
 using MazeRunner.Contracts;
 using MazeRunner.Utils;
 
@@ -61,122 +62,122 @@ public class MazeFactoryTestbed
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileInvalidPathSuppressExceptions_SuppressExceptions_ShouldNotThrowExceptions()
+    public async Task MazeFactory_FromFileInvalidPathSuppressExceptions_SuppressExceptions_ShouldNotThrowExceptions()
     {
         // Arrange
         var dubiouspath = "/something/that/doesnt/exist";
 
         // Act
-        var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: true));
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(dubiouspath, suppressExceptions: true));
 
         // Assert
-        action.Should().NotThrow();
+        await action.Should().NotThrowAsync();
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileInvalidPath_BubbleExceptions_ShouldThrowDirectoryNotFoundException()
+    public async Task MazeFactory_FromFileInvalidPath_BubbleExceptions_ShouldThrowDirectoryNotFoundException()
     {
         // Arrange
         var dubiouspath = "/something/that/doesnt/exist";
 
         // Act
-        var action = new Action(() => new MazesFactory().FromFile(dubiouspath, suppressExceptions: false));
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(dubiouspath, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<DirectoryNotFoundException>();
+        await action.Should().ThrowExactlyAsync<DirectoryNotFoundException>();
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileInvalidCharsInFile_BubbleExceptions_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_FromFileInvalidCharsInFile_BubbleExceptions_ShouldThrowInvalidDataException()
     {
         // Arrange
             
         // Act
-        var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidChars, suppressExceptions: false); });
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.InvalidChars, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("Invalid character ! at line 1 column 4");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("Invalid character ! at line 1 column 4");
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileInvalidCharsStrayNewLines_BubbleExceptions_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_FromFileInvalidCharsStrayNewLines_BubbleExceptions_ShouldThrowInvalidDataException()
     {
         // Arrange
 
         // Act
-        var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.StrayNewLines, suppressExceptions: false); });
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.StrayNewLines, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("Line 2 is empty (only the very last line is allowed to be empty)");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("Line 2 is empty (only the very last line is allowed to be empty)");
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileEmpty_BubbleExceptions_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_FromFileEmpty_BubbleExceptions_ShouldThrowInvalidDataException()
     {
         // Arrange
 
         // Act
-        var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.Empty, suppressExceptions: false); });
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.Empty, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("Empty");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("Empty");
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileNoEntrypoint_BubbleExceptions_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_FromFileNoEntrypoint_BubbleExceptions_ShouldThrowInvalidDataException()
     {
         // Arrange
 
         // Act
-        var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.NoEntrypoint, suppressExceptions: false); });
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.NoEntrypoint, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("No entrypoint specified");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("No entrypoint specified");
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileNoExitpoint_BubbleExceptions_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_FromFileNoExitpoint_BubbleExceptions_ShouldThrowInvalidDataException()
     {
         // Arrange
 
         // Act
-        var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.NoExitpoint, suppressExceptions: false); });
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.NoExitpoint, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("No exitpoint specified");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("No exitpoint specified");
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileJaggedMaze_BubbleExceptions_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_FromFileJaggedMaze_BubbleExceptions_ShouldThrowInvalidDataException()
     {
         // Arrange
 
         // Act
-        var action = new Action(() => { new MazesFactory().FromFile(_filepathOfArtifactFiles.JaggedMaze, suppressExceptions: false); });
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.JaggedMaze, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("Line 2 has different number of columns (7) than the first line (which has 8)");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("Line 2 has different number of columns (7) than the first line (which has 8)");
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileMinValid1x2_BubbleExceptions_ShouldReturnValidMaze()
+    public async Task MazeFactory_FromFileMinValid1x2_BubbleExceptions_ShouldReturnValidMaze()
     {
         // Arrange
         var result = (IMaze) null;
 
         // Act
-        var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.MinValid1x2, suppressExceptions: false); });
+        var action = new Func<Task>(async () => result = await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.MinValid1x2, suppressExceptions: false));
             
         // Assert
-        action.Should().NotThrow();
+        await action.Should().NotThrowAsync();
         result.Size.Should().Be(new Size(width: 2, height: 1));
         result.Exitpoint.Should().Be(new Point(x: 1, y: 0));
         result.Entrypoint.Should().Be(new Point(x: 0, y: 0));
@@ -184,46 +185,47 @@ public class MazeFactoryTestbed
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_FromFileValid3x4_BubbleExceptions_ShouldReturnValidMaze()
+    public async Task MazeFactory_FromFileValid3x4_BubbleExceptions_ShouldReturnValidMaze()
     {
         // Arrange
         var result = (IMaze) null;
-        var desired = (File.ReadAllText(_filepathOfArtifactFiles.Valid3x4).Trim() as string).NormalizeNewlines("\r\n");
+        var desired = ((await File.ReadAllTextAsync(_filepathOfArtifactFiles.Valid3x4)).Trim() as string).NormalizeNewlines("\r\n");
 
         // Act
-        var action = new Action(() => { result = new MazesFactory().FromFile(_filepathOfArtifactFiles.Valid3x4, suppressExceptions: false); });
+        var action = new Func<Task>(async () => result = await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.Valid3x4, suppressExceptions: false));
 
         // Assert
-        action.Should().NotThrow();
-        result.ToAsciiMap(linesSeparator: U.nl).Should().Be(desired); //0
-    }
-    //0 We force the line-separator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
-    //  If we omit this sort of enforcement then the line separator that will be used will be \n instead of \r\n which will cause the comparison to fail
-    //  Also bare in mind that git likes to normalize newlines into unix-style \n newlines which also causes problems all by its own
-
-    [Test]
-    [Category("Unit.MazeFactory")]
-    public void MazeFactory_InvalidDoubleEntryPoints_ShouldThrowInvalidDataException()
-    {
-        // Arrange
-
-        // Act
-        var action = new Action(() => new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidDoubleEntryPoints, suppressExceptions: false));
-
-        // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("Maze has two Entry points");
+        await action.Should().NotThrowAsync();
+        result.ToAsciiMap(linesSeparator: "\r\n").Should().Be(desired); //0
+        
+        //0 We force the line-separator used by toasciimap to be the windows style newline in order to have this test pass on unix platforms
+        //  If we omit this sort of enforcement then the line separator that will be used will be \n instead of \r\n which will cause the comparison to fail
+        //  Also bare in mind that git likes to normalize newlines into unix-style \n newlines which also causes problems all by its own
     }
 
     [Test]
     [Category("Unit.MazeFactory")]
-    public void MazeFactory_InvalidDoubleExitPoints_ShouldThrowInvalidDataException()
+    public async Task MazeFactory_InvalidDoubleEntryPoints_ShouldThrowInvalidDataException()
     {
         // Arrange
 
         // Act
-        var action = new Action(() => new MazesFactory().FromFile(_filepathOfArtifactFiles.InvalidDoubleExitPoints, suppressExceptions: false));
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.InvalidDoubleEntryPoints, suppressExceptions: false));
 
         // Assert
-        action.Should().Throw<InvalidDataException>().WithMessage("Maze has two exit points");
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("Maze has two Entry points");
+    }
+
+    [Test]
+    [Category("Unit.MazeFactory")]
+    public async Task MazeFactory_InvalidDoubleExitPoints_ShouldThrowInvalidDataException()
+    {
+        // Arrange
+
+        // Act
+        var action = new Func<Task>(async () => await new MazesFactory().FromFileAsync(_filepathOfArtifactFiles.InvalidDoubleExitPoints, suppressExceptions: false));
+
+        // Assert
+        await action.Should().ThrowExactlyAsync<InvalidDataException>().WithMessage("Maze has two exit points");
     }
 }

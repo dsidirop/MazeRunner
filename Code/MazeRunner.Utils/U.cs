@@ -1,4 +1,7 @@
-﻿using System;
+﻿#pragma warning disable CA1810 //disable warning about static initializers
+#pragma warning disable CA5394 //disable warning about random not being cryptographically secure
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -140,8 +143,8 @@ static public class U //utilities
         var quoteCharacter = doubleInsteadOfSingleQuotes ? @"""" : @"'";
         var escapedQuoteCharacter = @"\" + quoteCharacter;
 
-        input = input.Replace(@"\", @"\\");
-        input = input.Replace(quoteCharacter, escapedQuoteCharacter);
+        input = input.Replace(@"\", @"\\", StringComparison.InvariantCultureIgnoreCase);
+        input = input.Replace(quoteCharacter, escapedQuoteCharacter, StringComparison.InvariantCultureIgnoreCase);
         if (!wrapInQuotes) return input;
 
         return quoteCharacter + input + quoteCharacter;

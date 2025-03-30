@@ -87,7 +87,16 @@ public class EnginesTestbench : IEnginesTestbench
     public bool Running { get; private set; }
 
     public async Task RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null)
-        => await Task.Run(() => Run(enginesToTest, repetitions, cancellationToken), cancellationToken ?? CancellationToken.None);
+    {
+        cancellationToken ??= CancellationToken.None;
+        
+        await Task.Run( //00 vital
+            action: () => Run(enginesToTest, repetitions, cancellationToken),
+            cancellationToken: cancellationToken.Value
+        );
+        
+        //00  best to run this on a background task to ensure that we dont overload the UI thread
+    }
 
     private void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
     {
@@ -95,6 +104,7 @@ public class EnginesTestbench : IEnginesTestbench
         if (enginesToTest?.Any(x => x == null) ?? true) throw new ArgumentNullException(nameof(enginesToTest));
 
         var ct = cancellationToken ?? CancellationToken.None;
+
         var currentLap = 0;
         var benchmarkId = Interlocked.Increment(ref _benchmarkRuns); //i++ is not threadsafe
         var failedEngine = (IMazeRunnerEngine) null;
@@ -145,9 +155,10 @@ public class EnginesTestbench : IEnginesTestbench
                     eng.Concluded += lapConcluded;
                     for (var i = 0; i < repetitions; i++, eng.Reset())
                     {
+                        ct.ThrowIfCancellationRequested();
+                        
                         currentLap = i;
                         eng.Run(cancellationToken); //safe
-                        ct.ThrowIfCancellationRequested();
                     }
                 }
                 finally
@@ -164,7 +175,7 @@ public class EnginesTestbench : IEnginesTestbench
                     Crashes = crashes,
                     BenchmarkId = benchmarkId,
                     Repetitions = repetitions,
-                    ShortestPath = shortestPath ?? new List<Point>(0),
+                    ShortestPath = shortestPath ?? [],
                     BestPathLength = pathLengths.First(),
                     WorstPathLength = pathLengths.Last(),
                     AveragePathLength = pathLengths.Average(),
@@ -176,7 +187,7 @@ public class EnginesTestbench : IEnginesTestbench
         }
         catch (Exception ex)
         {
-            if (!OnException(benchmarkId, failedEngine, currentLap, ex)) return; //stop request
+            OnException(benchmarkId, failedEngine, currentLap, ex);
 
             throw;
         }
@@ -184,9 +195,10 @@ public class EnginesTestbench : IEnginesTestbench
         {
             OnAllDone(new AllDoneEventArgs {BenchmarkId = benchmarkId});
         }
+        
+        //00  it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory
+        //    property gets wiped clean
     }
-    //0 it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory
-    //  property gets wiped clean
 
     protected virtual void OnAllDone(AllDoneEventArgs ea)
     {
@@ -232,15 +244,21 @@ public class EnginesTestbench : IEnginesTestbench
         _singleEngineTestsCompleted?.Invoke(this, ea);
     }
 
+    // ReSharper disable once UnusedMethodReturnValue.Local    Unused_Method_Return_Value
     private bool OnException(int benchmarkId, IMazeRunnerEngine failedEngine, int currentLap, Exception ex)
     {
-        if (ex is OperationCanceledException) return false; //stop button
+        if (ex is OperationCanceledException)
+            return false; //ctrl+c or stop button    we dont want to log this
 
-        Tracer.TraceEvent(TraceEventType.Error, 0,
-            $"[#{benchmarkId}] Benchmark crashed:{U.nl2}" +
-            $"Lap# {currentLap}{U.nl}" +
-            $"Engine being benchmarked: {failedEngine.GetEngineName()}{U.nl}" +
-            $"{ex}");
+        Tracer.TraceEvent(
+            id: 0,
+            eventType: TraceEventType.Error,
+            message: $"[#{benchmarkId}] Benchmark crashed:{U.nl2}" +
+                     $"Lap# {currentLap}{U.nl}" +
+                     $"Engine being benchmarked: {failedEngine.GetEngineName()}{U.nl}" +
+                     $"{ex}"
+        );
+        
         return true;
     }
 }

@@ -1,9 +1,10 @@
-﻿using MazeRunner.Contracts;
+﻿using System.Threading.Tasks;
+using MazeRunner.Contracts;
 
 namespace MazeRunner.Mazes;
 
 public interface IMazesFactory
 {
-    IMaze FromFile(string path, bool suppressExceptions = true);
+    Task<IMaze> FromFileAsync(string path, bool suppressExceptions = true);
     IMaze Random(int width, int height, double roadblocksDensity = 0.5);
 }
