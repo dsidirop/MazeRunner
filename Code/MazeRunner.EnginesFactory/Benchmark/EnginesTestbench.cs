@@ -202,7 +202,7 @@ public class EnginesTestbench : IEnginesTestbench
 
     protected virtual void OnAllDone(AllDoneEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] All benchmarks done");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All benchmarks done");
 
         Running = false;
         _allDone?.Invoke(this, ea);
@@ -210,7 +210,7 @@ public class EnginesTestbench : IEnginesTestbench
 
     protected virtual void OnCommencing(CommencingEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] Commencing benchmarks on the following engines [{ea.RepetitionsPerEngine} lap(s) per engine]:{U.nl2}{string.Join(U.nl, ea.Engines.Select(x => x.GetEngineName()))}");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.RepetitionsPerEngine} lap(s) per engine]:{U.nl2}{string.Join(U.nl, ea!.Engines!.Select(x => x.GetEngineName()))}");
 
         Running = true;
         _commencing?.Invoke(this, ea);
@@ -218,28 +218,28 @@ public class EnginesTestbench : IEnginesTestbench
 
     protected virtual void OnLapStarting(LapStartingEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] Starting lap#{ea.LapIndex} for engine '{ea.Engine.GetEngineName()}'");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Starting lap#{ea!.LapIndex} for engine '{ea!.Engine!.GetEngineName()}'");
 
         _lapStarting?.Invoke(this, ea);
     }
 
     protected virtual void OnLapConcluded(LapConcludedEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] Concluded lap#{ea.LapIndex} for engine '{ea.Engine.GetEngineName()}' with status: {ea.Status} ({ea.Duration.TotalMilliseconds}ms)");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Concluded lap#{ea!.LapIndex} for engine '{ea!.Engine!.GetEngineName()}' with status: {ea!.Status} ({ea!.Duration!.TotalMilliseconds}ms)");
 
         _lapConcluded?.Invoke(this, ea);
     }
 
     protected virtual void OnSingleEngineTestsStarting(SingleEngineTestsStartingEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] Benchmarking engine '{ea.Engine.GetEngineName()}'");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Benchmarking engine '{ea!.Engine!.GetEngineName()}'");
 
         _singleEngineTestsStarting?.Invoke(this, ea);
     }
 
     protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea.BenchmarkId}] All laps completed for engine '{ea.Engine.GetEngineName()}':{U.nl2}{ea.ToStringy(includeShortestPath: false)}");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All laps completed for engine '{ea!.Engine!.GetEngineName()}':{U.nl2}{ea!.ToStringy(includeShortestPath: false)}");
 
         _singleEngineTestsCompleted?.Invoke(this, ea);
     }
