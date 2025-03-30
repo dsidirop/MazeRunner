@@ -30,7 +30,7 @@ public partial class CliControllerEngine
             var repetitions = Math.Max(1, args.FindParameter("repeat=").TryGetParameterValueInt()); //optional
             var enginenames = args.FindParameter("engines=").TryGetParameterValueString().ParseEngineNames(_enginesFactory);
 
-            var maze = _mazesFactory.FromFile(mazefile, suppressExceptions: false);
+            var maze = await _mazesFactory.FromFileAsync(mazefile, suppressExceptions: false);
             var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToArray();
 
             _enginesTestbench.LapConcluded += (_, ea) => //per lap

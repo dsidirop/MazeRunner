@@ -200,7 +200,7 @@ public partial class FormMazeRunnerTester : Form
         }
     }
 
-    private void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         try
         {
@@ -220,7 +220,7 @@ public partial class FormMazeRunnerTester : Form
 
             try
             {
-                ccMazeCanvas.Maze = _mazesFactory.FromFile(filepath);
+                ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
             }
             catch (Exception ex)
             {

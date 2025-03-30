@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using MazeRunner.Contracts;
 using MazeRunner.Utils;
 
@@ -45,7 +46,7 @@ public class MazesFactory : IMazesFactory
 
     static private Point ConvertLinearIndexToCoords(int linearIndex, int lineWidth) => new(x: linearIndex % lineWidth, y: linearIndex / lineWidth);
 
-    public IMaze FromFile(string path, bool suppressExceptions = true)
+    public async Task<IMaze> FromFileAsync(string path, bool suppressExceptions = true)
     {
         var result = (IMaze) null;
         try
@@ -59,7 +60,7 @@ public class MazesFactory : IMazesFactory
             {
                 for (;!reader.EndOfStream; lineIndex++)
                 {
-                    var line = reader.ReadLine();
+                    var line = await reader.ReadLineAsync();
                     if (string.IsNullOrEmpty(line))
                     {
                         if (reader.EndOfStream) break;
