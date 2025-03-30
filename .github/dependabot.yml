@@ -1,0 +1,40 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+
+registries:
+
+  nuget-org:
+    url: "https://api.nuget.org/v3/index.json"
+    type: "nuget-feed"
+
+
+updates:
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "02:00"
+      timezone: "Europe/London"
+    target-branch: "develop"
+  
+  - package-ecosystem: "nuget"
+    directory: "Code/MazeRunner.Tests/"
+    registries:
+      - nuget-org
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "Europe/London"
+    target-branch: "develop"
+    ignore:
+      - dependency-name: "FluentAssertions" #            ignore major-version updates FluentAssertions from version 8 and above
+        versions: [ "8.*", "9.*", "10.*", "11.*" ] #     because FluentAssertions requires a paid license for corporate use
+        update-types: [ "version-update:semver-major" ] 
+      - dependency-name: "Microsoft.Maui.*"
+        versions: [ "9.*", "10.*", "11.*" ]
+        update-types: [ "version-update:semver-major" ] 

@@ -179,7 +179,7 @@ function parse_arguments() {
 function usage() {
   local -r script_name=$(basename "$0")
 
-  echo "Usage: ${script_name}  --project-name  <name>   --project-version <version>  [--skip-installing-cyclonedx-cli-tool]  [--skip-installing-cyclonedx-dotnet-extension]  [--parent-project-name  <name>   --parent-project-version <version>]   --csproj-file-path <path>    --csproj-file-path <path>   --output-directory-path <path>  --output-sbom-file-name <name>   --sbom-signing-key-file-path <path>   --dependency-tracker-url <url>   --dependency-tracker-api-key-file-path <api_key>  "
+  echo "Usage: ${script_name}  --project-name  <name>   --project-version <version>   [--skip-uploading]  [--skip-installing-cyclonedx-cli-tool]  [--skip-installing-cyclonedx-dotnet-extension]  [--parent-project-name  <name>   --parent-project-version <version>]   --csproj-file-path <path>    --csproj-file-path <path>   --output-directory-path <path>  --output-sbom-file-name <name>   --sbom-signing-key-file-path <path>   --dependency-tracker-url <url>   --dependency-tracker-api-key-file-path <api_key>  "
 }
 
 function sniff_and_validate_host_os_and_architecture() {
@@ -192,7 +192,7 @@ function sniff_and_validate_host_os_and_architecture() {
   MSYS_NT*) host_os="Windows" ;;
   esac
 
-  declare architecture=$(uname -m)
+  declare -r architecture=$(uname -m)
   case ${architecture} in
   i386) architecture="x86" ;;
   i686) architecture="x86" ;;
