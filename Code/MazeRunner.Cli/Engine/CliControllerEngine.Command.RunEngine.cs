@@ -14,8 +14,9 @@ public partial class CliControllerEngine
     internal async Task<EExitCodes?> TryRunEngineAsync(string[] args, CancellationToken? cancellationToken = null)
     {
         var ct = cancellationToken ?? CancellationToken.None;
-        
-        if (args.Length is < 2 or > 4
+
+        if (args == null
+            || args.Length is < 2 or > 4
             || args.FindParameter("engines=") == null
             || args.FindParameter("mazefile=") == null
             || (args.Length == 3 && args.FindParameter("repeat=") == null && args.FindParameter("verbose") == null)

@@ -7,7 +7,7 @@ public partial class CliControllerEngine
 {
     internal EExitCodes PrintUsageMessage(string[] args)
     {
-        var exitcode = args.Length == 0 || args.Length == 1 && args.FindParameter("help") != null
+        var exitcode = args == null || args.Length == 0 || args.Length == 1 && args.FindParameter("help") != null
             ? EExitCodes.Success
             : EExitCodes.InvalidCommandLineArguments;
 

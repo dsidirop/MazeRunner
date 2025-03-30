@@ -12,7 +12,7 @@ public partial class CliControllerEngine
 {
     internal async Task<EExitCodes?> TryGenerateRandomMazeAsync(string[] args, CancellationToken? cancellationToken)
     {
-        if (args.Length != 5
+        if (args is not {Length: 5}
             || args.FindParameter("width=") == null
             || args.FindParameter("output=") == null
             || args.FindParameter("height=") == null
