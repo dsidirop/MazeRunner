@@ -10,7 +10,8 @@ env:
   MR_SOURCE_BRANCH: ${{                   github.ref                             }}
   MR_REPOSITORY_PATH: ${{                 github.repository                      }}
 
-  MR_GITHUB_ACCESS_TOKEN: ${{             secrets.GITHUB_TOKEN                   }}
+  MR_GITHUB_ACCESS_TOKEN: ${{             secrets.MR_GITHUB_ACCESS_TOKEN         }}
+  MR_GITHUB_NUGET_FEED_URL: "https://nuget.pkg.github.com/dsidirop/index.json"
   MR_GITHUB_NUGET_FEED_USERNAME: ${{      secrets.MR_GITHUB_NUGET_FEED_USERNAME  }}
 
   DOTNET_TARGET_WORKLOAD_VERSION: "9.0.200" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
@@ -33,7 +34,7 @@ jobs:
   
   build:
 
-    runs-on: 'windows-2022' # need a macos image that supports xcode 16.1+
+    runs-on: 'windows-2022'
     
     #   variable substitution is not supported in github at all    so we cant do stuff like this
     #
@@ -55,7 +56,7 @@ jobs:
                 &&                                                                                            \
                      "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci/MazeRunner.SetupBuildEnvironment.sh"         \
                              "${{env.DOTNET_TARGET_WORKLOAD_VERSION}}"                                        \
-                             "https://nuget.pkg.github.com/MazeRunner/index.json"                             \
+                             "${{env.MR_GITHUB_NUGET_FEED_URL}}"                                              \
                              "${{env.MR_GITHUB_NUGET_FEED_USERNAME}}"                                         \
                              "${{env.MR_GITHUB_ACCESS_TOKEN}}"                                                \
                              "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"
