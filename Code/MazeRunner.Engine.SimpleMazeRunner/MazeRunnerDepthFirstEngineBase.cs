@@ -185,13 +185,20 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
         try
         {
-            Tracer.TraceEvent(TraceEventType.Error, 0,
-                $"Engine '{GetEngineName()}' crashed:{U.nl2}" +
-                $"Step# {stepIndex}{U.nl}" +
-                $"TrajectoryLength: {TrajectoryLength}{U.nl}" +
-                $"InvalidatedSquares({InvalidatedSquares.Count}): {string.Join(", ", InvalidatedSquares.Select(p => $"({p.X}, {p.Y})"))}{U.nl}" +
-                $"CurrentTrajectorySquares: {_currentTrajectorySquares.Keys.Cast<Point>().Select(p => $"({p.X}, {p.Y})")}{U.nl2}" +
-                $"{ex}");
+            Tracer.TraceEvent(
+                id: 0,
+                eventType: TraceEventType.Error,
+                message: $"""
+                          Engine '{GetEngineName()}' crashed:
+
+                          Step# {stepIndex}
+                          TrajectoryLength: {TrajectoryLength}
+                          InvalidatedSquares({InvalidatedSquares.Count}): {string.Join(", ", InvalidatedSquares.Select(p => $"({p.X}, {p.Y})"))}
+                          CurrentTrajectorySquares: {_currentTrajectorySquares.Keys.Cast<Point>().Select(p => $"({p.X}, {p.Y})")}
+
+                          {ex}
+                          """
+            );
         }
         catch (Exception xx)
         {

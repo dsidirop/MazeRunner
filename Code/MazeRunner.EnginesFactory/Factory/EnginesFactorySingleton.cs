@@ -51,7 +51,17 @@ public class EnginesFactorySingleton : IEnginesFactory
                 .Where(x => x.IsClass && !x.IsAbstract && x.GetInterfaces().Contains(TypeOfIMazeRunnerEngine))
                 .ToDictionary(x => x.Name, x => x, StringComparer.InvariantCultureIgnoreCase);
 
-            Tracer.TraceInformation($"Factory initialization complete. Scanned {dllFilesToScan.Length} dlls:{U.nl2}{string.Join(U.nl, dllFilesToScan)}{U.nl2}Found {_engines.Count} engines:{U.nl2}{string.Join(U.nl, EnginesNames)}");
+            Tracer.TraceInformation(
+                $"""
+                 Factory initialization complete. Scanned {dllFilesToScan.Length} dlls:
+
+                 {string.Join("\n", dllFilesToScan)}
+
+                 Found {_engines.Count} engines:
+
+                 {string.Join("\n", EnginesNames)}
+                 """
+            );
         }
         
         //0 play it safe in terms of ensuring threadsafe init
@@ -68,7 +78,7 @@ public class EnginesFactorySingleton : IEnginesFactory
         }
         catch (Exception ex)
         {
-            Tracer.TraceInformation($"Failed to load assembly '{filepath}' to scan the engines it provides:{U.nl2}{ex}");
+            Tracer.TraceInformation($"Failed to load assembly '{filepath}' to scan the engines it provides:\n\n{ex}");
             return [];
         }
     }

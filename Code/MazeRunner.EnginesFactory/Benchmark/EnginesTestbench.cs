@@ -223,7 +223,11 @@ public class EnginesTestbench : IEnginesTestbench
 
     protected virtual void OnCommencing(CommencingEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.RepetitionsPerEngine} lap(s) per engine]:{U.nl2}{string.Join(U.nl, ea!.Engines!.Select(x => x.GetEngineName()))}");
+        Tracer.TraceInformation($"""
+                                 [#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.RepetitionsPerEngine} lap(s) per engine]:
+
+                                 {string.Join("\n", ea!.Engines!.Select(x => x.GetEngineName()))}
+                                 """);
 
         Running = true;
         _commencing?.Invoke(this, ea);
@@ -252,7 +256,7 @@ public class EnginesTestbench : IEnginesTestbench
 
     protected virtual void OnSingleEngineTestsCompleted(SingleEngineTestsCompletedEventArgs ea)
     {
-        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All laps completed for engine '{ea!.Engine!.GetEngineName()}':{U.nl2}{ea!.ToStringy(includeShortestPath: false)}");
+        Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All laps completed for engine '{ea!.Engine!.GetEngineName()}':\n\n{ea!.ToStringy(includeShortestPath: false)}");
 
         _singleEngineTestsCompleted?.Invoke(this, ea);
     }
@@ -266,10 +270,14 @@ public class EnginesTestbench : IEnginesTestbench
         Tracer.TraceEvent(
             id: 0,
             eventType: TraceEventType.Error,
-            message: $"[#{benchmarkId}] Benchmark crashed:{U.nl2}" +
-                     $"Lap# {currentLap}{U.nl}" +
-                     $"Engine being benchmarked: {failedEngine.GetEngineName()}{U.nl}" +
-                     $"{ex}"
+            message: $"""
+                      [#{benchmarkId}] Benchmark crashed:
+
+                      Lap# {currentLap}
+                      Engine being benchmarked: {failedEngine.GetEngineName()}
+
+                      {ex}
+                      """
         );
         
         return true;
