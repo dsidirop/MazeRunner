@@ -110,13 +110,17 @@ public class EnginesTestbench : IEnginesTestbench
         var failedEngine = (IMazeRunnerEngine) null;
         try
         {
-            OnCommencing(new CommencingEventArgs {BenchmarkId = benchmarkId, Engines = enginesToTest, RepetitionsPerEngine = repetitions});
+            OnCommencing(new CommencingEventArgs(
+                engines: enginesToTest,
+                benchmarkId: benchmarkId,
+                repetitionsPerEngine: repetitions
+            ));
 
             var stopWatch = new Stopwatch();
             enginesToTest.ForEach(eng =>
             {
                 failedEngine = eng;
-                OnSingleEngineTestsStarting(new SingleEngineTestsStartingEventArgs {BenchmarkId = benchmarkId, Engine = eng});
+                OnSingleEngineTestsStarting(new SingleEngineTestsStartingEventArgs(engine: eng, benchmarkId: benchmarkId));
 
                 var crashes = 0;
                 var pathLengths = new List<int>(repetitions);
@@ -127,14 +131,14 @@ public class EnginesTestbench : IEnginesTestbench
                 var lapStarting = new EventHandler((_, _) =>
                 {
                     stopWatch.Restart();
-                    OnLapStarting(new LapStartingEventArgs {BenchmarkId = benchmarkId, LapIndex = ii, Engine = eng});
+                    OnLapStarting(new LapStartingEventArgs(benchmarkId: benchmarkId, lapIndex: ii, engine: eng));
                 });
                 var lapConcluded = new EventHandler<ConcludedEventArgs>((_, ea) =>
                 {
                     try
                     {
                         stopWatch.Stop(); //order
-                        if (ea.Status == ConclusionStatusTypeEnum.Stopped || ea.Status == ConclusionStatusTypeEnum.Crashed)
+                        if (ea.Status is ConclusionStatusTypeEnum.Stopped or ConclusionStatusTypeEnum.Crashed)
                         {
                             if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
                             return;
@@ -144,8 +148,17 @@ public class EnginesTestbench : IEnginesTestbench
                     }
                     finally
                     {
-                        shortestPath = (shortestPath?.Count ?? int.MaxValue) > eng.TrajectoryLength ? eng.Trajectory.ToList() : shortestPath; //0 tolist
-                        OnLapConcluded(new LapConcludedEventArgs {BenchmarkId = benchmarkId, Status = ea.Status, LapIndex = ii++, Duration = stopWatch.Elapsed, Engine = eng}); //order
+                        shortestPath = (shortestPath?.Count ?? int.MaxValue) > eng.TrajectoryLength
+                            ? eng.Trajectory.ToList()  //0 tolist
+                            : shortestPath;
+
+                        OnLapConcluded(new LapConcludedEventArgs( //order
+                            engine: eng,
+                            status: ea.Status,
+                            lapIndex: ii++,
+                            duration: stopWatch.Elapsed,
+                            benchmarkId: benchmarkId
+                        ));
                     }
                 });
 
@@ -170,19 +183,19 @@ public class EnginesTestbench : IEnginesTestbench
                 pathLengths.Sort();
                 timeDurations.Sort();
                 OnSingleEngineTestsCompleted(new SingleEngineTestsCompletedEventArgs
-                {
-                    Engine = eng,
-                    Crashes = crashes,
-                    BenchmarkId = benchmarkId,
-                    Repetitions = repetitions,
-                    ShortestPath = shortestPath ?? [],
-                    BestPathLength = pathLengths.First(),
-                    WorstPathLength = pathLengths.Last(),
-                    AveragePathLength = pathLengths.Average(),
-                    BestTimePerformance = timeDurations.First(),
-                    WorstTimePerformance = timeDurations.Last(),
-                    AverageTimePerformance = new TimeSpan(Convert.ToInt64(timeDurations.Average(timeSpan => timeSpan.Ticks)))
-                });
+                (
+                    engine: eng,
+                    crashes: crashes,
+                    benchmarkId: benchmarkId,
+                    repetitions: repetitions,
+                    shortestPath: shortestPath ?? [],
+                    bestPathLength: pathLengths.First(),
+                    worstPathLength: pathLengths.Last(),
+                    averagePathLength: pathLengths.Average(),
+                    bestTimePerformance: timeDurations.First(),
+                    worstTimePerformance: timeDurations.Last(),
+                    averageTimePerformance: new TimeSpan(Convert.ToInt64(timeDurations.Average(timeSpan => timeSpan.Ticks)))
+                ));
             });
         }
         catch (Exception ex)
@@ -193,7 +206,7 @@ public class EnginesTestbench : IEnginesTestbench
         }
         finally
         {
-            OnAllDone(new AllDoneEventArgs {BenchmarkId = benchmarkId});
+            OnAllDone(new AllDoneEventArgs(benchmarkId));
         }
         
         //00  it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory

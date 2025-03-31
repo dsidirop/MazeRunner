@@ -98,7 +98,12 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
             ct.ThrowIfCancellationRequested();
 
             var tip = TrajectoryTip = _maze.Entrypoint;
-            OnStateChanged(new StateChangedEventArgs {StepIndex = si++, OldTip = null, NewTip = tip, IsProgressNotBacktracking = true});
+            OnStateChanged(new StateChangedEventArgs(
+                oldTip: null,
+                newTip: tip,
+                stepIndex: si++,
+                isProgressNotBacktracking: true
+            ));
             while (tip != null && _maze.HitTest(tip.Value) != MazeHitTestEnum.Exitpoint)
             {
                 ct.ThrowIfCancellationRequested();
@@ -122,13 +127,12 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
                     _currentTrajectorySquares.Remove(tip.Value); //policy so we backtrack by one square in the current trajectory
                 }
 
-                OnStateChanged(new StateChangedEventArgs
-                {
-                    OldTip = tip, //order
-                    NewTip = (tip = TrajectoryTip), //order   tip becomes null when we backtrack all the way back before square one and cant backtrack any further
-                    StepIndex = si++,
-                    IsProgressNotBacktracking = newSquareFound
-                });
+                OnStateChanged(new StateChangedEventArgs(
+                    oldTip: tip, //order
+                    newTip: tip = TrajectoryTip, //order   tip becomes null when we backtrack all the way back before square one and cant backtrack any further
+                    stepIndex: si++,
+                    isProgressNotBacktracking: newSquareFound
+                ));
             }
         }
         catch (Exception ex)
@@ -146,7 +150,10 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         }
         finally
         {
-            OnConcluded(new ConcludedEventArgs {Status = conclusionStatusType, ExitpointReached = conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null});
+            OnConcluded(new ConcludedEventArgs(
+                status: conclusionStatusType,
+                exitpointReached: conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null
+            ));
         }
         return this;
     }
@@ -179,7 +186,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         try
         {
             Tracer.TraceEvent(TraceEventType.Error, 0,
-                $"Engine '{this.GetEngineName()}' crashed:{U.nl2}" +
+                $"Engine '{GetEngineName()}' crashed:{U.nl2}" +
                 $"Step# {stepIndex}{U.nl}" +
                 $"TrajectoryLength: {TrajectoryLength}{U.nl}" +
                 $"InvalidatedSquares({InvalidatedSquares.Count}): {string.Join(", ", InvalidatedSquares.Select(p => $"({p.X}, {p.Y})"))}{U.nl}" +
