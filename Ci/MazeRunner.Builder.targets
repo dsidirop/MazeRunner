@@ -99,7 +99,7 @@
             <MazeRunner_Version_Script_Filepath Condition="   '$(MazeRunner_Version_Script_Filepath)'  == '' ">$([System.IO.Path]::Combine($(MazeRunner_Script_FolderPath), `MazeRunner.Version.sh`))</MazeRunner_Version_Script_Filepath>
             <MazeRunner_Version_Details_Filepath Condition="  '$(MazeRunner_Version_Details_Filepath)' == '' ">$([System.IO.Path]::Combine($(PackageOutputPath), `version.txt`))</MazeRunner_Version_Details_Filepath>
 
-            <MazeRunner_Master_Branch_Name Condition="  '$(MazeRunner_Master_Branch_Name)'  == '' ">main</MazeRunner_Master_Branch_Name>
+            <MazeRunner_Master_Branch_Name Condition="  '$(MazeRunner_Master_Branch_Name)'  == '' ">master</MazeRunner_Master_Branch_Name>
             <MazeRunner_Develop_Branch_Name Condition=" '$(MazeRunner_Develop_Branch_Name)' == '' ">develop</MazeRunner_Develop_Branch_Name>
 
             <!-- @formatter:off -->
