@@ -226,7 +226,7 @@ public class EnginesTestbench : IEnginesTestbench
         Tracer.TraceInformation($"""
                                  [#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.RepetitionsPerEngine} lap(s) per engine]:
 
-                                 {string.Join("\n", ea!.Engines!.Select(x => x.GetEngineName()))}
+                                 {ea!.Engines!.Select(x => x.GetEngineName()).LineJoinify()}
                                  """);
 
         Running = true;

@@ -47,18 +47,32 @@ public partial class CliControllerEngine
                     ));
 
                 _standardOutput.WriteLine(
-                    $"RUN#{ea.LapIndex + 1} -> {(ea.Engine.TrajectoryTip == null ? "FAILURE" : $"SUCCESS(pathlength={ea.Engine.TrajectoryLength},timespan={ea.Duration.TotalMilliseconds}) -> {string.Join(" -> ", ea.Engine.Trajectory.Select(p => $"({p.X},{p.Y})"))}{nl}")}{nl}" +
-                    $"{solution}{nl2}" +
-                    $"X=wall, *=trajectory, #=visited{nl}");
+                    $"""
+                     RUN#{ea.LapIndex + 1} -> {(
+                         ea.Engine.TrajectoryTip == null
+                             ? "FAILURE"
+                             : $"SUCCESS(pathlength={ea.Engine.TrajectoryLength},timespan={ea.Duration.TotalMilliseconds}) -> {ea.Engine.Trajectory.Select(p => $"({p.X},{p.Y})").Joinify(" -> ")}\n"
+                     )}
+
+                     {solution}
+
+                     X=wall, *=trajectory, #=visited
+
+                     """
+                );
             };
             _enginesTestbench.SingleEngineTestsCompleted += (_, ea) => //final
             {
                 _standardOutput.WriteLine(
-                    $"{nl}" +
-                    $"Engine: {ea.Engine.GetEngineName()}{nl}" +
-                    $"Number of runs: {ea.Repetitions} (smooth runs: {ea.Repetitions - ea.Crashes}, crashes: {ea.Crashes}){nl}" +
-                    $"Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength}{nl}" +
-                    $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
+                    $"""
+
+                     Engine: {ea.Engine.GetEngineName()}
+                     Number of runs: {ea.Repetitions} (smooth runs: {ea.Repetitions - ea.Crashes}, crashes: {ea.Crashes})
+                     Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength}
+                     Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms
+
+                     """
+                );
             };
 
             ct.ThrowIfCancellationRequested();

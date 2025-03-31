@@ -193,7 +193,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
                           Step# {stepIndex}
                           TrajectoryLength: {TrajectoryLength}
-                          InvalidatedSquares({InvalidatedSquares.Count}): {string.Join(", ", InvalidatedSquares.Select(p => $"({p.X}, {p.Y})"))}
+                          InvalidatedSquares({InvalidatedSquares.Count}): {InvalidatedSquares.Select(p => $"({p.X}, {p.Y})").CommaJoinify()}
                           CurrentTrajectorySquares: {_currentTrajectorySquares.Keys.Cast<Point>().Select(p => $"({p.X}, {p.Y})")}
 
                           {ex}

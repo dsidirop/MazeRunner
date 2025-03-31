@@ -55,11 +55,11 @@ public class EnginesFactorySingleton : IEnginesFactory
                 $"""
                  Factory initialization complete. Scanned {dllFilesToScan.Length} dlls:
 
-                 {string.Join("\n", dllFilesToScan)}
+                 {dllFilesToScan.LineJoinify()}
 
                  Found {_engines.Count} engines:
 
-                 {string.Join("\n", EnginesNames)}
+                 {EnginesNames.LineJoinify()}
                  """
             );
         }

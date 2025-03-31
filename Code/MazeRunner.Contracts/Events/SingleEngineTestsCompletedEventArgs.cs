@@ -67,6 +67,7 @@ public readonly struct SingleEngineTestsCompletedEventArgs : IMazeRunnerEventArg
                 {(includeShortestPath
                     ? $"""
                        Best (shortest) Path Found (coordinates are one-based, not zero-based):
+                       
                        {string.Join(" -> ", ShortestPath.Select(p => $"({p.X + 1},{p.Y + 1})"))}
                        """
                     : "")}
