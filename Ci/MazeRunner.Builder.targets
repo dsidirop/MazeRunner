@@ -107,7 +107,7 @@
             <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --major            '$(MazeRunner_Version_Major)'            </_MazeRunner_Version_Script_Parameters>
             <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --master-branch    '$(MazeRunner_Master_Branch_Name)'       </_MazeRunner_Version_Script_Parameters>
             <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --develop-branch   '$(MazeRunner_Develop_Branch_Name)'      </_MazeRunner_Version_Script_Parameters>
-            <!-- @formatter:on -->
+            <!-- @formatter:on  -->
         </PropertyGroup>
 
         <Message Importance="High" Text="  bash '$(MazeRunner_Version_Script_Filepath)' $(_MazeRunner_Version_Script_Parameters)  "/>
@@ -122,17 +122,15 @@
         </Exec>
 
         <PropertyGroup>
-            <MazeRunner_Version_Base>$([System.Text.RegularExpressions.Regex]::Replace("$(MazeRunner_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$1.$2.$3"))</MazeRunner_Version_Base>
-            <MazeRunner_Version_BuildId>$([System.Text.RegularExpressions.Regex]::Replace("$(MazeRunner_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$5"))</MazeRunner_Version_BuildId>
+            <!-- @formatter:off -->
+            <MazeRunner_Version_Base    >$([System.Text.RegularExpressions.Regex]::Replace( "$(MazeRunner_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$1.$2.$3" ))</MazeRunner_Version_Base>
+            <MazeRunner_Version_BuildId >$([System.Text.RegularExpressions.Regex]::Replace( "$(MazeRunner_Version_Full)", "^(\d*)\.(\d*)\.(\d*)-?([^.]*).?(\d*)?$", "$5"       ))</MazeRunner_Version_BuildId>
             <MazeRunner_Version_BuildId Condition=" '$(MazeRunner_Version_BuildId)' == '' ">0</MazeRunner_Version_BuildId>
+            <!-- @formatter:on -->
         </PropertyGroup>
 
-        <CreateProperty Value="$(MazeRunner_Version_Full)">
+        <CreateProperty Value="$(MazeRunner_Version_Base)">
             <Output PropertyName="MazeRunner_Version_Full" TaskParameter="Value"/>
-        </CreateProperty>
-
-        <CreateProperty Value="$(MazeRunner_Version_Base).$(MazeRunner_Version_BuildId)">
-            <Output PropertyName="MazeRunner_Version_Assembly" TaskParameter="Value"/>
         </CreateProperty>
 
         <!-- https://learn.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=bash#updatebuildnumber-override-the-automatically-generated-build-number -->
@@ -143,9 +141,6 @@
 
     <!-- BUILD -->
     <Target Name="BuildProjects" DependsOnTargets="DeduceVersion">
-        <Error Text="'MazeRunner_Version_Assembly' has to be set. Please call this script again with the argument '/p:MazeRunner_Version_Assembly=...'"
-               Condition=" '$(MazeRunner_Version_Assembly)' == '' "/>
-
         <Error Text="'MazeRunner_Version_Full' has to be set. Please call this script again with the argument '/p:MazeRunner_Version_Full=...'"
                Condition=" '$(MazeRunner_Version_Full)' == '' "/>
 
@@ -261,11 +256,9 @@
             <_MazeRunner_ProjectFile_EnginesFactory_Name  >$([System.IO.Path]::GetFileName( '$(MazeRunner_ProjectFile_EnginesFactory)')   .Replace('.csproj', ''))</_MazeRunner_ProjectFile_EnginesFactory_Name>
             <_MazeRunner_ProjectFile_SimpleMazeRunner_Name>$([System.IO.Path]::GetFileName( '$(MazeRunner_ProjectFile_SimpleMazeRunner)') .Replace('.csproj', ''))</_MazeRunner_ProjectFile_SimpleMazeRunner_Name>
 
-            <!-- notice that we intentionally use $(MazeRunner_Version_Assembly) instead of $(MazeRunner_Version_Full) -->
-            <!-- because cyclonedx inherently ear-tags sboms with the former rather than the later                     -->
             <_MazeRunner_Sbom_Script_Parameters> </_MazeRunner_Sbom_Script_Parameters>
             <_MazeRunner_Sbom_Script_Parameters>$(_MazeRunner_Sbom_Script_Parameters) --skip-uploading                                                                                                    </_MazeRunner_Sbom_Script_Parameters>
-            <_MazeRunner_Sbom_Script_Parameters>$(_MazeRunner_Sbom_Script_Parameters) --project-version                        &quot;$(MazeRunner_Version_Assembly)&quot;                                 </_MazeRunner_Sbom_Script_Parameters>
+            <_MazeRunner_Sbom_Script_Parameters>$(_MazeRunner_Sbom_Script_Parameters) --project-version                        &quot;$(MazeRunner_Version_Full)&quot;                                     </_MazeRunner_Sbom_Script_Parameters>
             <_MazeRunner_Sbom_Script_Parameters>$(_MazeRunner_Sbom_Script_Parameters) --output-directory-path                  &quot;$(PackageOutputPath)&quot;                                           </_MazeRunner_Sbom_Script_Parameters>
             <_MazeRunner_Sbom_Script_Parameters>$(_MazeRunner_Sbom_Script_Parameters) --sbom-signing-key-file-path             &quot;$(MazeRunner_Dependency_Tracker_Private_Signing_Key_File_Path)&quot; </_MazeRunner_Sbom_Script_Parameters>
 
@@ -280,11 +273,11 @@
             <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  chmod +x           ./MazeRunner.GenerateSignAndUploadSbom.sh</_MazeRunner_Sbom_Scriptlet>
             <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_TestbedUI)&quot;           --project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;        --output-sbom-file-name &quot;sbom.mazerunner.winformsui.xml&quot;       --parent-project-name &quot;[Group::MazeRunner]&quot;</_MazeRunner_Sbom_Scriptlet>
 
-            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_Cli)&quot;                 --project-name &quot;$(_MazeRunner_ProjectFile_Cli_Name)&quot;              --output-sbom-file-name &quot;sbom.mazerunner.cli.xml&quot;              --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Assembly)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
-            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_Mazes)&quot;               --project-name &quot;$(_MazeRunner_ProjectFile_Mazes_Name)&quot;            --output-sbom-file-name &quot;sbom.mazerunner.mazes.xml&quot;            --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Assembly)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
-            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_Utils)&quot;               --project-name &quot;$(_MazeRunner_ProjectFile_Utils_Name)&quot;            --output-sbom-file-name &quot;sbom.mazerunner.utils.xml&quot;            --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Assembly)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
-            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_EnginesFactory)&quot;      --project-name &quot;$(_MazeRunner_ProjectFile_EnginesFactory_Name)&quot;   --output-sbom-file-name &quot;sbom.mazerunner.enginesfactory.xml&quot;   --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Assembly)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
-            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_SimpleMazeRunner)&quot;    --project-name &quot;$(_MazeRunner_ProjectFile_SimpleMazeRunner_Name)&quot; --output-sbom-file-name &quot;sbom.mazerunner.simplemazerunner.xml&quot; --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Assembly)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
+            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_Cli)&quot;                 --project-name &quot;$(_MazeRunner_ProjectFile_Cli_Name)&quot;              --output-sbom-file-name &quot;sbom.mazerunner.cli.xml&quot;              --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Full)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
+            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_Mazes)&quot;               --project-name &quot;$(_MazeRunner_ProjectFile_Mazes_Name)&quot;            --output-sbom-file-name &quot;sbom.mazerunner.mazes.xml&quot;            --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Full)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
+            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_Utils)&quot;               --project-name &quot;$(_MazeRunner_ProjectFile_Utils_Name)&quot;            --output-sbom-file-name &quot;sbom.mazerunner.utils.xml&quot;            --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Full)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
+            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_EnginesFactory)&quot;      --project-name &quot;$(_MazeRunner_ProjectFile_EnginesFactory_Name)&quot;   --output-sbom-file-name &quot;sbom.mazerunner.enginesfactory.xml&quot;   --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Full)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
+            <_MazeRunner_Sbom_Scriptlet>$(_MazeRunner_Sbom_Scriptlet)  $(_Logical_And)    ./MazeRunner.GenerateSignAndUploadSbom.sh     $(_MazeRunner_Sbom_Script_Parameters)    --csproj-file-path &quot;$(MazeRunner_ProjectFile_SimpleMazeRunner)&quot;    --project-name &quot;$(_MazeRunner_ProjectFile_SimpleMazeRunner_Name)&quot; --output-sbom-file-name &quot;sbom.mazerunner.simplemazerunner.xml&quot; --parent-project-name &quot;$(_MazeRunner_ProjectFile_TestbedUI_Name)&quot;  --parent-project-version &quot;$(MazeRunner_Version_Full)&quot; --skip-installing-cyclonedx-cli-tool --skip-installing-cyclonedx-dotnet-extension</_MazeRunner_Sbom_Scriptlet>
             <!-- @formatter:on -->
         </PropertyGroup>
 
