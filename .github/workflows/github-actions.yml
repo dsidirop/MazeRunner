@@ -10,7 +10,7 @@ env:
   MR_SOURCE_BRANCH: ${{                   github.ref                             }}
   MR_REPOSITORY_PATH: ${{                 github.repository                      }}
 
-  MR_GITHUB_ACCESS_TOKEN: ${{             secrets.MR_GITHUB_ACCESS_TOKEN         }}
+  MR_GITHUB_ACCESS_TOKEN: ${{             secrets.GITHUB_TOKEN                   }}
   MR_GITHUB_NUGET_FEED_URL: "https://nuget.pkg.github.com/dsidirop/index.json"
   MR_GITHUB_NUGET_FEED_USERNAME: ${{      secrets.MR_GITHUB_NUGET_FEED_USERNAME  }}
 
