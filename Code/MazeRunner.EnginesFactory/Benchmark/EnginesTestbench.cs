@@ -160,7 +160,7 @@ public class EnginesTestbench : IEnginesTestbench
                     averagePathLength: pathLengths.Average(),
                     bestTimePerformance: timeDurations.First(),
                     worstTimePerformance: timeDurations.Last(),
-                    averageTimePerformance: new TimeSpan(Convert.ToInt64(timeDurations.Average(timeSpan => timeSpan.Ticks)))
+                    averageTimePerformance: new TimeSpan((long) timeDurations.Average(timeSpan => timeSpan.Ticks))
                 ));
                 return;
 
