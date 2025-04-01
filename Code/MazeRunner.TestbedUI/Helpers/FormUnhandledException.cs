@@ -22,7 +22,11 @@ public partial class FormUnhandledException : Form
     private static string StringFormatException(Exception exception)
     {
         return exception == null
-            ? $"(exception is null - no stacktrace available){U.nl}"
-            : $"Exception = {exception.GetType()}{U.nl}Message = {exception.Message}{U.nl}FullText = {exception}{U.nl}";
+            ? "(exception is null - no stacktrace available)"
+            : $"""
+               Exception = {exception.GetType()}
+               Message = {exception.Message}
+               FullText = {exception}
+               """;
     }
 }

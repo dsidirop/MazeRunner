@@ -6,24 +6,54 @@ using System.Linq;
 namespace MazeRunner.Contracts.Events;
 
 [Serializable]
-public class SingleEngineTestsCompletedEventArgs : EventArgs
+public readonly struct SingleEngineTestsCompletedEventArgs : IMazeRunnerEventArgs
 {
-    public int BenchmarkId;
+    public readonly int BenchmarkId;
 
-    public IList<Point> ShortestPath;
+    public readonly IList<Point> ShortestPath;
 
-    public IMazeRunnerEngine Engine;
+    public readonly IMazeRunnerEngine Engine;
 
-    public int Crashes;
-    public int Repetitions;
+    public readonly int Crashes;
+    public readonly int Repetitions;
 
-    public int BestPathLength;
-    public int WorstPathLength;
-    public double AveragePathLength;
+    public readonly int BestPathLength;
+    public readonly int WorstPathLength;
+    public readonly double AveragePathLength;
 
-    public TimeSpan BestTimePerformance;
-    public TimeSpan WorstTimePerformance;
-    public TimeSpan AverageTimePerformance;
+    public readonly TimeSpan BestTimePerformance;
+    public readonly TimeSpan WorstTimePerformance;
+    public readonly TimeSpan AverageTimePerformance;
+
+    public SingleEngineTestsCompletedEventArgs(
+        int benchmarkId,
+        IList<Point> shortestPath,
+        IMazeRunnerEngine engine,
+        int crashes,
+        int repetitions,
+        int bestPathLength,
+        int worstPathLength,
+        double averagePathLength,
+        TimeSpan bestTimePerformance,
+        TimeSpan worstTimePerformance,
+        TimeSpan averageTimePerformance
+    )
+    {
+        BenchmarkId = benchmarkId;
+        ShortestPath = shortestPath;
+        Engine = engine;
+        Crashes = crashes;
+        Repetitions = repetitions;
+        BestPathLength = bestPathLength;
+        WorstPathLength = worstPathLength;
+        AveragePathLength = averagePathLength;
+        BestTimePerformance = bestTimePerformance;
+        WorstTimePerformance = worstTimePerformance;
+        AverageTimePerformance = averageTimePerformance;
+    }
+    
+    [Obsolete("This constructor should not be used")]
+    public SingleEngineTestsCompletedEventArgs() => throw new NotImplementedException("This constructor should not be used");
 
     public override string ToString() => ToStringy(includeShortestPath: true);
     
@@ -37,6 +67,7 @@ public class SingleEngineTestsCompletedEventArgs : EventArgs
                 {(includeShortestPath
                     ? $"""
                        Best (shortest) Path Found (coordinates are one-based, not zero-based):
+                       
                        {string.Join(" -> ", ShortestPath.Select(p => $"({p.X + 1},{p.Y + 1})"))}
                        """
                     : "")}

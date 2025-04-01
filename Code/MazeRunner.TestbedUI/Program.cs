@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA2000
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,7 +13,6 @@ namespace MazeRunner.TestbedUI;
 
 static internal class Program
 {
-#pragma warning disable CA2000
     [STAThread]
     static private void Main()
     {
@@ -26,7 +27,6 @@ static internal class Program
         //0 as a small optimization we force the factory to load and scan assemblies asynchronously so that the form may have the enginenames
         //  readily available a bit down the road without stalling
     }
-#pragma warning restore CA2000
 
     private class ThreadExceptionHandler
     {

@@ -3,9 +3,18 @@
 namespace MazeRunner.Contracts.Events;
 
 [Serializable]
-public class SingleEngineTestsStartingEventArgs : EventArgs
+public readonly struct SingleEngineTestsStartingEventArgs : IMazeRunnerEventArgs
 {
-    public int BenchmarkId;
+    public readonly int BenchmarkId;
 
-    public IMazeRunnerEngine Engine;
+    public readonly IMazeRunnerEngine Engine;
+
+    public SingleEngineTestsStartingEventArgs(int benchmarkId, IMazeRunnerEngine engine)
+    {
+        Engine = engine;
+        BenchmarkId = benchmarkId;
+    }
+    
+    [Obsolete("This constructor should not be used")]
+    public SingleEngineTestsStartingEventArgs() => throw new NotImplementedException("This constructor should not be used");
 }
