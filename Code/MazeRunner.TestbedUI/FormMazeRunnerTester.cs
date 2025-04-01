@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -79,7 +81,7 @@ public partial class FormMazeRunnerTester : Form
             txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
             ccMazeCanvas.ResetCellsToDefaultColors();
         });
-        _enginesTestbench.LapConcluded += (_, eaa) => Post(_ => txtLog.AppendTextAndScrollToBottom($@"{U.ConclusionToSymbol[eaa.Status]}  "));
+        _enginesTestbench.LapConcluded += (_, eaa) => Post(_ => txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[eaa.Status]}  "));
         _enginesTestbench.SingleEngineTestsStarting += (_, eaa) =>
         {
             Post(_ => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetEngineName()}'. Completed Laps: ");
@@ -95,6 +97,13 @@ public partial class FormMazeRunnerTester : Form
     }
     //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
     //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
+
+    static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>
+    {
+        { ConclusionStatusTypeEnum.Crashed, "⚠" },
+        { ConclusionStatusTypeEnum.Completed, "✓" },
+        { ConclusionStatusTypeEnum.Stopped, "✋" }
+    }.AsReadOnly();
 
     // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
     private void OnComponentStateChanged(ComponentStateChanged ea)
@@ -278,8 +287,9 @@ public partial class FormMazeRunnerTester : Form
     {
         public string Name { get; set; }
         public bool Selected { get; set; }
+        
+        //0 we could have reduced this to [Obfuscation] but it would not be that clear what we are after in terms of obfuscation
     }
-    //0 we could have reduced this to [Obfuscation] but it wouldnt be that clear what we are after in terms of obfuscation
 
     [DebuggerDisplay("{DebuggerDisplayProxy,nq}")]
     internal sealed class ComponentStateChanged

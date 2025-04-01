@@ -14,8 +14,4 @@
         <AssemblyVersion>$(Version).0</AssemblyVersion>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
-    </ItemGroup>
-
 </Project>
