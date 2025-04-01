@@ -3,10 +3,19 @@
 namespace MazeRunner.Contracts.Events;
 
 [Serializable]
-public class ConcludedEventArgs : EventArgs
+public readonly struct ConcludedEventArgs : IMazeRunnerEventArgs
 {
-    public bool ExitpointReached;
-    public ConclusionStatusTypeEnum Status;
+    public readonly bool ExitpointReached;
+    public readonly ConclusionStatusTypeEnum Status;
+
+    public ConcludedEventArgs(bool exitpointReached, ConclusionStatusTypeEnum status)
+    {
+        Status = status;
+        ExitpointReached = exitpointReached;
+    }
+    
+    [Obsolete("This constructor should not be used")]
+    public ConcludedEventArgs() => throw new NotImplementedException("This constructor should not be used");
 
     public override string ToString() => $"ConclusionStatus={Status} -> ExitpointReached {(ExitpointReached ? "YES" : "NO")}";
 }

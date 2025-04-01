@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Cli.Engine.Exceptions;
 using MazeRunner.Cli.Enums;
+using MazeRunner.Contracts.Events;
 using MazeRunner.Utils;
 
 namespace MazeRunner.Cli.Engine;
@@ -34,36 +35,59 @@ public partial class CliControllerEngine
             var maze = await _mazesFactory.FromFileAsync(mazefile, suppressExceptions: false);
             var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToArray();
 
-            _enginesTestbench.LapConcluded += (_, ea) => //per lap
+            ct.ThrowIfCancellationRequested();
+
+            try
+            {
+                _enginesTestbench.LapConcluded += EnginesTestbench_LapConcluded_;
+                _enginesTestbench.SingleEngineTestsCompleted += EnginesTestbench_SingleEngineTestsCompleted_;
+                await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
+            }
+            finally
+            {
+                _enginesTestbench.LapConcluded -= EnginesTestbench_LapConcluded_;
+                _enginesTestbench.SingleEngineTestsCompleted -= EnginesTestbench_SingleEngineTestsCompleted_;
+            }
+
+            void EnginesTestbench_LapConcluded_(object _, LapConcludedEventArgs ea)
             {
                 if (!verbose) return;
 
                 var solution = maze.ToAsciiMap(p => ea.Engine.Trajectory.Contains(p)
                     ? '*'
-                    : (
-                        ea.Engine.InvalidatedSquares.Contains(p)
-                            ? '#'
-                            : null
-                    ));
+                    : (ea.Engine.InvalidatedSquares.Contains(p)
+                        ? '#'
+                        : null));
 
                 _standardOutput.WriteLine(
-                    $"RUN#{ea.LapIndex + 1} -> {(ea.Engine.TrajectoryTip == null ? "FAILURE" : $"SUCCESS(pathlength={ea.Engine.TrajectoryLength},timespan={ea.Duration.TotalMilliseconds}) -> {string.Join(" -> ", ea.Engine.Trajectory.Select(p => $"({p.X},{p.Y})"))}{nl}")}{nl}" +
-                    $"{solution}{nl2}" +
-                    $"X=wall, *=trajectory, #=visited{nl}");
-            };
-            _enginesTestbench.SingleEngineTestsCompleted += (_, ea) => //final
+                    $"""
+                     RUN#{ea.LapIndex + 1} -> {(
+                         ea.Engine.TrajectoryTip == null
+                             ? "FAILURE"
+                             : $"SUCCESS(pathlength={ea.Engine.TrajectoryLength},timespan={ea.Duration.TotalMilliseconds}) -> {ea.Engine.Trajectory.Select(p => $"({p.X},{p.Y})").Joinify(" -> ")}\n"
+                     )}
+
+                     {solution}
+
+                     X=wall, *=trajectory, #=visited
+
+                     """
+                );
+            }
+
+            void EnginesTestbench_SingleEngineTestsCompleted_(object _, SingleEngineTestsCompletedEventArgs ea)
             {
                 _standardOutput.WriteLine(
-                    $"{nl}" +
-                    $"Engine: {ea.Engine.GetEngineName()}{nl}" +
-                    $"Number of runs: {ea.Repetitions} (smooth runs: {ea.Repetitions - ea.Crashes}, crashes: {ea.Crashes}){nl}" +
-                    $"Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength}{nl}" +
-                    $"Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms{nl}");
-            };
+                    $"""
 
-            ct.ThrowIfCancellationRequested();
+                     Engine: {ea.Engine.GetEngineName()}
+                     Number of runs: {ea.Repetitions} (smooth runs: {ea.Repetitions - ea.Crashes}, crashes: {ea.Crashes})
+                     Path-lengths (Best / Worst / Average): {ea.BestPathLength} / {ea.WorstPathLength} / {ea.AveragePathLength}
+                     Time-durations (Best / Worst / Average): {ea.BestTimePerformance.TotalMilliseconds}ms / {ea.WorstTimePerformance.TotalMilliseconds}ms / {ea.AverageTimePerformance.TotalMilliseconds}ms
 
-            await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
+                     """
+                );
+            }
         }
         catch (Exception ex)
         {

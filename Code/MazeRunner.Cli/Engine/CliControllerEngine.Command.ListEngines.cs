@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Cli.Enums;
+using MazeRunner.Utils;
 
 namespace MazeRunner.Cli.Engine;
 
@@ -12,7 +13,14 @@ public partial class CliControllerEngine
 
         var engineNames = _enginesFactory.EnginesNames; //todo convert this to a method and pass the ct to it
 
-        await _standardOutput.WriteLineAsync($"Available Engines:{nl2}{string.Join(nl, engineNames)}{nl2}");
+        await _standardOutput.WriteLineAsync(
+            $"""
+             Available Engines:
+
+             {engineNames.LineJoinify()}
+
+             """
+        );
         
         return EExitCodes.Success;
     }
