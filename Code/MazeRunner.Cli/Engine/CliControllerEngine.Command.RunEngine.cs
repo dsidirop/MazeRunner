@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Cli.Engine.Exceptions;
 using MazeRunner.Cli.Enums;
+using MazeRunner.Contracts.Events;
 using MazeRunner.Utils;
 
 namespace MazeRunner.Cli.Engine;
@@ -34,17 +35,29 @@ public partial class CliControllerEngine
             var maze = await _mazesFactory.FromFileAsync(mazefile, suppressExceptions: false);
             var enginesToBenchmark = enginenames.Select(x => _enginesFactory.Spawn(x, maze)).ToArray();
 
-            _enginesTestbench.LapConcluded += (_, ea) => //per lap
+            ct.ThrowIfCancellationRequested();
+
+            try
+            {
+                _enginesTestbench.LapConcluded += EnginesTestbench_LapConcluded_;
+                _enginesTestbench.SingleEngineTestsCompleted += EnginesTestbench_SingleEngineTestsCompleted_;
+                await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
+            }
+            finally
+            {
+                _enginesTestbench.LapConcluded -= EnginesTestbench_LapConcluded_;
+                _enginesTestbench.SingleEngineTestsCompleted -= EnginesTestbench_SingleEngineTestsCompleted_;
+            }
+
+            void EnginesTestbench_LapConcluded_(object _, LapConcludedEventArgs ea)
             {
                 if (!verbose) return;
 
                 var solution = maze.ToAsciiMap(p => ea.Engine.Trajectory.Contains(p)
                     ? '*'
-                    : (
-                        ea.Engine.InvalidatedSquares.Contains(p)
-                            ? '#'
-                            : null
-                    ));
+                    : (ea.Engine.InvalidatedSquares.Contains(p)
+                        ? '#'
+                        : null));
 
                 _standardOutput.WriteLine(
                     $"""
@@ -60,8 +73,9 @@ public partial class CliControllerEngine
 
                      """
                 );
-            };
-            _enginesTestbench.SingleEngineTestsCompleted += (_, ea) => //final
+            }
+
+            void EnginesTestbench_SingleEngineTestsCompleted_(object _, SingleEngineTestsCompletedEventArgs ea)
             {
                 _standardOutput.WriteLine(
                     $"""
@@ -73,11 +87,7 @@ public partial class CliControllerEngine
 
                      """
                 );
-            };
-
-            ct.ThrowIfCancellationRequested();
-
-            await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
+            }
         }
         catch (Exception ex)
         {

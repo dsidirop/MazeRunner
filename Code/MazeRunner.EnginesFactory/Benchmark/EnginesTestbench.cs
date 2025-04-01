@@ -120,7 +120,7 @@ public class EnginesTestbench : IEnginesTestbench
             enginesToTest.ForEach(eng =>
             {
                 failedEngine = eng;
-                OnSingleEngineTestsStarting(new SingleEngineTestsStartingEventArgs(engine: eng, benchmarkId: benchmarkId));
+                OnSingleEngineTestsStarting(new SingleEngineTestsStartingEventArgs(benchmarkId, eng));
 
                 var crashes = 0;
                 var pathLengths = new List<int>(repetitions);
@@ -128,44 +128,10 @@ public class EnginesTestbench : IEnginesTestbench
                 var timeDurations = new List<TimeSpan>(repetitions);
 
                 var ii = 0;
-                var lapStarting = new EventHandler((_, _) =>
-                {
-                    stopWatch.Restart();
-                    OnLapStarting(new LapStartingEventArgs(benchmarkId: benchmarkId, lapIndex: ii, engine: eng));
-                });
-                var lapConcluded = new EventHandler<ConcludedEventArgs>((_, ea) =>
-                {
-                    try
-                    {
-                        stopWatch.Stop(); //order
-                        if (ea.Status is ConclusionStatusTypeEnum.Stopped or ConclusionStatusTypeEnum.Crashed)
-                        {
-                            if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
-                            return;
-                        }
-                        timeDurations.Add(stopWatch.Elapsed); //order
-                        pathLengths.Add(eng.TrajectoryLength); //order
-                    }
-                    finally
-                    {
-                        shortestPath = (shortestPath?.Count ?? int.MaxValue) > eng.TrajectoryLength
-                            ? eng.Trajectory.ToList()  //0 tolist
-                            : shortestPath;
-
-                        OnLapConcluded(new LapConcludedEventArgs( //order
-                            engine: eng,
-                            status: ea.Status,
-                            lapIndex: ii++,
-                            duration: stopWatch.Elapsed,
-                            benchmarkId: benchmarkId
-                        ));
-                    }
-                });
-
                 try
                 {
-                    eng.Starting += lapStarting;
-                    eng.Concluded += lapConcluded;
+                    eng.Starting += Engine_Starting;
+                    eng.Concluded += Engine_Concluded;
                     for (var i = 0; i < repetitions; i++, eng.Reset())
                     {
                         ct.ThrowIfCancellationRequested();
@@ -176,8 +142,8 @@ public class EnginesTestbench : IEnginesTestbench
                 }
                 finally
                 {
-                    eng.Starting -= lapStarting;
-                    eng.Concluded -= lapConcluded;
+                    eng.Starting -= Engine_Starting;
+                    eng.Concluded -= Engine_Concluded;
                 }
 
                 pathLengths.Sort();
@@ -196,6 +162,43 @@ public class EnginesTestbench : IEnginesTestbench
                     worstTimePerformance: timeDurations.Last(),
                     averageTimePerformance: new TimeSpan(Convert.ToInt64(timeDurations.Average(timeSpan => timeSpan.Ticks)))
                 ));
+                return;
+
+                void Engine_Starting(object _, EventArgs __)
+                {
+                    stopWatch.Restart();
+                    OnLapStarting(new LapStartingEventArgs(benchmarkId, lapIndex: ii, eng));
+                }
+                
+                void Engine_Concluded(object _, ConcludedEventArgs ea)
+                {
+                    try
+                    {
+                        stopWatch.Stop(); //order
+                        if (ea.Status is ConclusionStatusTypeEnum.Stopped or ConclusionStatusTypeEnum.Crashed)
+                        {
+                            if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
+                            return;
+                        }
+
+                        timeDurations.Add(stopWatch.Elapsed); //order
+                        pathLengths.Add(eng.TrajectoryLength); //order
+                    }
+                    finally
+                    {
+                        shortestPath = (shortestPath?.Count ?? int.MaxValue) > eng.TrajectoryLength
+                            ? eng.Trajectory.ToList() //0 tolist
+                            : shortestPath;
+
+                        OnLapConcluded(new LapConcludedEventArgs( //order
+                            engine: eng,
+                            status: ea.Status,
+                            lapIndex: ii++,
+                            duration: stopWatch.Elapsed,
+                            benchmarkId: benchmarkId
+                        ));
+                    }
+                }
             });
         }
         catch (Exception ex)
