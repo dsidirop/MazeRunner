@@ -130,8 +130,8 @@ public class EnginesTestbench : IEnginesTestbench
                 var ii = 0;
                 try
                 {
-                    eng.Starting += Engine_Starting;
-                    eng.Concluded += Engine_Concluded;
+                    eng.Starting += Engine_Starting_;
+                    eng.Concluded += Engine_Concluded_;
                     for (var i = 0; i < repetitions; i++, eng.Reset())
                     {
                         ct.ThrowIfCancellationRequested();
@@ -142,8 +142,8 @@ public class EnginesTestbench : IEnginesTestbench
                 }
                 finally
                 {
-                    eng.Starting -= Engine_Starting;
-                    eng.Concluded -= Engine_Concluded;
+                    eng.Starting -= Engine_Starting_;
+                    eng.Concluded -= Engine_Concluded_;
                 }
 
                 pathLengths.Sort();
@@ -164,13 +164,13 @@ public class EnginesTestbench : IEnginesTestbench
                 ));
                 return;
 
-                void Engine_Starting(object _, EventArgs __)
+                void Engine_Starting_(object _, EventArgs __)
                 {
                     stopWatch.Restart();
                     OnLapStarting(new LapStartingEventArgs(benchmarkId, lapIndex: ii, eng));
                 }
                 
-                void Engine_Concluded(object _, ConcludedEventArgs ea)
+                void Engine_Concluded_(object _, ConcludedEventArgs ea)
                 {
                     try
                     {
