@@ -165,14 +165,14 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         _starting?.Invoke(this, EventArgs.Empty);
     }
 
-    protected virtual void OnConcluded(ConcludedEventArgs ea)
+    protected virtual void OnConcluded(in ConcludedEventArgs ea)
     {
         Tracer.TraceInformation($"{ea}");
 
         _concluded?.Invoke(this, ea);
     }
 
-    protected virtual void OnStateChanged(StateChangedEventArgs ea)
+    protected virtual void OnStateChanged(in StateChangedEventArgs ea)
     {
         Tracer.TraceInformation($"{ea}");
 
