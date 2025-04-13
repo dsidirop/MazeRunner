@@ -6,7 +6,7 @@ using System.Linq;
 namespace MazeRunner.Contracts.Events;
 
 [Serializable]
-public readonly struct SingleEngineTestsCompletedEventArgs : IMazeRunnerEventArgs
+public readonly struct SpecificEngineTestsCompletedEventArgs : IMazeRunnerEventArgs
 {
     public readonly int BenchmarkId;
 
@@ -25,7 +25,7 @@ public readonly struct SingleEngineTestsCompletedEventArgs : IMazeRunnerEventArg
     public readonly TimeSpan WorstTimePerformance;
     public readonly TimeSpan AverageTimePerformance;
 
-    public SingleEngineTestsCompletedEventArgs(
+    public SpecificEngineTestsCompletedEventArgs(
         int benchmarkId,
         IList<Point> shortestPath,
         IMazeRunnerEngine engine,
@@ -53,7 +53,7 @@ public readonly struct SingleEngineTestsCompletedEventArgs : IMazeRunnerEventArg
     }
     
     [Obsolete("This constructor should not be used")]
-    public SingleEngineTestsCompletedEventArgs() => throw new NotImplementedException("This constructor should not be used");
+    public SpecificEngineTestsCompletedEventArgs() => throw new NotImplementedException("This constructor should not be used");
 
     public override string ToString() => ToStringy(includeShortestPath: true);
     

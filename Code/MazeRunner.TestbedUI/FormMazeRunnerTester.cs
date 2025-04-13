@@ -68,21 +68,27 @@ public partial class FormMazeRunnerTester : Form
 
         _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //0 enginesnames order
         _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
-        lbxkEnginesToBenchmark.ItemCheck += (_, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
+
+        lbxkEnginesToBenchmark.ItemCheck += lbxkEnginesToBenchmark_ItemCheckStatusChanged_; //order
 
         _enginesTestbench.Commencing += EnginesTestbench_Commencing_;
         {
-            _enginesTestbench.SingleEngineTestsStarting += EnginesTestbench_SingleEngineTestsStarting_;
+            _enginesTestbench.SpecificEngineTestsStarting += EnginesTestbench_SpecificEngineTestsStarting_;
         
-            _enginesTestbench.LapStarting += EnginesTestbench_LapStarting_;
-            _enginesTestbench.LapConcluded += EnginesTestbench_LapConcluded_;
+            _enginesTestbench.SpecificEngineLapStarting += EnginesTestbench_SpecificEngineLapStarting_;
+            _enginesTestbench.SpecificEngineLapConcluded += EnginesTestbench_SpecificEngineLapConcluded_;
 
-            _enginesTestbench.SingleEngineTestsCompleted += EnginesTestbench_SingleEngineTestsCompleted;    
+            _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;    
         }
         _enginesTestbench.AllDone += EnginesTestbench_AllDone_;
 
         OnComponentStateChanged(new ComponentStateChanged("form.onload")); //init ui
         return;
+
+        void lbxkEnginesToBenchmark_ItemCheckStatusChanged_(object _, ItemCheckEventArgs ea_)
+        {
+            _mazeRunnersEnginesDataSource[ea_.Index].Selected = ea_.NewValue == CheckState.Checked;
+        }
 
         void EnginesTestbench_AllDone_(object o, AllDoneEventArgs allDoneEventArgs)
         {
@@ -108,7 +114,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        void EnginesTestbench_SingleEngineTestsStarting_(object _, SingleEngineTestsStartingEventArgs ea_)
+        void EnginesTestbench_SpecificEngineTestsStarting_(object _, SpecificEngineTestsStartingEventArgs ea_)
         {
             Post(PostCallback_);
             Thread.Sleep(400);
@@ -120,7 +126,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        void EnginesTestbench_LapStarting_(object _, LapStartingEventArgs ea_)
+        void EnginesTestbench_SpecificEngineLapStarting_(object _, SpecificEngineLapStartingEventArgs ea_)
         {
             Post(PostCallback_);
             return;
@@ -132,7 +138,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        void EnginesTestbench_LapConcluded_(object _, LapConcludedEventArgs ea_)
+        void EnginesTestbench_SpecificEngineLapConcluded_(object _, SpecificEngineLapConcludedEventArgs ea_)
         {
             Post(PostCallback_);
             return;
@@ -143,7 +149,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        void EnginesTestbench_SingleEngineTestsCompleted(object _, SingleEngineTestsCompletedEventArgs ea_)
+        void EnginesTestbench_SpecificEngineTestsCompleted_(object _, SpecificEngineTestsCompletedEventArgs ea_)
         {
             Post(PostCallback_);
             Thread.Sleep(1300);

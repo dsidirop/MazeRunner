@@ -3,7 +3,7 @@
 namespace MazeRunner.Contracts.Events;
 
 [Serializable]
-public readonly struct LapConcludedEventArgs : IMazeRunnerEventArgs
+public readonly struct SpecificEngineLapConcludedEventArgs : IMazeRunnerEventArgs
 {
     public readonly int BenchmarkId;
 
@@ -12,7 +12,7 @@ public readonly struct LapConcludedEventArgs : IMazeRunnerEventArgs
     public readonly IMazeRunnerEngine Engine;
     public readonly ConclusionStatusTypeEnum Status;
 
-    public LapConcludedEventArgs(int benchmarkId, int lapIndex, TimeSpan duration, IMazeRunnerEngine engine, ConclusionStatusTypeEnum status)
+    public SpecificEngineLapConcludedEventArgs(int benchmarkId, int lapIndex, TimeSpan duration, IMazeRunnerEngine engine, ConclusionStatusTypeEnum status)
     {
         BenchmarkId = benchmarkId;
         LapIndex = lapIndex;
@@ -22,5 +22,5 @@ public readonly struct LapConcludedEventArgs : IMazeRunnerEventArgs
     }
     
     [Obsolete("This constructor should not be used")]
-    public LapConcludedEventArgs() => throw new NotImplementedException("This constructor should not be used");
+    public SpecificEngineLapConcludedEventArgs() => throw new NotImplementedException("This constructor should not be used");
 }
