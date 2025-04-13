@@ -113,7 +113,7 @@ public class EnginesTestbench : IEnginesTestbench
             OnCommencing(new CommencingEventArgs(
                 engines: enginesToTest,
                 benchmarkId: benchmarkId,
-                repetitionsPerEngine: repetitions
+                lapsPerEngine: repetitions
             ));
 
             var stopWatch = new Stopwatch();
@@ -227,7 +227,7 @@ public class EnginesTestbench : IEnginesTestbench
     protected virtual void OnCommencing(in CommencingEventArgs ea)
     {
         Tracer.TraceInformation($"""
-                                 [#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.RepetitionsPerEngine} lap(s) per engine]:
+                                 [#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.LapsPerEngine} lap(s) per engine]:
 
                                  {ea!.Engines!.Select(x => x.GetEngineName()).LineJoinify()}
                                  """);

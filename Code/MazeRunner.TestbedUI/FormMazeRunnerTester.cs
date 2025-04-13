@@ -70,39 +70,100 @@ public partial class FormMazeRunnerTester : Form
         _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
         lbxkEnginesToBenchmark.ItemCheck += (_, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
 
-        _enginesTestbench.AllDone += (_, _) => Post(_ =>
+        _enginesTestbench.Commencing += EnginesTestbench_Commencing_;
         {
-            txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
-            OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
-        });
-        _enginesTestbench.Commencing += (_, _) => Post(_ => OnComponentStateChanged(new ComponentStateChanged("testbench.launching")));
-        _enginesTestbench.LapStarting += (_, eaa) => Post(_ =>
-        {
-            txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
-            ccMazeCanvas.ResetCellsToDefaultColors();
-        });
-        _enginesTestbench.LapConcluded += (_, eaa) => Post(_ => txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[eaa.Status]}  "));
-        _enginesTestbench.SingleEngineTestsStarting += (_, eaa) =>
-        {
-            Post(_ => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetEngineName()}'. Completed Laps: ");
-            Thread.Sleep(400);
-        };
-        _enginesTestbench.SingleEngineTestsCompleted += (_, eaa) =>
-        {
-            Post(_ => txtLog.AppendTextAndScrollToBottom($"{nl2}{eaa.ToStringy(includeShortestPath: true)}{nl}"));
-            Thread.Sleep(1300);
-        };
+            _enginesTestbench.SingleEngineTestsStarting += EnginesTestbench_SingleEngineTestsStarting_;
+        
+            _enginesTestbench.LapStarting += EnginesTestbench_LapStarting_;
+            _enginesTestbench.LapConcluded += EnginesTestbench_LapConcluded_;
 
-        OnComponentStateChanged(new ComponentStateChanged("form.onload")); //initui
+            _enginesTestbench.SingleEngineTestsCompleted += EnginesTestbench_SingleEngineTestsCompleted;    
+        }
+        _enginesTestbench.AllDone += EnginesTestbench_AllDone_;
+
+        OnComponentStateChanged(new ComponentStateChanged("form.onload")); //init ui
+        return;
+
+        void EnginesTestbench_AllDone_(object o, AllDoneEventArgs allDoneEventArgs)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
+                OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
+            }
+        }
+
+        void EnginesTestbench_Commencing_(object o, CommencingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.Text += $@"{nl2}** Commencing tests on {ea_.Engines.Count} engines with {ea_.LapsPerEngine} laps per engine ... ";
+                OnComponentStateChanged(new ComponentStateChanged("testbench.launching"));
+            }
+        }
+        
+        void EnginesTestbench_SingleEngineTestsStarting_(object _, SingleEngineTestsStartingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            Thread.Sleep(400);
+            return;
+            
+            void PostCallback_(object _)
+            {
+                txtLog.Text += $@"{nl2}**** Commencing tests on Engine '{ea_.Engine.GetEngineName()}'. Completed Laps: ";
+            }
+        }
+        
+        void EnginesTestbench_LapStarting_(object _, LapStartingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ea_.LapIndex + 1}");
+                ccMazeCanvas.ResetCellsToDefaultColors();
+            }
+        }
+        
+        void EnginesTestbench_LapConcluded_(object _, LapConcludedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
+            }
+        }
+        
+        void EnginesTestbench_SingleEngineTestsCompleted(object _, SingleEngineTestsCompletedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            Thread.Sleep(1300);
+            return;
+            
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($"{nl2}{ea_.ToStringy(includeShortestPath: true)}{nl}");
+            }
+        }
+
+        //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
+        //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
     }
-    //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
-    //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
 
     static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>
     {
-        { ConclusionStatusTypeEnum.Crashed, "⚠" },
-        { ConclusionStatusTypeEnum.Completed, "✓" },
-        { ConclusionStatusTypeEnum.Stopped, "✋" }
+        { ConclusionStatusTypeEnum.Stopped, "✋" },
+        { ConclusionStatusTypeEnum.Crashed, "⚠️" },
+        { ConclusionStatusTypeEnum.Completed, "✅️" },
     }.AsReadOnly();
 
     // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
