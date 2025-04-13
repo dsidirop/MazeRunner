@@ -104,6 +104,7 @@ public class EnginesTestbench : IEnginesTestbench
 
         var ct = cancellationToken ?? CancellationToken.None;
 
+        var stopWatch = new Stopwatch();
         var currentLap = 0;
         var benchmarkId = Interlocked.Increment(ref _benchmarkRuns); //i++ is not threadsafe
         var failedEngine = (IMazeRunnerEngine) null;
@@ -115,15 +116,14 @@ public class EnginesTestbench : IEnginesTestbench
                 lapsPerEngine: repetitions
             ));
 
-            var stopWatch = new Stopwatch();
-            enginesToTest.ForEach(eng =>
+            foreach (var eng in enginesToTest)
             {
                 failedEngine = eng;
                 OnSpecificEngineTestsStarting(new SpecificEngineTestsStartingEventArgs(benchmarkId, eng));
 
                 var crashes = 0;
                 var pathLengths = new List<int>(repetitions);
-                var shortestPath = (IList<Point>) null;
+                var shortestPath = (IReadOnlyCollection<Point>) null;
                 var timeDurations = new List<TimeSpan>(repetitions);
 
                 var ii = 0;
@@ -147,13 +147,16 @@ public class EnginesTestbench : IEnginesTestbench
 
                 pathLengths.Sort();
                 timeDurations.Sort();
+                    
                 OnSpecificEngineTestsCompleted(new SpecificEngineTestsCompletedEventArgs
                 (
                     engine: eng,
                     crashes: crashes,
                     benchmarkId: benchmarkId,
                     repetitions: repetitions,
+#pragma warning disable CA1508
                     shortestPath: shortestPath ?? [],
+#pragma warning restore CA1508
                     bestPathLength: pathLengths.First(),
                     worstPathLength: pathLengths.Last(),
                     averagePathLength: pathLengths.Average(),
@@ -161,7 +164,7 @@ public class EnginesTestbench : IEnginesTestbench
                     worstTimePerformance: timeDurations.Last(),
                     averageTimePerformance: new TimeSpan((long) timeDurations.Average(timeSpan => timeSpan.Ticks))
                 ));
-                return;
+                continue;
 
                 void Engine_Starting_(object _, EventArgs __)
                 {
@@ -169,14 +172,14 @@ public class EnginesTestbench : IEnginesTestbench
                     OnLapStarting(new SpecificEngineLapStartingEventArgs(benchmarkId, lapIndex: ii, eng));
                 }
                 
-                void Engine_Concluded_(object _, ConcludedEventArgs ea)
+                void Engine_Concluded_(object _, ConcludedEventArgs ea_)
                 {
                     try
                     {
                         stopWatch.Stop(); //order
-                        if (ea.Status is ConclusionStatusTypeEnum.Stopped or ConclusionStatusTypeEnum.Crashed)
+                        if (ea_.Status is ConclusionStatusTypeEnum.Stopped or ConclusionStatusTypeEnum.Crashed)
                         {
-                            if (ea.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
+                            if (ea_.Status == ConclusionStatusTypeEnum.Crashed) crashes++;
                             return;
                         }
 
@@ -186,19 +189,19 @@ public class EnginesTestbench : IEnginesTestbench
                     finally
                     {
                         shortestPath = (shortestPath?.Count ?? int.MaxValue) > eng.TrajectoryLength
-                            ? eng.Trajectory.ToList() //0 tolist
+                            ? eng.Trajectory.ToArray().AsReadOnly() //0 tolist
                             : shortestPath;
 
                         OnLapConcluded(new SpecificEngineLapConcludedEventArgs( //order
                             engine: eng,
-                            status: ea.Status,
+                            status: ea_.Status,
                             lapIndex: ii++,
                             duration: stopWatch.Elapsed,
                             benchmarkId: benchmarkId
                         ));
                     }
                 }
-            });
+            }
         }
         catch (Exception ex)
         {
@@ -210,7 +213,7 @@ public class EnginesTestbench : IEnginesTestbench
         {
             OnAllDone(new AllDoneEventArgs(benchmarkId));
         }
-        
+
         //00  it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory
         //    property gets wiped clean
     }
