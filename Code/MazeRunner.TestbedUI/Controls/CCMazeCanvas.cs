@@ -198,6 +198,6 @@ public partial class CCMazeCanvas : UserControl
         {MazeHitTestEnum.Entrypoint, new Tuple<Color, Font, string>(Color.Goldenrod, FontForStartAndEndCells, StartTag)}
     };
 
-    private const string ExitTag = "G";
-    private const string StartTag = "S";
+    private const string ExitTag = "🥇";
+    private const string StartTag = "🏠";
 }

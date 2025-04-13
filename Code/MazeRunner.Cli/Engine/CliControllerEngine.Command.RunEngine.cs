@@ -39,17 +39,17 @@ public partial class CliControllerEngine
 
             try
             {
-                _enginesTestbench.LapConcluded += EnginesTestbench_LapConcluded_;
-                _enginesTestbench.SingleEngineTestsCompleted += EnginesTestbench_SingleEngineTestsCompleted_;
+                _enginesTestbench.SpecificEngineLapConcluded += EnginesTestbench_SpecificEngineLapConcluded_;
+                _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;
                 await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
             }
             finally
             {
-                _enginesTestbench.LapConcluded -= EnginesTestbench_LapConcluded_;
-                _enginesTestbench.SingleEngineTestsCompleted -= EnginesTestbench_SingleEngineTestsCompleted_;
+                _enginesTestbench.SpecificEngineLapConcluded -= EnginesTestbench_SpecificEngineLapConcluded_;
+                _enginesTestbench.SpecificEngineTestsCompleted -= EnginesTestbench_SpecificEngineTestsCompleted_;
             }
 
-            void EnginesTestbench_LapConcluded_(object _, LapConcludedEventArgs ea)
+            void EnginesTestbench_SpecificEngineLapConcluded_(object _, SpecificEngineLapConcludedEventArgs ea)
             {
                 if (!verbose) return;
 
@@ -75,7 +75,7 @@ public partial class CliControllerEngine
                 );
             }
 
-            void EnginesTestbench_SingleEngineTestsCompleted_(object _, SingleEngineTestsCompletedEventArgs ea)
+            void EnginesTestbench_SpecificEngineTestsCompleted_(object _, SpecificEngineTestsCompletedEventArgs ea)
             {
                 _standardOutput.WriteLine(
                     $"""

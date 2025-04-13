@@ -16,7 +16,7 @@ static internal class Program
     [STAThread]
     static private void Main()
     {
-        Task.Run(() => EnginesFactorySingleton.I.EnginesNames); //0 async init
+        Task.Run(EnginesFactorySingleton.I.EnsureInit); //0 async init
 
         Application.ThreadException += new ThreadExceptionHandler().Application_ThreadException; //recoverable errors from forms
 

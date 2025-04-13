@@ -28,9 +28,9 @@ namespace MazeRunner.TestbedUI
             this.tlpUniversal = new System.Windows.Forms.TableLayoutPanel();
             this.splitBoxHorizontal = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.ccMazeCanvas = new MazeRunner.TestbedUI.Controls.CCMazeCanvas();
+            this._ccMazeCanvas = new MazeRunner.TestbedUI.Controls.CCMazeCanvas();
             this.tlpOptionsSidebar = new System.Windows.Forms.TableLayoutPanel();
-            this.lbxkEnginesToBenchmark = new System.Windows.Forms.CheckedListBox();
+            this._lbxkEnginesToBenchmark = new System.Windows.Forms.CheckedListBox();
             this.lblAvailableEngines = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
             this.tlpDummyContainer = new System.Windows.Forms.TableLayoutPanel();
@@ -47,7 +47,7 @@ namespace MazeRunner.TestbedUI
             this.txtLog = new System.Windows.Forms.TextBox();
             this.tlpFooterTitle = new System.Windows.Forms.TableLayoutPanel();
             this.lblLogs = new System.Windows.Forms.Label();
-            this.lnkClearLogs = new System.Windows.Forms.LinkLabel();
+            this._lnkClearLogs = new System.Windows.Forms.LinkLabel();
             this.mstripFile.SuspendLayout();
             this.tlpUniversal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitBoxHorizontal)).BeginInit();
@@ -178,7 +178,7 @@ namespace MazeRunner.TestbedUI
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.AutoScroll = true;
-            this.splitContainer1.Panel1.Controls.Add(this.ccMazeCanvas);
+            this.splitContainer1.Panel1.Controls.Add(this._ccMazeCanvas);
             this.splitContainer1.Panel1MinSize = 450;
             // 
             // splitContainer1.Panel2
@@ -192,15 +192,15 @@ namespace MazeRunner.TestbedUI
             // 
             // ccMazeCanvas
             // 
-            this.ccMazeCanvas.AutoSize = true;
-            this.ccMazeCanvas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ccMazeCanvas.Location = new System.Drawing.Point(0, 0);
-            this.ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
-            this.ccMazeCanvas.Maze = null;
-            this.ccMazeCanvas.Name = "ccMazeCanvas";
-            this.ccMazeCanvas.Padding = new System.Windows.Forms.Padding(5);
-            this.ccMazeCanvas.Size = new System.Drawing.Size(173, 173);
-            this.ccMazeCanvas.TabIndex = 0;
+            this._ccMazeCanvas.AutoSize = true;
+            this._ccMazeCanvas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._ccMazeCanvas.Location = new System.Drawing.Point(0, 0);
+            this._ccMazeCanvas.Margin = new System.Windows.Forms.Padding(0);
+            this._ccMazeCanvas.Maze = null;
+            this._ccMazeCanvas.Name = "ccMazeCanvas";
+            this._ccMazeCanvas.Padding = new System.Windows.Forms.Padding(5);
+            this._ccMazeCanvas.Size = new System.Drawing.Size(173, 173);
+            this._ccMazeCanvas.TabIndex = 0;
             // 
             // tlpOptionsSidebar
             // 
@@ -208,7 +208,7 @@ namespace MazeRunner.TestbedUI
             this.tlpOptionsSidebar.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpOptionsSidebar.ColumnCount = 1;
             this.tlpOptionsSidebar.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptionsSidebar.Controls.Add(this.lbxkEnginesToBenchmark, 0, 3);
+            this.tlpOptionsSidebar.Controls.Add(this._lbxkEnginesToBenchmark, 0, 3);
             this.tlpOptionsSidebar.Controls.Add(this.lblAvailableEngines, 0, 1);
             this.tlpOptionsSidebar.Controls.Add(this.gbOptions, 0, 5);
             this.tlpOptionsSidebar.Controls.Add(this.tlpStartStop, 0, 6);
@@ -229,13 +229,13 @@ namespace MazeRunner.TestbedUI
             // 
             // lbxkEnginesToBenchmark
             // 
-            this.lbxkEnginesToBenchmark.CheckOnClick = true;
-            this.lbxkEnginesToBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbxkEnginesToBenchmark.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbxkEnginesToBenchmark.Location = new System.Drawing.Point(3, 30);
-            this.lbxkEnginesToBenchmark.Name = "lbxkEnginesToBenchmark";
-            this.lbxkEnginesToBenchmark.Size = new System.Drawing.Size(377, 164);
-            this.lbxkEnginesToBenchmark.TabIndex = 0;
+            this._lbxkEnginesToBenchmark.CheckOnClick = true;
+            this._lbxkEnginesToBenchmark.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._lbxkEnginesToBenchmark.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lbxkEnginesToBenchmark.Location = new System.Drawing.Point(3, 30);
+            this._lbxkEnginesToBenchmark.Name = "lbxkEnginesToBenchmark";
+            this._lbxkEnginesToBenchmark.Size = new System.Drawing.Size(377, 164);
+            this._lbxkEnginesToBenchmark.TabIndex = 0;
             // 
             // lblAvailableEngines
             // 
@@ -485,7 +485,7 @@ namespace MazeRunner.TestbedUI
             this.tlpFooterTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpFooterTitle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpFooterTitle.Controls.Add(this.lblLogs, 0, 0);
-            this.tlpFooterTitle.Controls.Add(this.lnkClearLogs, 1, 0);
+            this.tlpFooterTitle.Controls.Add(this._lnkClearLogs, 1, 0);
             this.tlpFooterTitle.Location = new System.Drawing.Point(8, 8);
             this.tlpFooterTitle.Name = "tlpFooterTitle";
             this.tlpFooterTitle.RowCount = 1;
@@ -505,16 +505,16 @@ namespace MazeRunner.TestbedUI
             // 
             // lnkClearLogs
             // 
-            this.lnkClearLogs.AutoSize = true;
-            this.lnkClearLogs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lnkClearLogs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lnkClearLogs.Location = new System.Drawing.Point(42, 0);
-            this.lnkClearLogs.Name = "lnkClearLogs";
-            this.lnkClearLogs.Size = new System.Drawing.Size(38, 19);
-            this.lnkClearLogs.TabIndex = 5;
-            this.lnkClearLogs.TabStop = true;
-            this.lnkClearLogs.Text = "(clear)";
-            this.lnkClearLogs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._lnkClearLogs.AutoSize = true;
+            this._lnkClearLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._lnkClearLogs.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lnkClearLogs.Location = new System.Drawing.Point(42, 0);
+            this._lnkClearLogs.Name = "lnkClearLogs";
+            this._lnkClearLogs.Size = new System.Drawing.Size(38, 19);
+            this._lnkClearLogs.TabIndex = 5;
+            this._lnkClearLogs.TabStop = true;
+            this._lnkClearLogs.Text = "(clear)";
+            this._lnkClearLogs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormMazeRunnerTester
             // 
@@ -574,7 +574,7 @@ namespace MazeRunner.TestbedUI
         private System.Windows.Forms.SplitContainer splitBoxHorizontal;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TableLayoutPanel tlpOptionsSidebar;
-        private System.Windows.Forms.CheckedListBox lbxkEnginesToBenchmark;
+        private System.Windows.Forms.CheckedListBox _lbxkEnginesToBenchmark;
         private System.Windows.Forms.Label lblAvailableEngines;
         private System.Windows.Forms.GroupBox gbOptions;
         private System.Windows.Forms.TableLayoutPanel tlpStartStop;
@@ -588,12 +588,12 @@ namespace MazeRunner.TestbedUI
         private System.Windows.Forms.NumericUpDown nudIterations;
         private System.Windows.Forms.NumericUpDown nudMovementDelay;
         private System.Windows.Forms.Label lblMovementDelay;
-        private CCMazeCanvas ccMazeCanvas;
+        private CCMazeCanvas _ccMazeCanvas;
         private System.Windows.Forms.ToolStripMenuItem reshuffleCurrentMazeToolStripMenuItem;
         private System.Windows.Forms.Label lblTip;
         private System.Windows.Forms.TableLayoutPanel tlpFooterTitle;
         private System.Windows.Forms.Label lblLogs;
-        private System.Windows.Forms.LinkLabel lnkClearLogs;
+        private System.Windows.Forms.LinkLabel _lnkClearLogs;
     }
 }
 

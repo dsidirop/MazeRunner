@@ -37,11 +37,11 @@ public partial class FormMazeRunnerTester : Form
         _mazesFactory = mazesFactory;
         _enginesFactory = enginesFactory;
         _enginesTestbench = enginesTestbench;
-        _mazeRunnersEnginesDataSource = new BindingList<EngineEntry>(); //order
+        _mazeRunnersEnginesDataSource = []; //order
 
-        lbxkEnginesToBenchmark.DataSource = _mazeRunnersEnginesDataSource; //order
-        lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
-        lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
+        _lbxkEnginesToBenchmark.DataSource = _mazeRunnersEnginesDataSource; //order
+        _lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
+        _lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
     }
     
     /// <summary>
@@ -62,47 +62,118 @@ public partial class FormMazeRunnerTester : Form
 
     protected override void OnLoad(EventArgs ea)
     {
-        ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
+        _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(KickstartMazeSpecs.Width, KickstartMazeSpecs.Height, KickstartMazeSpecs.RoadblockDensity);
 
-        lnkClearLogs.LinkClicked += (_, _) => txtLog.Clear();
+        _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //0 engines-names order
+        _mazeRunnersEnginesDataSource.Each((x, i) => _lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
 
-        _enginesFactory.EnginesNames.ForEach(x => _mazeRunnersEnginesDataSource.Add(new EngineEntry {Selected = true, Name = x})); //0 enginesnames order
-        _mazeRunnersEnginesDataSource.Each((x, i) => lbxkEnginesToBenchmark.SetItemChecked(i, x.Selected)); //order
-        lbxkEnginesToBenchmark.ItemCheck += (_, eaa) => _mazeRunnersEnginesDataSource[eaa.Index].Selected = eaa.NewValue == CheckState.Checked; //order
+        _lnkClearLogs.LinkClicked += lnkClearLogs_LinkClicked_; //order
+        _lbxkEnginesToBenchmark.ItemCheck += lbxkEnginesToBenchmark_ItemCheckStatusChanged_; //order
 
-        _enginesTestbench.AllDone += (_, _) => Post(_ =>
+        _enginesTestbench.Commencing += EnginesTestbench_Commencing_;
         {
-            txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
-            OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
-        });
-        _enginesTestbench.Commencing += (_, _) => Post(_ => OnComponentStateChanged(new ComponentStateChanged("testbench.launching")));
-        _enginesTestbench.LapStarting += (_, eaa) => Post(_ =>
+            _enginesTestbench.SpecificEngineTestsStarting += EnginesTestbench_SpecificEngineTestsStarting_;
+        
+            _enginesTestbench.SpecificEngineLapStarting += EnginesTestbench_SpecificEngineLapStarting_;
+            _enginesTestbench.SpecificEngineLapConcluded += EnginesTestbench_SpecificEngineLapConcluded_;
+
+            _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;    
+        }
+        _enginesTestbench.AllDone += EnginesTestbench_AllDone_;
+
+        OnComponentStateChanged(new ComponentStateChanged("form.onload")); //init ui
+        return;
+
+        void lnkClearLogs_LinkClicked_(object o, LinkLabelLinkClickedEventArgs linkLabelLinkClickedEventArgs)
         {
-            txtLog.AppendTextAndScrollToBottom($@"{eaa.LapIndex + 1}");
-            ccMazeCanvas.ResetCellsToDefaultColors();
-        });
-        _enginesTestbench.LapConcluded += (_, eaa) => Post(_ => txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[eaa.Status]}  "));
-        _enginesTestbench.SingleEngineTestsStarting += (_, eaa) =>
+            txtLog.Clear();
+        }
+
+        void lbxkEnginesToBenchmark_ItemCheckStatusChanged_(object _, ItemCheckEventArgs ea_)
         {
-            Post(_ => txtLog.Text += $@"{nl2}** Commencing tests on Engine '{eaa.Engine.GetEngineName()}'. Completed Laps: ");
+            _mazeRunnersEnginesDataSource[ea_.Index].Selected = ea_.NewValue == CheckState.Checked;
+        }
+
+        void EnginesTestbench_AllDone_(object o, AllDoneEventArgs allDoneEventArgs)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
+                OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
+            }
+        }
+
+        void EnginesTestbench_Commencing_(object o, CommencingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.Text += $@"{nl2}** Commencing tests on {ea_.Engines.Count} engines with {ea_.LapsPerEngine} laps per engine ... ";
+                OnComponentStateChanged(new ComponentStateChanged("testbench.launching"));
+            }
+        }
+        
+        void EnginesTestbench_SpecificEngineTestsStarting_(object _, SpecificEngineTestsStartingEventArgs ea_)
+        {
+            Post(PostCallback_);
             Thread.Sleep(400);
-        };
-        _enginesTestbench.SingleEngineTestsCompleted += (_, eaa) =>
+            return;
+            
+            void PostCallback_(object _)
+            {
+                txtLog.Text += $@"{nl2}**** Commencing tests on Engine '{ea_.Engine.GetEngineName()}'. Completed Laps: ";
+            }
+        }
+        
+        void EnginesTestbench_SpecificEngineLapStarting_(object _, SpecificEngineLapStartingEventArgs ea_)
         {
-            Post(_ => txtLog.AppendTextAndScrollToBottom($"{nl2}{eaa.ToStringy(includeShortestPath: true)}{nl}"));
-            Thread.Sleep(1300);
-        };
+            Post(PostCallback_);
+            return;
 
-        OnComponentStateChanged(new ComponentStateChanged("form.onload")); //initui
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ea_.LapIndex + 1}");
+                _ccMazeCanvas.ResetCellsToDefaultColors();
+            }
+        }
+        
+        void EnginesTestbench_SpecificEngineLapConcluded_(object _, SpecificEngineLapConcludedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
+            }
+        }
+        
+        void EnginesTestbench_SpecificEngineTestsCompleted_(object _, SpecificEngineTestsCompletedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            Thread.Sleep(1300);
+            return;
+            
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($"{nl2}{ea_.ToStringy(includeShortestPath: true)}{nl}");
+            }
+        }
+
+        //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
+        //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
     }
-    //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
-    //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
 
     static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>
     {
-        { ConclusionStatusTypeEnum.Crashed, "⚠" },
-        { ConclusionStatusTypeEnum.Completed, "✓" },
-        { ConclusionStatusTypeEnum.Stopped, "✋" }
+        { ConclusionStatusTypeEnum.Stopped, "✋" },
+        { ConclusionStatusTypeEnum.Crashed, "⚠️" },
+        { ConclusionStatusTypeEnum.Completed, "✅️" },
     }.AsReadOnly();
 
     // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
@@ -114,7 +185,7 @@ public partial class FormMazeRunnerTester : Form
         btnStart.Enabled = !testsUnderway;
         nudIterations.Enabled = !testsUnderway;
         nudMovementDelay.Enabled = !testsUnderway;
-        lbxkEnginesToBenchmark.Enabled = !testsUnderway;
+        _lbxkEnginesToBenchmark.Enabled = !testsUnderway;
         saveMazeToolStripMenuItem.Enabled = !testsUnderway;
         loadMazeToolStripMenuItem.Enabled = !testsUnderway;
         generateRandomMazeToolStripMenuItem.Enabled = !testsUnderway;
@@ -130,7 +201,7 @@ public partial class FormMazeRunnerTester : Form
             var delay = (int) nudMovementDelay.Value;
 
             var delayIsSmall = delay < MinDelayThreshold;
-            var mazeTooLarge = ccMazeCanvas.Maze.Size.Height * ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
+            var mazeTooLarge = _ccMazeCanvas.Maze.Size.Height * _ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
             if (mazeTooLarge)
             {
                 ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -141,7 +212,7 @@ public partial class FormMazeRunnerTester : Form
 
             var enginesToBenchmark = _mazeRunnersEnginesDataSource
                 .Where(x => x.Selected)
-                .Select(x => _enginesFactory.Spawn(x.Name, ccMazeCanvas.Maze))
+                .Select(x => _enginesFactory.Spawn(x.Name, _ccMazeCanvas.Maze))
                 .Select(x =>
                 {
                     x.StateChanged += Engine_OnStateChanged_;
@@ -164,8 +235,8 @@ public partial class FormMazeRunnerTester : Form
                 {
                     Post(_ =>
                     {
-                        if (eaa.NewTip != null) ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                        if (eaa.OldTip != null) ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                        if (eaa.NewTip != null) _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                        if (eaa.OldTip != null) _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
                     });
                 }
 
@@ -195,7 +266,7 @@ public partial class FormMazeRunnerTester : Form
         {
             saveFileDialog.Title = @"Save Maze as";
             saveFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
-            saveFileDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{ccMazeCanvas.Maze.Size.Height:D5}x{ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
+            saveFileDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{_ccMazeCanvas.Maze.Size.Height:D5}x{_ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
             saveFileDialog.AddExtension = true;
             saveFileDialog.ValidateNames = true;
             saveFileDialog.CheckPathExists = true;
@@ -208,7 +279,7 @@ public partial class FormMazeRunnerTester : Form
 
         try
         {
-            File.WriteAllText(filepath, ccMazeCanvas.Maze.ToAsciiMap());
+            File.WriteAllText(filepath, _ccMazeCanvas.Maze.ToAsciiMap());
             using (var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation())
             {
                 formFileGeneratedSuccessfully.Text = @"Maze Saved Successfully";
@@ -243,7 +314,7 @@ public partial class FormMazeRunnerTester : Form
 
             try
             {
-                ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
+                _ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
             }
             catch (Exception ex)
             {
@@ -258,13 +329,13 @@ public partial class FormMazeRunnerTester : Form
 
     private void reshuffleCurrentMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
-        var mazespecs = ccMazeCanvas.Maze.GetMazeSpecs();
-        ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(mazespecs.Width, mazespecs.Height, mazespecs.RoadblockDensity);
+        var mazespecs = _ccMazeCanvas.Maze.GetMazeSpecs();
+        _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(mazespecs.Width, mazespecs.Height, mazespecs.RoadblockDensity);
     }
 
     private void generateRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
-        var mazespecs = ccMazeCanvas.Maze.GetMazeSpecs();
+        var mazespecs = _ccMazeCanvas.Maze.GetMazeSpecs();
         using (var generateMazeDialog = new FormGenerateNewRandomMaze())
         {
             generateMazeDialog.MazeWidth = mazespecs.Width;
@@ -272,7 +343,7 @@ public partial class FormMazeRunnerTester : Form
             generateMazeDialog.MazeDensity = mazespecs.RoadblockDensity;
             if (generateMazeDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
+            _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
         }
     }
 

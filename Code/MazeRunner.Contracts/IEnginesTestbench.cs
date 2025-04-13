@@ -12,10 +12,10 @@ public interface IEnginesTestbench
 
     event EventHandler<AllDoneEventArgs> AllDone;
     event EventHandler<CommencingEventArgs> Commencing;
-    event EventHandler<LapStartingEventArgs> LapStarting;
-    event EventHandler<LapConcludedEventArgs> LapConcluded;
-    event EventHandler<SingleEngineTestsStartingEventArgs> SingleEngineTestsStarting;
-    event EventHandler<SingleEngineTestsCompletedEventArgs> SingleEngineTestsCompleted;
+    event EventHandler<SpecificEngineLapStartingEventArgs> SpecificEngineLapStarting;
+    event EventHandler<SpecificEngineLapConcludedEventArgs> SpecificEngineLapConcluded;
+    event EventHandler<SpecificEngineTestsStartingEventArgs> SpecificEngineTestsStarting;
+    event EventHandler<SpecificEngineTestsCompletedEventArgs> SpecificEngineTestsCompleted;
 
     Task RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null);
 }

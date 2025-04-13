@@ -7,14 +7,14 @@ namespace MazeRunner.Contracts.Events;
 public readonly struct CommencingEventArgs : IMazeRunnerEventArgs
 {
     public readonly int BenchmarkId;
-    public readonly int RepetitionsPerEngine;
+    public readonly int LapsPerEngine;
     public readonly IReadOnlyCollection<IMazeRunnerEngine> Engines;
 
-    public CommencingEventArgs(int benchmarkId, IReadOnlyCollection<IMazeRunnerEngine> engines, int repetitionsPerEngine)
+    public CommencingEventArgs(int benchmarkId, IReadOnlyCollection<IMazeRunnerEngine> engines, int lapsPerEngine)
     {
         Engines = engines;
         BenchmarkId = benchmarkId;
-        RepetitionsPerEngine = repetitionsPerEngine;
+        LapsPerEngine = lapsPerEngine;
     }
     
     [Obsolete("This constructor should not be used")]
