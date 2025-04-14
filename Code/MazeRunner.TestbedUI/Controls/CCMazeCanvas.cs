@@ -73,9 +73,9 @@ public partial class CCMazeCanvas : UserControl
             };
         }
 
-        if (!string.IsNullOrEmpty(textToAppend))
+        if (!string.IsNullOrEmpty(textToAppend) && label.Text is not StartTag and not ExitTag)
         {
-            label.Text += $@"{(string.IsNullOrEmpty(label.Text) ? "" : (label.Text == StartTag || label.Text == ExitTag ? " " : ", "))}{textToAppend}";
+            label.Text += $@"{(string.IsNullOrEmpty(label.Text) ? "" : ", ")}{textToAppend}";
         }
 
         if (add)
