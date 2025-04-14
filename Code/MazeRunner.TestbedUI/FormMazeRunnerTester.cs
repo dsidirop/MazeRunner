@@ -242,8 +242,19 @@ public partial class FormMazeRunnerTester : Form
                 
                 void PostCallback_(object _)
                 {
-                    if (eaa.NewTip != null) _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                    if (eaa.OldTip != null) _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                    try
+                    {
+                        _ccMazeCanvas.tlpMesh.SuspendLayout();
+                        _ccMazeCanvas.tlpMesh.SuspendDrawing();
+                        
+                        if (eaa.NewTip != null) _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                        if (eaa.OldTip != null) _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                    }
+                    finally
+                    {
+                        _ccMazeCanvas.tlpMesh.ResumeDrawing();
+                        _ccMazeCanvas.tlpMesh.ResumeLayout();
+                    }
                 }
             }
         }
