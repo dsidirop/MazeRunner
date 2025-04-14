@@ -233,14 +233,18 @@ public partial class FormMazeRunnerTester : Form
             {
                 if (!mazeTooLarge)
                 {
-                    Post(_ =>
-                    {
-                        if (eaa.NewTip != null) _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                        if (eaa.OldTip != null) _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                    });
+                    Post(PostCallback_);
                 }
 
                 if (!delayIsSmall) Thread.Sleep(delay); //1 todo  github#22   dont use task.delay() here because it doesnt work
+
+                return;
+                
+                void PostCallback_(object _)
+                {
+                    if (eaa.NewTip != null) _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                    if (eaa.OldTip != null) _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                }
             }
         }
         catch (Exception ex)

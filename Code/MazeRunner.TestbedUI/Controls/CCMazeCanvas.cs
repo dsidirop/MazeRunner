@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using MazeRunner.Contracts;
 using MazeRunner.Utils;
-using System.ComponentModel;
 
 namespace MazeRunner.TestbedUI.Controls;
 
@@ -17,6 +18,7 @@ public partial class CCMazeCanvas : UserControl
     private ColumnStyle StandardColumnStyle => new(SizeType.Absolute, width: CellEdgeLength);
 
     private IMaze _maze;
+
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IMaze Maze
     {
@@ -35,7 +37,7 @@ public partial class CCMazeCanvas : UserControl
         InitializeComponent();
 
         //tlpMesh.SuspendDrawing() SuspendLayout() //todo  experiment with this technique to speed up the drawing process
-            
+
         tlpMesh.RowStyles.Cast<RowStyle>().ForEach(x =>
         {
             x.Height = CellEdgeLength;
@@ -48,28 +50,32 @@ public partial class CCMazeCanvas : UserControl
         });
     }
 
-    public CCMazeCanvas CustomizeCell(Point cellCoords, Color color, string textToAppend = null)
+    public CCMazeCanvas CustomizeCell(Point cellCoords, Color backcolor, string textToAppend = null)
     {
         if (!_maze.Contains(cellCoords)) throw new ArgumentOutOfRangeException(nameof(cellCoords));
 
         //tlpMesh.SuspendDrawing() //todo  experiment with this technique to speed up the drawing process
-            
+
         var add = false;
         var label = tlpMesh.GetControlFromPosition(column: cellCoords.X, row: cellCoords.Y);
         if (label == null)
         {
             add = true;
-            label = SpawnCellControl(color, FontForSimpleCells, "");
+            label = SpawnControlForCell(backcolor: backcolor, font: FontForSimpleCells, fontcolor: White, text: "");
         }
         else
         {
-            label.Font = FontForSimpleCells;
-            label.BackColor = color;
+            // label.Font = FontForSimpleCells;
+            label.BackColor = _maze.HitTest(cellCoords) switch
+            {
+                MazeHitTestEnum.Free => backcolor,
+                _ => label.BackColor // roadblocks, entrance and exit point get to keep their colors
+            };
         }
 
-        if (!string.IsNullOrEmpty(textToAppend))
+        if (!string.IsNullOrEmpty(textToAppend) && label.Text is not StartTag and not ExitTag)
         {
-            label.Text += $@"{(string.IsNullOrEmpty(label.Text) ? "" : (label.Text == StartTag || label.Text == ExitTag ? ": " : ", "))}{textToAppend}";
+            label.Text += $@"{(string.IsNullOrEmpty(label.Text) ? "" : ", ")}{textToAppend}";
         }
 
         if (add)
@@ -106,6 +112,7 @@ public partial class CCMazeCanvas : UserControl
                     tlpMesh.ColumnStyles.RemoveAt(tlpMesh.ColumnStyles.Count - 1);
                 }
             }
+
             tlpMesh.ColumnCount = _maze.Size.Width;
 
             while (tlpMesh.RowStyles.Count != _maze.Size.Height)
@@ -119,6 +126,7 @@ public partial class CCMazeCanvas : UserControl
                     tlpMesh.RowStyles.RemoveAt(tlpMesh.RowStyles.Count - 1);
                 }
             }
+
             tlpMesh.RowCount = _maze.Size.Height;
 
             ResetCellsToDefaultColors();
@@ -151,16 +159,17 @@ public partial class CCMazeCanvas : UserControl
                         continue;
                     }
 
-                    var properColorAndText = HitTestToColorAndText[hittest];
+                    var properColorAndText = HitTestResultToColorAndText[hittest];
                     if (preexistingLabel == null) //0
                     {
-                        tlpMesh.Controls.Add(SpawnCellControl(properColorAndText.Item1, properColorAndText.Item2, properColorAndText.Item3), column, row);
+                        tlpMesh.Controls.Add(SpawnControlForCell(properColorAndText.BackColor, properColorAndText.Font, properColorAndText.FontColor, properColorAndText.Tag), column, row);
                         continue;
                     }
 
-                    preexistingLabel.Text = properColorAndText.Item3;
-                    preexistingLabel.Font = properColorAndText.Item2;
-                    preexistingLabel.BackColor = properColorAndText.Item1;
+                    preexistingLabel.Text = properColorAndText.Tag;
+                    preexistingLabel.Font = properColorAndText.Font;
+                    preexistingLabel.BackColor = properColorAndText.BackColor;
+                    preexistingLabel.ForeColor = properColorAndText.FontColor;
                 }
             }
         }
@@ -168,10 +177,11 @@ public partial class CCMazeCanvas : UserControl
         {
             tlpMesh.ResumeDrawing();
         }
-    }
-    //0 this method is also being used by setupmaze thus it needs to tread carefully when a cell has not filled yet with a control
 
-    static private Label SpawnCellControl(Color color, Font font, string text) => new()
+        //0 this method is also being used by setupmaze thus it needs to tread carefully when a cell has not filled yet with a control
+    }
+
+    static private Label SpawnControlForCell(Color backcolor, Font font, Color fontcolor, string text) => new()
     {
         Text = text,
         Font = font,
@@ -182,22 +192,28 @@ public partial class CCMazeCanvas : UserControl
         TabIndex = 0,
         AutoSize = true,
         Location = new Point(1, 1),
-        BackColor = color,
-        ForeColor = White,
+        BackColor = backcolor,
+        ForeColor = fontcolor,
         TextAlign = ContentAlignment.MiddleCenter
     };
 
     static private readonly Color White = Color.White;
-    static private readonly Font FontForSimpleCells = new("Tahoma", 8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-    static private readonly Font FontForStartAndEndCells = new("Tahoma", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-    static public readonly Dictionary<MazeHitTestEnum, Tuple<Color, Font, string>> HitTestToColorAndText = new()
-    {
-        //{MazeHitTestEnum.Free, new Tuple<Color, Font, string>(White, FontForSimpleCells, "")}, //not needed
-        {MazeHitTestEnum.Roadblock, new Tuple<Color, Font, string>(Color.Black, FontForSimpleCells, "")},
-        {MazeHitTestEnum.Exitpoint, new Tuple<Color, Font, string>(Color.Green, FontForStartAndEndCells, ExitTag)},
-        {MazeHitTestEnum.Entrypoint, new Tuple<Color, Font, string>(Color.Goldenrod, FontForStartAndEndCells, StartTag)}
-    };
+    static private readonly Font FontForExitCell = new("Tahoma", 32F, FontStyle.Regular, GraphicsUnit.Point, 0);
+    static private readonly Font FontForStartCell = new("Tahoma", 21F, FontStyle.Regular, GraphicsUnit.Point, 0);
+    static private readonly Font FontForSimpleCells = new("Tahoma", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+    static private readonly Font FontForRoadblockCells = new("Tahoma", 42F, FontStyle.Regular, GraphicsUnit.Point, 0);
+
+    static public readonly ImmutableDictionary<MazeHitTestEnum, (Color BackColor, Font Font, Color FontColor, string Tag)> HitTestResultToColorAndText = new[]
+        { //@formatter:off
+            //{MazeHitTestEnum.Free, new Tuple<Color, Font, string>(White, FontForSimpleCells, "")}, //not needed
+            (HitTestResult: MazeHitTestEnum.Roadblock,  BackColor: Color.LightGray,       Font: FontForRoadblockCells,  FontColor: Color.DimGray,      Tag: RoadBlockTag ),
+            (HitTestResult: MazeHitTestEnum.Exitpoint,  BackColor: Color.DarkGoldenrod,   Font: FontForExitCell,        FontColor: Color.Gold,         Tag: ExitTag      ),
+            (HitTestResult: MazeHitTestEnum.Entrypoint, BackColor: Color.LightSeaGreen,   Font: FontForStartCell,       FontColor: Color.FloralWhite,  Tag: StartTag     ),
+        } //@formatter:on
+        .Select(x => new KeyValuePair<MazeHitTestEnum, (Color BackColor, Font Font, Color FontColor, string Tag)>(x.HitTestResult, (x.BackColor, x.Font, x.FontColor, x.Tag)))
+        .ToImmutableDictionary();
 
     private const string ExitTag = "🥇";
     private const string StartTag = "🏠";
+    private const string RoadBlockTag = "🪨";
 }

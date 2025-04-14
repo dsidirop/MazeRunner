@@ -10,7 +10,7 @@ public readonly struct SpecificEngineTestsCompletedEventArgs : IMazeRunnerEventA
 {
     public readonly int BenchmarkId;
 
-    public readonly IList<Point> ShortestPath;
+    public readonly IReadOnlyCollection<Point> ShortestPath;
 
     public readonly IMazeRunnerEngine Engine;
 
@@ -27,7 +27,7 @@ public readonly struct SpecificEngineTestsCompletedEventArgs : IMazeRunnerEventA
 
     public SpecificEngineTestsCompletedEventArgs(
         int benchmarkId,
-        IList<Point> shortestPath,
+        IReadOnlyCollection<Point> shortestPath,
         IMazeRunnerEngine engine,
         int crashes,
         int repetitions,
