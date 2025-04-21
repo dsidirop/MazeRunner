@@ -242,18 +242,23 @@ public partial class FormMazeRunnerTester : Form
                 
                 void PostCallback_(object _)
                 {
+                    var label1 = (Label) null;
+                    var label2 = (Label) null;
                     try
                     {
                         _ccMazeCanvas.tlpMesh.SuspendLayout();
                         _ccMazeCanvas.tlpMesh.SuspendDrawing();
-                        
-                        if (eaa.NewTip != null) _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                        if (eaa.OldTip != null) _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+
+                        if (eaa.NewTip != null) label1 = _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                        if (eaa.OldTip != null) label2 = _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
                     }
                     finally
                     {
                         _ccMazeCanvas.tlpMesh.ResumeDrawing();
                         _ccMazeCanvas.tlpMesh.ResumeLayout();
+
+                        if (label1 != null) label1.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                        if (label2 != null) label2.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
                     }
                 }
             }

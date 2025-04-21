@@ -50,18 +50,19 @@ public partial class CCMazeCanvas : UserControl
         });
     }
 
-    public CCMazeCanvas CustomizeCell(Point cellCoords, Color backcolor, string textToAppend = null)
+    public Label CustomizeCell(Point cellCoords, Color backcolor, string textToAppend = null)
     {
         if (!_maze.Contains(cellCoords)) throw new ArgumentOutOfRangeException(nameof(cellCoords));
 
         //tlpMesh.SuspendDrawing() //todo  experiment with this technique to speed up the drawing process
 
         var add = false;
-        var label = tlpMesh.GetControlFromPosition(column: cellCoords.X, row: cellCoords.Y);
+        var label = (Label) tlpMesh.GetControlFromPosition(column: cellCoords.X, row: cellCoords.Y);
         if (label == null)
         {
             add = true;
             label = SpawnControlForCell(backcolor: backcolor, font: FontForSimpleCells, fontcolor: White, text: "");
+            label.Visible = false;
         }
         else
         {
@@ -83,7 +84,7 @@ public partial class CCMazeCanvas : UserControl
             tlpMesh.Controls.Add(label, column: cellCoords.X, row: cellCoords.Y); //1
         }
 
-        return this;
+        return label;
     }
     //0 we need to force a redraw only of a specific cell in the tlp   thus we calculate its client rectangle and invoke invalidate on it followed by update
     //1 as an optimization we add the control deadlast after we have set its attributes   this is done because if the control gets added and then its properties
