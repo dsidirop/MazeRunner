@@ -365,8 +365,26 @@ public partial class FormMazeRunnerTester : Form
     private void Post(SendOrPostCallback callback, object data = null) => _syncContext.Post(callback, data);
     //private void Send(SendOrPostCallback callback, object data = null) => _syncContext.Send(callback, data);
 
-    protected DialogResult ShowMessageSafe(string text, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Error, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1, Exception ex = null, IWin32Window owner = null)
-        => MessageBox.Show(owner ?? this, text, caption, buttons, icon, defaultButton);
+    protected DialogResult ShowMessageSafe(
+        string text,
+        string caption,
+        MessageBoxButtons buttons = MessageBoxButtons.OK,
+        MessageBoxIcon icon = MessageBoxIcon.Error,
+        MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1,
+        Exception ex = null,
+        IWin32Window owner = null
+    ) => MessageBox.Show(
+        text: $"""
+               {text}
+
+               {ex}
+               """,
+        icon: icon,
+        owner: owner ?? this,
+        caption: caption,
+        buttons: buttons,
+        defaultButton: defaultButton
+    );
 
     [Obfuscation(Exclude = true, ApplyToMembers = true)] //0
     private sealed class EngineEntry
