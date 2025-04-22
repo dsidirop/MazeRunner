@@ -9,7 +9,7 @@ namespace MazeRunner.Contracts;
 public interface IMazeRunnerEngine
 {
     event EventHandler Starting;
-    event EventHandler<ConcludedEventArgs> Concluded;
+    event EventHandler<AllLapsConcludedEventArgs> Concluded;
     event EventHandler<StateChangedEventArgs> StateChanged; //progressed
 
     IMaze Maze { get; }

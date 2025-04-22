@@ -27,5 +27,6 @@
   <Project Path="MazeRunner.Contracts\MazeRunner.Contracts.csproj" Type="Classic C#" />
   <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="Classic C#" />
   <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="Classic C#" />
+  <Project Path="MazeRunner.Utils.Reactive\MazeRunner.Utils.Reactive.csproj" Type="Classic C#" />
   <Project Path="MazeRunner.Utils\MazeRunner.Utils.csproj" Type="Classic C#" />
 </Solution>

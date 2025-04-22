@@ -428,7 +428,7 @@ namespace MazeRunner.TestbedUI
             lblTip.Name = "lblTip";
             lblTip.Size = new System.Drawing.Size(194, 38);
             lblTip.TabIndex = 2;
-            lblTip.Text = "Tip: Press Ctrl + R to reshuffle the current maze";
+            lblTip.Text = "Note: The engines complete very fast in the background but the UI will take some time to render everything\n\nTip: Press Ctrl + R to reshuffle the current maze";
             lblTip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tlpLogs

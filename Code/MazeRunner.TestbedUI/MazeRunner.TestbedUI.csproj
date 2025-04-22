@@ -66,6 +66,11 @@
         
         <!-- it is necessary to include this reference to force the project to spawn its dll under the output folder so that we can scan the engines it provides upon launching -->
         <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Utils.Reactive\MazeRunner.Utils.Reactive.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Reactive" Version="6.0.1" />
     </ItemGroup>
 
 </Project>
