@@ -25,8 +25,8 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         remove => _starting -= value;
     }
 
-    private event EventHandler<ConcludedEventArgs> _concluded;
-    public event EventHandler<ConcludedEventArgs> Concluded
+    private event EventHandler<AllLapsConcludedEventArgs> _concluded;
+    public event EventHandler<AllLapsConcludedEventArgs> Concluded
     {
         add
         {
@@ -150,7 +150,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         }
         finally
         {
-            OnConcluded(new ConcludedEventArgs(
+            OnConcluded(new AllLapsConcludedEventArgs(
                 status: conclusionStatusType,
                 exitpointReached: conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null
             ));
@@ -165,7 +165,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         _starting?.Invoke(this, EventArgs.Empty);
     }
 
-    protected virtual void OnConcluded(in ConcludedEventArgs ea)
+    protected virtual void OnConcluded(in AllLapsConcludedEventArgs ea)
     {
         Tracer.TraceInformation($"{ea}");
 

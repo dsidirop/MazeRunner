@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace MazeRunner.Contracts.Events;
 
 [Serializable]
-public readonly struct CommencingEventArgs : IMazeRunnerEventArgs
+public readonly struct BenchmarkingCommencingEventArgs : IMazeRunnerEventArgs
 {
     public readonly int BenchmarkId;
     public readonly int LapsPerEngine;
     public readonly IReadOnlyCollection<IMazeRunnerEngine> Engines;
 
-    public CommencingEventArgs(int benchmarkId, IReadOnlyCollection<IMazeRunnerEngine> engines, int lapsPerEngine)
+    public BenchmarkingCommencingEventArgs(int benchmarkId, IReadOnlyCollection<IMazeRunnerEngine> engines, int lapsPerEngine)
     {
         Engines = engines;
         BenchmarkId = benchmarkId;
@@ -18,5 +18,5 @@ public readonly struct CommencingEventArgs : IMazeRunnerEventArgs
     }
     
     [Obsolete("This constructor should not be used")]
-    public CommencingEventArgs() => throw new NotImplementedException("This constructor should not be used");
+    public BenchmarkingCommencingEventArgs() => throw new NotImplementedException("This constructor should not be used");
 }

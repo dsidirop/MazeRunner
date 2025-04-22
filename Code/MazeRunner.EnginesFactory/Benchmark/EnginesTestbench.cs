@@ -17,8 +17,8 @@ public class EnginesTestbench : IEnginesTestbench
 
     static private int _benchmarkRuns;
 
-    private event EventHandler<AllDoneEventArgs> _allDone;
-    public event EventHandler<AllDoneEventArgs> AllDone
+    private event EventHandler<AllBenchmarkingDoneEventArgs> _allDone;
+    public event EventHandler<AllBenchmarkingDoneEventArgs> AllBenchmarkingDone
     {
         add
         {
@@ -28,8 +28,8 @@ public class EnginesTestbench : IEnginesTestbench
         remove => _allDone -= value;
     }
 
-    private event EventHandler<CommencingEventArgs> _commencing;
-    public event EventHandler<CommencingEventArgs> Commencing
+    private event EventHandler<BenchmarkingCommencingEventArgs> _commencing;
+    public event EventHandler<BenchmarkingCommencingEventArgs> BenchmarkingCommencing
     {
         add
         {
@@ -39,8 +39,8 @@ public class EnginesTestbench : IEnginesTestbench
         remove => _commencing -= value;
     }
 
-    private event EventHandler<SpecificEngineLapStartingEventArgs> _specificEngineLapStarting;
-    public event EventHandler<SpecificEngineLapStartingEventArgs> SpecificEngineLapStarting
+    private event EventHandler<SpecificEngineSingleLapStartingEventArgs> _specificEngineLapStarting;
+    public event EventHandler<SpecificEngineSingleLapStartingEventArgs> SpecificEngineSingleLapStarting
     {
         add
         {
@@ -110,7 +110,7 @@ public class EnginesTestbench : IEnginesTestbench
         var failedEngine = (IMazeRunnerEngine) null;
         try
         {
-            OnCommencing(new CommencingEventArgs(
+            OnCommencing(new BenchmarkingCommencingEventArgs(
                 engines: enginesToTest,
                 benchmarkId: benchmarkId,
                 lapsPerEngine: repetitions
@@ -133,6 +133,7 @@ public class EnginesTestbench : IEnginesTestbench
                     eng.Concluded += Engine_Concluded_;
                     for (var i = 0; i < repetitions; i++, eng.Reset())
                     {
+                        var foo = ct.IsCancellationRequested;
                         ct.ThrowIfCancellationRequested();
                         
                         currentLap = i;
@@ -169,10 +170,10 @@ public class EnginesTestbench : IEnginesTestbench
                 void Engine_Starting_(object _, EventArgs __)
                 {
                     stopWatch.Restart();
-                    OnLapStarting(new SpecificEngineLapStartingEventArgs(benchmarkId, lapIndex: ii, eng));
+                    OnLapStarting(new SpecificEngineSingleLapStartingEventArgs(benchmarkId, lapIndex: ii, eng));
                 }
                 
-                void Engine_Concluded_(object _, ConcludedEventArgs ea_)
+                void Engine_Concluded_(object _, AllLapsConcludedEventArgs ea_)
                 {
                     try
                     {
@@ -211,14 +212,14 @@ public class EnginesTestbench : IEnginesTestbench
         }
         finally
         {
-            OnAllDone(new AllDoneEventArgs(benchmarkId));
+            OnAllDone(new AllBenchmarkingDoneEventArgs(benchmarkId));
         }
 
         //00  it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory
         //    property gets wiped clean
     }
 
-    protected virtual void OnAllDone(in AllDoneEventArgs ea)
+    protected virtual void OnAllDone(in AllBenchmarkingDoneEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All benchmarks done");
 
@@ -226,7 +227,7 @@ public class EnginesTestbench : IEnginesTestbench
         _allDone?.Invoke(this, ea);
     }
 
-    protected virtual void OnCommencing(in CommencingEventArgs ea)
+    protected virtual void OnCommencing(in BenchmarkingCommencingEventArgs ea)
     {
         Tracer.TraceInformation($"""
                                  [#{ea!.BenchmarkId}] Commencing benchmarks on the following engines [{ea!.LapsPerEngine} lap(s) per engine]:
@@ -238,7 +239,7 @@ public class EnginesTestbench : IEnginesTestbench
         _commencing?.Invoke(this, ea);
     }
 
-    protected virtual void OnLapStarting(in SpecificEngineLapStartingEventArgs ea)
+    protected virtual void OnLapStarting(in SpecificEngineSingleLapStartingEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Starting lap#{ea!.LapIndex} for engine '{ea!.Engine!.GetEngineName()}'");
 

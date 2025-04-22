@@ -6,6 +6,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
@@ -14,6 +17,7 @@ using MazeRunner.Contracts.Events;
 using MazeRunner.Mazes;
 using MazeRunner.TestbedUI.Helpers;
 using MazeRunner.Utils;
+using MazeRunner.Utils.Reactive;
 
 // ReSharper disable NotAccessedField.Local
 
@@ -23,11 +27,20 @@ namespace MazeRunner.TestbedUI;
 public partial class FormMazeRunnerTester : Form
 {
     private CancellationTokenSource _tokenSource;
+
     private readonly IMazesFactory _mazesFactory;
     private readonly IEnginesFactory _enginesFactory;
     private readonly IEnginesTestbench _enginesTestbench;
     private readonly SynchronizationContext _syncContext;
+    
+    private EventLoopScheduler _eventLoopScheduler1;
+    private EventLoopScheduler _eventLoopScheduler2;
+    
+    private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStream1;
+    private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStream2;
     private readonly BindingList<EngineEntry> _mazeRunnersEnginesDataSource;
+    
+    private Subject<(object Sender, IMazeRunnerEventArgs EventArgs)> _mazeRunnerBenchmarkingUpdatingEventsSubject;
 
     public FormMazeRunnerTester(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesTestbench)
     {
@@ -43,7 +56,7 @@ public partial class FormMazeRunnerTester : Form
         _lbxkEnginesToBenchmark.ValueMember = nameof(EngineEntry.Selected); //order
         _lbxkEnginesToBenchmark.DisplayMember = nameof(EngineEntry.Name); //order
     }
-    
+
     /// <summary>
     /// Clean up any resources being used.
     /// </summary>
@@ -51,7 +64,12 @@ public partial class FormMazeRunnerTester : Form
     protected override void Dispose(bool disposing)
     {
         _tokenSource?.Dispose();
-            
+        _eventLoopScheduler1?.Dispose();
+        _eventLoopScheduler2?.Dispose();
+        _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStream1?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStream2?.Dispose();
+
         if (disposing && components != null)
         {
             components.Dispose();
@@ -70,16 +88,16 @@ public partial class FormMazeRunnerTester : Form
         _lnkClearLogs.LinkClicked += lnkClearLogs_LinkClicked_; //order
         _lbxkEnginesToBenchmark.ItemCheck += lbxkEnginesToBenchmark_ItemCheckStatusChanged_; //order
 
-        _enginesTestbench.Commencing += EnginesTestbench_Commencing_;
+        _enginesTestbench.BenchmarkingCommencing += EnginesTestbench_BenchmarkingCommencing_;
         {
             _enginesTestbench.SpecificEngineTestsStarting += EnginesTestbench_SpecificEngineTestsStarting_;
         
-            _enginesTestbench.SpecificEngineLapStarting += EnginesTestbench_SpecificEngineLapStarting_;
+            _enginesTestbench.SpecificEngineSingleLapStarting += EnginesTestbench_SpecificEngineSingleLapStarting_;
             _enginesTestbench.SpecificEngineLapConcluded += EnginesTestbench_SpecificEngineLapConcluded_;
 
             _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;    
         }
-        _enginesTestbench.AllDone += EnginesTestbench_AllDone_;
+        _enginesTestbench.AllBenchmarkingDone += EnginesTestbench_AllBenchmarkingDone_;
 
         OnComponentStateChanged(new ComponentStateChanged("form.onload")); //init ui
         return;
@@ -94,75 +112,35 @@ public partial class FormMazeRunnerTester : Form
             _mazeRunnersEnginesDataSource[ea_.Index].Selected = ea_.NewValue == CheckState.Checked;
         }
 
-        void EnginesTestbench_AllDone_(object o, AllDoneEventArgs allDoneEventArgs)
+        void EnginesTestbench_AllBenchmarkingDone_(object sender_, AllBenchmarkingDoneEventArgs ea_)
         {
-            Post(PostCallback_);
-            return;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
-                OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
-            }
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnCompleted();
         }
 
-        void EnginesTestbench_Commencing_(object o, CommencingEventArgs ea_)
+        void EnginesTestbench_BenchmarkingCommencing_(object sender_, BenchmarkingCommencingEventArgs ea_)
         {
-            Post(PostCallback_);
-            return;
-
-            void PostCallback_(object _)
-            {
-                txtLog.Text += $@"{nl2}** Commencing tests on {ea_.Engines.Count} engines with {ea_.LapsPerEngine} laps per engine ... ";
-                OnComponentStateChanged(new ComponentStateChanged("testbench.launching"));
-            }
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineTestsStarting_(object _, SpecificEngineTestsStartingEventArgs ea_)
+        void EnginesTestbench_SpecificEngineTestsStarting_(object sender_, SpecificEngineTestsStartingEventArgs ea_)
         {
-            Post(PostCallback_);
-            Thread.Sleep(400);
-            return;
-            
-            void PostCallback_(object _)
-            {
-                txtLog.Text += $@"{nl2}**** Commencing tests on Engine '{ea_.Engine.GetEngineName()}'. Completed Laps: ";
-            }
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineLapStarting_(object _, SpecificEngineLapStartingEventArgs ea_)
+        void EnginesTestbench_SpecificEngineSingleLapStarting_(object sender_, SpecificEngineSingleLapStartingEventArgs ea_)
         {
-            Post(PostCallback_);
-            return;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{ea_.LapIndex + 1}");
-                _ccMazeCanvas.ResetCellsToDefaultColors();
-            }
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineLapConcluded_(object _, SpecificEngineLapConcludedEventArgs ea_)
+        void EnginesTestbench_SpecificEngineLapConcluded_(object sender_, SpecificEngineLapConcludedEventArgs ea_)
         {
-            Post(PostCallback_);
-            return;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
-            }
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineTestsCompleted_(object _, SpecificEngineTestsCompletedEventArgs ea_)
+        void EnginesTestbench_SpecificEngineTestsCompleted_(object sender_, SpecificEngineTestsCompletedEventArgs ea_)
         {
-            Post(PostCallback_);
-            Thread.Sleep(1300);
-            return;
-            
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($"{nl2}{ea_.ToStringy(includeShortestPath: true)}{nl}");
-            }
+            _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
 
         //0 the property engines-names will cause the factory to perform a onetime initialization onthefly which involves loading assemblies and so on   this can potentially prove
@@ -191,7 +169,9 @@ public partial class FormMazeRunnerTester : Form
         generateRandomMazeToolStripMenuItem.Enabled = !testsUnderway;
         reshuffleCurrentMazeToolStripMenuItem.Enabled = !testsUnderway;
     }
-
+    
+    private bool _isDelayTooSmall;
+    private bool _isMazeTooLarge;
     private const int MaxMazeArea = 500;
     private const int MinDelayThreshold = 5;
     private async void btnStart_Click(object sender, EventArgs ea)
@@ -200,9 +180,9 @@ public partial class FormMazeRunnerTester : Form
         {
             var delay = (int) nudMovementDelay.Value;
 
-            var delayIsSmall = delay < MinDelayThreshold;
-            var mazeTooLarge = _ccMazeCanvas.Maze.Size.Height * _ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
-            if (mazeTooLarge)
+            _isDelayTooSmall = delay < MinDelayThreshold;
+            _isMazeTooLarge = _ccMazeCanvas.Maze.Size.Height * _ccMazeCanvas.Maze.Size.Width > MaxMazeArea;
+            if (_isMazeTooLarge)
             {
                 ShowMessageSafe($"Live Update of Cells will be disabled because the Maze currently used is too large. Only mazes that have less than {MaxMazeArea} cells get updated live.", "Live Update Disabled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -220,6 +200,28 @@ public partial class FormMazeRunnerTester : Form
                 })
                 .ToArray();
 
+            _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStream1?.Dispose();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStream2?.Dispose();
+            _eventLoopScheduler1?.Dispose();
+            _eventLoopScheduler2?.Dispose();
+
+            _eventLoopScheduler1 = new EventLoopScheduler();
+            _eventLoopScheduler2 = new EventLoopScheduler();
+            _mazeRunnerBenchmarkingUpdatingEventsSubject = new Subject<(object Sender, IMazeRunnerEventArgs EventArgs)>();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStream1 = _mazeRunnerBenchmarkingUpdatingEventsSubject
+                .ObserveOn(_eventLoopScheduler1)
+                .SubscribeAndHandleAllExceptions(
+                    onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(x.Sender, x.EventArgs),
+                    onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
+                );
+            _subscriptionOnMazeRunnerBenchmarkingEventsStream2 = _mazeRunnerBenchmarkingUpdatingEventsSubject
+                .ObserveOn(_eventLoopScheduler2)
+                .SubscribeAndHandleAllExceptions(
+                    onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(x.Sender, x.EventArgs),
+                    onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
+                );
+
             try
             {
                 await _enginesTestbench.RunAsync(enginesToBenchmark, (int) nudIterations.Value, _tokenSource.Token);
@@ -229,55 +231,280 @@ public partial class FormMazeRunnerTester : Form
                 enginesToBenchmark.ForEach(x => x.StateChanged -= Engine_OnStateChanged_);
             }
 
-            void Engine_OnStateChanged_(object _, StateChangedEventArgs eaa)
+            void Engine_OnStateChanged_(object sender_, StateChangedEventArgs ea_)
             {
-                if (!mazeTooLarge)
-                {
-                    Post(PostCallback_);
-                }
-
-                if (!delayIsSmall) Thread.Sleep(delay); //1 todo  github#22   dont use task.delay() here because it doesnt work
-
-                return;
-                
-                void PostCallback_(object _)
-                {
-                    var label1 = (Label) null;
-                    var label2 = (Label) null;
-                    try
-                    {
-                        _ccMazeCanvas.tlpMesh.SuspendLayout();
-                        _ccMazeCanvas.tlpMesh.SuspendDrawing();
-
-                        if (eaa.NewTip != null) label1 = _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                        if (eaa.OldTip != null) label2 = _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                    }
-                    finally
-                    {
-                        _ccMazeCanvas.tlpMesh.ResumeDrawing();
-                        _ccMazeCanvas.tlpMesh.ResumeLayout();
-
-                        if (label1 != null) label1.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
-                        if (label2 != null) label2.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
-                    }
-                }
+                _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
             }
         }
         catch (Exception ex)
         {
             if (ex is OperationCanceledException)
-                return;
-
-            using (var form = new FormUnhandledException(ex))
             {
-                form.ShowDialog();
+                OnBenchmarkingCancelled();
+                return;
+            }
+            
+            HandlePossibleOops(ex);
+        }
+        
+        //0 if the delay is set to low there is no point to try and update the ui because the gdi infrastructure simply cant cope to the constant spamming and freezes for quite some time
+    }
+
+    private void OnBenchmarkingCancelled()
+    {
+        OnComponentStateChanged(new ComponentStateChanged("testbench.cancelled"));
+                
+        txtLog.AppendTextAndScrollToBottom($@"{nl}Cancelled!");
+                
+        _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStream1?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStream2?.Dispose();
+        _eventLoopScheduler1?.Dispose();
+        _eventLoopScheduler2?.Dispose();
+    }
+
+    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(object _, IMazeRunnerEventArgs ea)
+    {
+        var __ = ea switch //@formatter:off
+        {
+            BenchmarkingCommencingEventArgs          ea_ => ForLogging_OnCommencing_(ea_), //                     benchmarker
+            SpecificEngineTestsStartingEventArgs     ea_ => ForLogging_OnSpecificEngineTestsStarting_(ea_), //    benchmarker
+            
+            SpecificEngineSingleLapStartingEventArgs ea_ => ForLogging_OnSpecificEngineLapStarting_(ea_), //      benchmarker 
+            StateChangedEventArgs                    ea_ => ForLogging_OnStateChanged_(ea_), //                   engine
+            SpecificEngineLapConcludedEventArgs      ea_ => ForLogging_OnSpecificEngineLapConcluded_(ea_), //     benchmarker
+            AllLapsConcludedEventArgs                ea_ => ForLogging_OnAllLapsConcluded_(ea_), //               engine
+            
+            SpecificEngineTestsCompletedEventArgs    ea_ => ForLogging_SpecificEngineTestsCompleted_(ea_), //     benchmarker
+            AllBenchmarkingDoneEventArgs             ea_ => ForLogging_OnAllBenchmarkingDone_(ea_), //            benchmarker
+            
+            _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
+        };
+        return;
+
+        bool ForLogging_OnAllLapsConcluded_(AllLapsConcludedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
+            }
+        }
+
+        bool ForLogging_OnAllBenchmarkingDone_(AllBenchmarkingDoneEventArgs _)
+        {
+            Post(PostCallback_);
+            return true;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
+            }
+        }
+        
+        bool ForLogging_SpecificEngineTestsCompleted_(SpecificEngineTestsCompletedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+            
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($"{nl2}{ea_.ToStringy(includeShortestPath: true)}{nl}");
+            }
+        }
+        
+        bool ForLogging_OnCommencing_(BenchmarkingCommencingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+            
+            void PostCallback_(object _)
+            {
+                txtLog.Text += $@"{nl2}** Commencing tests on {ea_.Engines.Count} engines with {ea_.LapsPerEngine} laps per engine ... ";
+            }
+        }
+        
+        bool ForLogging_OnSpecificEngineLapStarting_(SpecificEngineSingleLapStartingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ea_.LapIndex + 1}"); //consider logging on a different subscriber with a separate scheduler
+            }
+        }
+
+        static bool ForLogging_OnStateChanged_(StateChangedEventArgs eaa)
+        {
+            //nothing to do logging-wise
+            return true;
+        }
+
+        bool ForLogging_OnSpecificEngineLapConcluded_(SpecificEngineLapConcludedEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+
+            void PostCallback_(object _)
+            {
+                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
+            }
+        }
+        
+        bool ForLogging_OnSpecificEngineTestsStarting_(SpecificEngineTestsStartingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+
+            void PostCallback_(object state)
+            {
+                txtLog.Text += $@"{nl2}**** Commencing tests on Engine '{ea_.Engine.GetEngineName()}'. Completed Laps: ";
             }
         }
     }
-    //0 if the delay is set to low there is no point to try and update the ui because the gdi infrastructure simply cant cope to the constant spamming and freezes for quite some time
-    //1 todo  githubticket#22  using thread-sleep causes the engine performance to degrade and the results reported to be distorted    read the ticket on some possible solutions for this issue
 
-    private void btnStop_Click(object sender, EventArgs ea) => _tokenSource.Cancel(); // once a token-source instance gets cancelled it is all over for said instance    we thus reinstantiate the token-source inside btnstart_click
+    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(object _, IMazeRunnerEventArgs ea)
+    {
+        if (_tokenSource.IsCancellationRequested)
+        {
+            OnBenchmarkingCancelled();
+            return;
+        }
+        
+        var __ = ea switch //@formatter:off
+        {
+            BenchmarkingCommencingEventArgs          ea_ => ForUI_OnCommencing_(ea_), //                      benchmarker
+            SpecificEngineTestsStartingEventArgs     ea_ => ForUI_OnSpecificEngineTestsStarting_(ea_), //     benchmarker
+            
+            SpecificEngineSingleLapStartingEventArgs ea_ => ForUI_OnSpecificEngineSingleLapStarting_(ea_), // benchmarker 
+            StateChangedEventArgs                    ea_ => ForUI_OnStateChanged_(ea_), //                    engine
+            SpecificEngineLapConcludedEventArgs      ea_ => ForUI_OnSpecificEngineLapConcluded_(ea_), //      benchmarker
+            AllLapsConcludedEventArgs                ea_ => ForUI_OnAllLapsConcluded_(ea_), //                engine
+            
+            SpecificEngineTestsCompletedEventArgs    ea_ => ForUI_SpecificEngineTestsCompleted_(ea_), //      benchmarker
+            AllBenchmarkingDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingDone_(ea_), //             benchmarker
+            
+            _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
+        };
+        return;
+
+        static bool ForUI_OnAllLapsConcluded_(AllLapsConcludedEventArgs ea_)
+        {
+            // nothing to do ui-wise
+            return true;
+        }
+
+        bool ForUI_OnAllBenchmarkingDone_(AllBenchmarkingDoneEventArgs _)
+        {
+            Send(SendCallback_);
+            return true;
+
+            void SendCallback_(object _)
+            {
+                OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
+            }
+        }
+        
+        static bool ForUI_SpecificEngineTestsCompleted_(SpecificEngineTestsCompletedEventArgs ea_)
+        {
+            // nothing to do ui-wise
+            return true;
+        }
+        
+        bool ForUI_OnCommencing_(BenchmarkingCommencingEventArgs ea_)
+        {
+            Send(SendCallback_);
+            return true;
+            
+            void SendCallback_(object state)
+            {
+                OnComponentStateChanged(new ComponentStateChanged("testbench.launching"));
+            }
+        }
+        
+        bool ForUI_OnSpecificEngineSingleLapStarting_(SpecificEngineSingleLapStartingEventArgs ea_)
+        {
+            Post(PostCallback_);
+            return true;
+
+            void PostCallback_(object _)
+            {
+                _ccMazeCanvas.ResetCellsToDefaultColors();
+            }
+        }
+        
+        bool ForUI_OnStateChanged_(StateChangedEventArgs eaa)
+        {
+            if (!_isMazeTooLarge)
+            {
+                Send(SendCallback_);
+            }
+            
+            if (!_isDelayTooSmall) Thread.Sleep((int)nudMovementDelay.Value); //must be done on the consumption thread to enforce the slow-down
+
+            return true;
+                
+            void SendCallback_(object _)
+            {
+                var label1 = (Label) null;
+                var label2 = (Label) null;
+                try
+                {
+                    _ccMazeCanvas.tlpMesh.SuspendLayout();
+                    _ccMazeCanvas.tlpMesh.SuspendDrawing();
+
+                    if (eaa.NewTip != null) label1 = _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+                    if (eaa.OldTip != null) label2 = _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+                }
+                finally
+                {
+                    _ccMazeCanvas.tlpMesh.ResumeDrawing();
+                    _ccMazeCanvas.tlpMesh.ResumeLayout();
+
+                    if (label1 != null) label1.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                    if (label2 != null) label2.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                }
+            }
+        }
+
+        bool ForUI_OnSpecificEngineLapConcluded_(SpecificEngineLapConcludedEventArgs ea_)
+        {
+            // nothing to do ui-wise
+            return true;
+        }
+        
+        bool ForUI_OnSpecificEngineTestsStarting_(SpecificEngineTestsStartingEventArgs ea_)
+        {
+            // nothing to do ui-wise
+            return true;
+        }
+    }
+
+    static void MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored(Exception ex_, bool _)
+    {
+        HandlePossibleOops(ex_);
+    }
+
+    static private void HandlePossibleOops(Exception ex)
+    {
+        if (ex is OperationCanceledException)
+            return; //ignore control-flow exceptions
+        
+        using var form = new FormUnhandledException(ex);
+
+        form.ShowDialog();
+    }
+
+    private void btnStop_Click(object sender, EventArgs ea)
+    {
+        _tokenSource.Cancel();
+        
+        // once a token-source instance gets cancelled it is all over for said instance
+        // we thus reinstantiate the token-source inside btnstart_click
+    }
 
     private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
@@ -368,7 +595,7 @@ public partial class FormMazeRunnerTester : Form
     }
 
     private void Post(SendOrPostCallback callback, object data = null) => _syncContext.Post(callback, data);
-    //private void Send(SendOrPostCallback callback, object data = null) => _syncContext.Send(callback, data);
+    private void Send(SendOrPostCallback callback, object data = null) => _syncContext.Send(callback, data);
 
     protected DialogResult ShowMessageSafe(
         string text,
