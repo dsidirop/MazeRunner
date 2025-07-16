@@ -10,11 +10,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Using Include="NUnit.Framework"/>
+        <Using Include="NUnit.Framework" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="TestArtifacts\**\*"/>
+        <EmbeddedResource Include="TestArtifacts\**\*" />
         <EmbeddedResource Update="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>
             <SubType>Designer</SubType>
@@ -23,17 +23,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Moq" Version="4.20.72"/>
-        <PackageReference Include="Castle.Core" Version="5.2.1"/>
-        <PackageReference Include="FluentAssertions" Version="[7.2.0, 8)"/>
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="Castle.Core" Version="5.2.1" />
+        <PackageReference Include="FluentAssertions" Version="[7.2.0, 8)" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
 
         <PackageReference Include="NUnit" Version="4.3.2" />
-        <PackageReference Include="NUnit.Analyzers" Version="4.7.0">
+        <PackageReference Include="NUnit.Analyzers" Version="4.9.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -49,11 +49,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
         <ProjectReference Include="..\MazeRunner.Cli\MazeRunner.Cli.csproj" />
-        <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
-        <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
-        <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj" />
+        <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" />
+        <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj" />
     </ItemGroup>
 
 </Project>
