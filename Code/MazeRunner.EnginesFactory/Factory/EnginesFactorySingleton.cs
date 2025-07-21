@@ -44,18 +44,19 @@ public class EnginesFactorySingleton : IEnginesFactory
         {
             if (_engines != null) return;
 
-            var dllFilesToScan = Directory.GetFiles(U.ProductInstallationFolderpath_system, "MazeRunner.Engine.*.dll");
-
-            _engines = dllFilesToScan //1
-                .SelectMany(TryLoadAssemblyAndGetExportedTypes)
-                .Where(x => x.IsClass && !x.IsAbstract && x.GetInterfaces().Contains(TypeOfIMazeRunnerEngine))
+            _engines = Enumerable
+                .Empty<Assembly>()
+                .Concat(AppDomain.CurrentDomain.GetAssemblies()) //this works in MAUI (android, ios, ...) and on Windows/Linux
+                .Concat(TryGetDllFilesToScanFromFilesystem_().Select(TryLoadAssemblyFile_).Where(a => a != null)) // this works only on Windows/Linux
+                .SelectMany(CollectAllExportedTypes_)
+                .Where(MatchConcreteClassesOfIMazeRunnerEngine_)
                 .ToDictionary(x => x.Name, x => x, StringComparer.InvariantCultureIgnoreCase);
 
             Tracer.TraceInformation(
                 $"""
-                 Factory initialization complete. Scanned {dllFilesToScan.Length} dlls:
+                 Factory initialization complete. Scanned {TryGetDllFilesToScanFromFilesystem_().Length} dlls:
 
-                 {dllFilesToScan.LineJoinify()}
+                 {TryGetDllFilesToScanFromFilesystem_().LineJoinify()}
 
                  Found {_engines.Count} engines:
 
@@ -63,25 +64,51 @@ public class EnginesFactorySingleton : IEnginesFactory
                  """
             );
         }
+
+        return;
         
+        static IEnumerable<Type> CollectAllExportedTypes_(Assembly assembly)
+        {
+            return assembly.GetExportedTypes();
+        }
+
+        string[] TryGetDllFilesToScanFromFilesystem_()
+        {
+            try
+            {
+                return Directory.GetFiles(U.ProductInstallationFolderpath_system, "MazeRunner.Engine.*.dll");
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceInformation($"Failed to scan for maze runner engine dlls in the installation folder '{U.ProductInstallationFolderpath_system}' (ignoring this and moving on):\n\n{ex}");
+                return [];
+            }
+        }
+
+        static bool MatchConcreteClassesOfIMazeRunnerEngine_(Type x)
+        {
+            return x.IsClass && !x.IsAbstract && x.GetInterfaces().Contains(TypeOfIMazeRunnerEngine);
+        }
+
+        Assembly TryLoadAssemblyFile_(string filepath)
+        {
+            try
+            {
+                return Assembly.LoadFrom(filepath);
+            }
+            catch (Exception ex)
+            {
+                Tracer.TraceInformation($"Failed to load assembly '{filepath}' to scan the engines it provides:\n\n{ex}");
+                return null;
+            }
+        }
+
         //0 play it safe in terms of ensuring threadsafe init
         //1 scan engines dynamically from all dlls that are named after the pattern mazerunner.engine.xyz.dll   if someone wants to add his own engine he can just
         //  drop his dll into the directory with the rest of the dlls
     }
 #pragma warning restore CA1508
 
-    private Type[] TryLoadAssemblyAndGetExportedTypes(string filepath)
-    {
-        try
-        {
-            return Assembly.LoadFrom(filepath).GetExportedTypes();
-        }
-        catch (Exception ex)
-        {
-            Tracer.TraceInformation($"Failed to load assembly '{filepath}' to scan the engines it provides:\n\n{ex}");
-            return [];
-        }
-    }
 
     private EnginesFactorySingleton()
     {
