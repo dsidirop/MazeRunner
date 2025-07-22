@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MazeRunner.Cli.Engine;
 using MazeRunner.EnginesFactory.Benchmark;
-using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 
 namespace MazeRunner.Cli;
@@ -13,7 +12,7 @@ static internal class Program
     {
         var cliControllerEngine = new CliControllerEngine(
             mazesFactory: new MazesFactory(),
-            enginesFactory: EnginesFactorySingleton.I,
+            enginesFactory: EnginesFactory.Factory.GrandMazeRunnerEnginesFactory.I,
             enginesTestbench: new EnginesTestbench(),
 
             standardError: Console.Error,

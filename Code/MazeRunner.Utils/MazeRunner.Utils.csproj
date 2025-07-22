@@ -14,4 +14,10 @@
         <AssemblyVersion>$(Version).0</AssemblyVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+        <Compile Update="**/EnumerableExtentions.*.cs">
+            <DependentUpon>EnumerableExtentions.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
 </Project>
