@@ -6,7 +6,6 @@ using FluentAssertions;
 using MazeRunner.Engine.SimpleMazeRunner;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Properties;
-using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement
 
