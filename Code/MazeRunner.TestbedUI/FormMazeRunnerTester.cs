@@ -34,8 +34,8 @@ public partial class FormMazeRunnerTester : Form
     private readonly IEnginesTestbench _enginesTestbench;
     private readonly SynchronizationContext _syncContext;
     
-    private EventLoopScheduler _eventLoopSchedulerFor_UI;
-    private EventLoopScheduler _eventLoopSchedulerFor_Logging;
+    private IScheduler _subscriptionSchedulerFor_UI;
+    private IScheduler _subscriptionSchedulerFor_Logging;
     
     private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI;
     private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging;
@@ -65,12 +65,13 @@ public partial class FormMazeRunnerTester : Form
     protected override void Dispose(bool disposing)
     {
         _tokenSource?.Dispose();
-        _eventLoopSchedulerFor_UI?.Dispose();
-        _eventLoopSchedulerFor_Logging?.Dispose();
         _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
         _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI?.Dispose();
         _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging?.Dispose();
 
+        (_subscriptionSchedulerFor_UI as IDisposable)?.Dispose();
+        //(_subscriptionSchedulerFor_Logging as IDisposable)?.Dispose(); //dont
+        
         if (disposing && components != null)
         {
             components.Dispose();
@@ -205,20 +206,20 @@ public partial class FormMazeRunnerTester : Form
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI?.Dispose();
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging?.Dispose();
             
-            _eventLoopSchedulerFor_UI ??= new EventLoopScheduler(); //       we can safely reuse the schedulers
-            _eventLoopSchedulerFor_Logging ??= new EventLoopScheduler(); //  once we ensure they have been created once
+            _subscriptionSchedulerFor_UI ??= new EventLoopScheduler(); //        we can safely reuse the schedulers once we ensure they have been created once
+            _subscriptionSchedulerFor_Logging ??= TaskPoolScheduler.Default; //  ideal for logging purposes
 
             _mazeRunnerBenchmarkingUpdatingEventsSubject = new Subject<(object Sender, IMazeRunnerEventArgs EventArgs)>();
 
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI = _mazeRunnerBenchmarkingUpdatingEventsSubject
-                .ObserveOn(_eventLoopSchedulerFor_UI)
+                .ObserveOn(_subscriptionSchedulerFor_UI)
                 .SubscribeAndHandleAllExceptions(
                     onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(x.Sender, x.EventArgs),
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
                 );
             
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging = _mazeRunnerBenchmarkingUpdatingEventsSubject
-                .ObserveOn(_eventLoopSchedulerFor_Logging)
+                .ObserveOn(_subscriptionSchedulerFor_Logging)
                 .SubscribeAndHandleAllExceptions(
                     onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(x.Sender, x.EventArgs),
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
@@ -262,8 +263,8 @@ public partial class FormMazeRunnerTester : Form
         _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI?.Dispose();
         _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging?.Dispose();
 
-        // _eventLoopSchedulerFor_UI?.Dispose();        //nah  no need to dispose   the schedulers are reusable
-        // _eventLoopSchedulerFor_Logging?.Dispose();   //nah  no need to dispose   the schedulers are reusable
+        // _subscriptionSchedulerFor_UI?.Dispose();        //nah  no need to dispose   the schedulers are reusable
+        // _subscriptionSchedulerFor_Logging?.Dispose();   //nah  no need to dispose   the schedulers are reusable
     }
 
     private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(object _, IMazeRunnerEventArgs ea)
