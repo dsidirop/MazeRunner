@@ -64,19 +64,19 @@ jobs:
       - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
         shell: 'bash'
         run: |
-          cd    "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci"                                                                                 \
-                     &&                                                                                                                      \
-          dotnet                                                                                                                             \
-             msbuild                                                                                                                         \
-             "MazeRunner.Builder.targets"                                                                                                    \
-             -m:1                                                                                                                            \
-                                                                                                                                             \
-                                                        -p:PackageOutputPath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"             \
-                                                                                                                                             \
-                                                    -p:MazeRunner_Source_Branch="${{env.MR_SOURCE_BRANCH}}"                                  \
-                                                  -p:MazeRunner_Repository_Path="${{env.MR_REPOSITORY_PATH}}"                                \
-                                              -p:MazeRunner_Github_Access_Token="${{env.MR_GITHUB_ACCESS_TOKEN}}"                            \
-                                          -p:MazeRunner_Test_Results_Folderpath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/TestResults"
+          cd    "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci"                                                          \
+                     &&                                                                                               \
+          dotnet                                                                                                      \
+             msbuild                                                                                                  \
+             "MazeRunner.Builder.targets"                                                                             \
+             -m:1                                                                                                     \
+                                                                                                                      \
+                                    -p:PackageOutputPath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"          \
+                                                                                                                      \
+                             -p:MazeRunner_Source_Branch="${{env.MR_SOURCE_BRANCH}}"                                  \
+                           -p:MazeRunner_Repository_Path="${{env.MR_REPOSITORY_PATH}}"                                \
+                       -p:MazeRunner_Github_Access_Token="${{env.MR_GITHUB_ACCESS_TOKEN}}"                            \
+                   -p:MazeRunner_Test_Results_Folderpath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/TestResults"
 
       - name: '⬆️ Upload Artifacts' # to share with other workflows   https://stackoverflow.com/a/77663335/863651
         uses: 'actions/upload-artifact@v4'

@@ -79,13 +79,17 @@
     </PropertyGroup>
 
     <Target Name="PrintConfiguration">
-        <Message Importance="High" Text="** Configuration            = '$(Configuration)'"/>
-        <Message Importance="High" Text="** PackageOutputPath        = '$(PackageOutputPath)'"/>
-
-        <Message Importance="High" Text="** MazeRunner_SolutionFile             = '$(MazeRunner_SolutionFile)'"/>
-        <Message Importance="High" Text="** MazeRunner_Source_Branch            = '$(MazeRunner_Source_Branch)'"/>
-        <Message Importance="High" Text="** MazeRunner_Repository_Path          = '$(MazeRunner_Repository_Path)'"/>
-        <Message Importance="High" Text="** MazeRunner_Test_Results_Folderpath  = '$(MazeRunner_Test_Results_Folderpath)'"/>
+        <Message Importance="High" Text="** MSBuild Version                     = '$(MSBuildVersion)'                     "/>
+        <Message Importance="High" Text="** MSBuild Runtime Type                = '$(MSBuildRuntimeType)'                 "/>
+        <Message Importance="High" Text="** MSBuild Tools Version               = '$(MSBuildToolsVersion)'                "/>
+        <Message Importance="High" Text="**                                                                               "/>
+        <Message Importance="High" Text="** Configuration                       = '$(Configuration)'                      "/>
+        <Message Importance="High" Text="** PackageOutputPath                   = '$(PackageOutputPath)'                  "/>
+        <Message Importance="High" Text="**                                                                               "/>
+        <Message Importance="High" Text="** MazeRunner_SolutionFile             = '$(MazeRunner_SolutionFile)'            "/>
+        <Message Importance="High" Text="** MazeRunner_Source_Branch            = '$(MazeRunner_Source_Branch)'           "/>
+        <Message Importance="High" Text="** MazeRunner_Repository_Path          = '$(MazeRunner_Repository_Path)'         "/>
+        <Message Importance="High" Text="** MazeRunner_Test_Results_Folderpath  = '$(MazeRunner_Test_Results_Folderpath)' "/>
 
         <!-- <Message Importance="High" Text="** MazeRunner_Github_Access_Token   ='$(MazeRunner_Github_Access_Token)'"/> dont -->
     </Target>
