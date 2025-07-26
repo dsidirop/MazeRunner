@@ -12,9 +12,9 @@ public readonly struct SpecificEngineSingleLapStartingEventArgs : IMazeRunnerEve
 
     public SpecificEngineSingleLapStartingEventArgs(int benchmarkId, int lapIndex, IMazeRunnerEngine engine)
     {
-        BenchmarkId = benchmarkId;
-        LapIndex = lapIndex;
         Engine = engine;
+        LapIndex = lapIndex;
+        BenchmarkId = benchmarkId;
     }
     
     [Obsolete("This constructor should not be used")]
