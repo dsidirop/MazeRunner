@@ -192,7 +192,21 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
     }
 
     IDictionaryEnumerator IDictionary.GetEnumerator() => OrderedDictionaryAsIDictionary.GetEnumerator();
-    public bool Contains(KeyValuePair<TKey, TValue> item) => OrderedDictionaryAsIDictionary.Contains(item.Key) && ((TValue)OrderedDictionaryAsIDictionary[item.Key]).Equals(item.Value);
+
+    public bool Contains(KeyValuePair<TKey, TValue> item)
+    {
+        if (!OrderedDictionaryAsIDictionary.Contains(item.Key))
+            return false;
+
+        var value = OrderedDictionaryAsIDictionary[item.Key];
+        if (value == null && item.Value == null)
+            return true;
+        
+        if (value == null && item.Value != null || value != null && item.Value == null)
+            return false;
+        
+        return ((TValue) value)!.Equals(item.Value);
+    }
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
