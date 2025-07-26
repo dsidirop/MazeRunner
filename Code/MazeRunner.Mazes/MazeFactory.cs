@@ -72,7 +72,7 @@ public class MazesFactory : IMazesFactory
             var roadblocks = new HashSet<Point>();
             var mazeWidthBasedOnFirstLine = 0;
             
-            using var reader = new StreamReader(File.OpenRead(path));
+            using var reader = new StreamReader(File.OpenRead(path), System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             
             for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
             {
