@@ -33,7 +33,6 @@ if [ -z "${ARTIFACTS_FOLDER_PATH}" ]; then
   exit 5
 fi
 
-
 echo
 echo "** Dotnet CLI:"
 which    dotnet   &&   dotnet   --version
@@ -43,8 +42,51 @@ if [ $exitCode != 0 ]; then
   exit 50
 fi
 
+echo -e "Checking for .NET 10 SDK installation..."
+if dotnet --list-sdks | grep -q "10.0"; then
+    echo " .NET 10 SDK is already installed"
+else
+    echo " .NET10 SDK is not installed - installing it now..."
+    
+    curl -L -o "dotnet-install.ps1" "https://dot.net/v1/dotnet-install.ps1" # Use the dotnet-install script which works better in bash
+    declare exitCode=$?
+    if [ $exitCode != 0 ]; then
+      echo "##vso[task.logissue type=error]Failed to download the dotnet10 installation script."
+      exit 60
+    fi
+    
+    pwsh -Command "./dotnet-install.ps1 -Channel 10.0 -InstallDir 'C:\Program Files\dotnet'"
+    declare exitCode=$?
+    if [ $exitCode != 0 ]; then
+      echo "##vso[task.logissue type=error]Failed to install dotnet10."
+      exit 61
+    fi
 
-cd "Code"
+    if [ -f "$HOME/.bashrc" ]; then # update path permanently in bash profile
+      if ! grep -q "Program Files/dotnet" "$HOME/.bashrc"; then
+        echo 'export PATH="$PATH:/c/Program Files/dotnet"' >> "$HOME/.bashrc"
+        echo "Added .NET to PATH in .bashrc"
+      fi
+    fi
+    
+    if [ -f "$HOME/.bash_profile" ]; then # also update .bash_profile if it exists
+      if ! grep -q "Program Files/dotnet" "$HOME/.bash_profile"; then
+        echo 'export PATH="$PATH:/c/Program Files/dotnet"' >> "$HOME/.bash_profile"
+        echo "Added .NET to PATH in .bash_profile"
+      fi
+    fi
+    
+    export PATH="$PATH:/c/Program Files/dotnet" # update path to include the new installation if needed
+    
+    dotnet --version # verify installation
+    declare exitCode=$?
+    if [ $exitCode != 0 ]; then
+      echo "##vso[task.logissue type=error]Failed to install dotnet10."
+      exit 65
+    fi
+fi
+
+cd "Code" #vital
 declare exitCode=$?
 if [ $exitCode != 0 ]; then
   echo "##vso[task.logissue type=error]Failed to cd to 'Code' folder."
@@ -58,7 +100,7 @@ if [ $exitCode != 0 ]; then
   echo "##vso[task.logissue type=error]Failed to restore dotnet workloads."
   exit 70
 fi
-cd - || exit 71
+# cd - || exit 71 #nah    better stay inside the 'Code' folder for the next steps
 
 echo
 echo "** Adding 'Artifacts' Folder as a Nuget Source (dotnet):"

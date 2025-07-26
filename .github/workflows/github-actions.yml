@@ -14,7 +14,7 @@ env:
   MR_GITHUB_NUGET_FEED_URL: "https://nuget.pkg.github.com/dsidirop/index.json"
   MR_GITHUB_NUGET_FEED_USERNAME: ${{      secrets.MR_GITHUB_NUGET_FEED_USERNAME  }}
 
-  DOTNET_TARGET_WORKLOAD_VERSION: "9.0.200" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
+  DOTNET_TARGET_WORKLOAD_VERSION: "10.0.100-preview.5.25306.3" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
 
 
 on:
