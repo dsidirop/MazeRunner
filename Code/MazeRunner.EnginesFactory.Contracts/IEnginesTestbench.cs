@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
 
-namespace MazeRunner.Contracts;
+namespace MazeRunner.EnginesFactory.Contracts;
 
 public interface IEnginesTestbench
 {

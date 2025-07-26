@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using MazeRunner.Contracts;
 
-namespace MazeRunner.Contracts;
+namespace MazeRunner.EnginesFactory.Contracts;
 
 public interface IEnginesFactory
 {

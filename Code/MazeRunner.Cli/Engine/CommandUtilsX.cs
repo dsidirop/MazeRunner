@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using MazeRunner.Cli.Engine.Exceptions;
-using MazeRunner.Contracts;
+using MazeRunner.EnginesFactory.Contracts;
 
 namespace MazeRunner.Cli.Engine;
 

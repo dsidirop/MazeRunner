@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
+using MazeRunner.EnginesFactory.Contracts;
 using MazeRunner.Utils;
 
 namespace MazeRunner.EnginesFactory.Benchmark;
