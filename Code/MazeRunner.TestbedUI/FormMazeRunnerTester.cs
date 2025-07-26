@@ -11,6 +11,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
@@ -506,7 +507,7 @@ public partial class FormMazeRunnerTester : Form
         // we thus reinstantiate the token-source inside btnstart_click
     }
 
-    private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async Task saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var filepath = "";
 
@@ -534,7 +535,7 @@ public partial class FormMazeRunnerTester : Form
 
         try
         {
-            File.WriteAllText(filepath, _ccMazeCanvas.Maze.ToAsciiMap());
+            await File.WriteAllTextAsync(filepath, _ccMazeCanvas.Maze.ToAsciiMap());
 
             using var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation();
             
@@ -550,7 +551,7 @@ public partial class FormMazeRunnerTester : Form
         }
     }
 
-    private async void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async Task loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var filepath = "";
         try
