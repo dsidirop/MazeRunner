@@ -14,26 +14,26 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 {
     private readonly TraceSource Tracer = new(nameof(MazeRunnerDepthFirstEngineBase), SourceLevels.Off); //preferred not to use inheritance for setting this
 
-    private event EventHandler _starting;
-    public event EventHandler Starting
+    private event EventHandler<LapStartingEventArgs> _lapStarting;
+    public event EventHandler<LapStartingEventArgs> LapStarting
     {
         add
         {
-            _starting -= value;
-            _starting += value;
+            _lapStarting -= value;
+            _lapStarting += value;
         }
-        remove => _starting -= value;
+        remove => _lapStarting -= value;
     }
 
-    private event EventHandler<LapConcludedEventArgs> _concluded;
-    public event EventHandler<LapConcludedEventArgs> Concluded
+    private event EventHandler<LapConcludedEventArgs> _lapConcluded;
+    public event EventHandler<LapConcludedEventArgs> LapConcluded
     {
         add
         {
-            _concluded -= value;
-            _concluded += value;
+            _lapConcluded -= value;
+            _lapConcluded += value;
         }
-        remove => _concluded -= value;
+        remove => _lapConcluded -= value;
     }
 
     private event EventHandler<StateChangedEventArgs> _stateChanged;
@@ -93,7 +93,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         var conclusionStatusType = ConclusionStatusTypeEnum.Completed;
         try
         {
-            OnStarting();
+            OnLapStarting();
 
             ct.ThrowIfCancellationRequested();
 
@@ -150,7 +150,7 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         }
         finally
         {
-            OnConcluded(new LapConcludedEventArgs(
+            OnLapConcluded(new LapConcludedEventArgs(
                 status: conclusionStatusType,
                 exitpointReached: conclusionStatusType == ConclusionStatusTypeEnum.Completed && TrajectoryTip != null
             ));
@@ -158,18 +158,18 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
         return this;
     }
 
-    protected virtual void OnStarting()
+    protected virtual void OnLapStarting()
     {
         Tracer.TraceInformation($"Commencing on maze with specs: {_maze}");
 
-        _starting?.Invoke(this, EventArgs.Empty);
+        _lapStarting?.Invoke(this, new());
     }
 
-    protected virtual void OnConcluded(in LapConcludedEventArgs ea)
+    protected virtual void OnLapConcluded(in LapConcludedEventArgs ea)
     {
         Tracer.TraceInformation($"{ea}");
 
-        _concluded?.Invoke(this, ea);
+        _lapConcluded?.Invoke(this, ea);
     }
 
     protected virtual void OnStateChanged(in StateChangedEventArgs ea)

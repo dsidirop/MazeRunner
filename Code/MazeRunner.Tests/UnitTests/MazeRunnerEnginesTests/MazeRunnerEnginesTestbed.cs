@@ -64,7 +64,7 @@ public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
         // Assert
             
         action.Should().NotThrow();
-        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.Concluded)).Count().Should().Be(1);
+        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.LapConcluded)).Count().Should().Be(1);
         eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.StateChanged));
 
         runner.Trajectory.Should().BeEquivalentTo([maze.Entrypoint, maze.Exitpoint]);
@@ -87,7 +87,7 @@ public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
 
         // Assert
         action.Should().NotThrow();
-        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.Concluded)).Count().Should().Be(1);
+        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.LapConcluded)).Count().Should().Be(1);
         eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.StateChanged));
 
         runner.Trajectory.Any().Should().Be(false);
@@ -110,7 +110,7 @@ public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
 
         // Assert
         action.Should().NotThrow();
-        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.Concluded)).Count().Should().Be(1);
+        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.LapConcluded)).Count().Should().Be(1);
         eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.StateChanged)).Count().Should().Be(3);
 
         runner.Trajectory.Should().BeEquivalentTo([maze.Entrypoint, new Point(x: 1, y: 0), maze.Exitpoint]);
@@ -133,7 +133,7 @@ public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
 
         // Assert
         action.Should().NotThrow();
-        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.Concluded)).Count().Should().Be(1);
+        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.LapConcluded)).Count().Should().Be(1);
         eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.StateChanged)).Count().Should().Be(2);
 
         runner.Trajectory.Any().Should().Be(false);
@@ -156,7 +156,7 @@ public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
 
         // Assert
         action.Should().NotThrow();
-        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.Concluded)).Count().Should().Be(1);
+        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.LapConcluded)).Count().Should().Be(1);
         eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.StateChanged)).Count().Should().Be(3);
 
         runner.TrajectoryTip.Should().Be(maze.Exitpoint);
@@ -178,7 +178,7 @@ public class MazeRunnerEnginesTestbed<TEngine> where TEngine : IMazeRunnerEngine
 
         // Assert
         action.Should().NotThrow();
-        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.Concluded)).Count().Should().Be(1);
+        eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.LapConcluded)).Count().Should().Be(1);
         eventsMonitor.Should().Raise(nameof(IMazeRunnerEngine.StateChanged)).Count().Should().Be(2);
 
         runner.TrajectoryTip.Should().Be(null);
