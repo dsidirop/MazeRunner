@@ -64,19 +64,19 @@ else
 
     if [ -f "$HOME/.bashrc" ]; then # update path permanently in bash profile
       if ! grep -q "Program Files/dotnet" "$HOME/.bashrc"; then
-        echo 'export PATH="$PATH:/c/Program Files/dotnet"' >> "$HOME/.bashrc"
+        echo 'export PATH="/c/Program Files/dotnet:$PATH"' >> "$HOME/.bashrc"
         echo "Added .NET to PATH in .bashrc"
       fi
     fi
     
     if [ -f "$HOME/.bash_profile" ]; then # also update .bash_profile if it exists
       if ! grep -q "Program Files/dotnet" "$HOME/.bash_profile"; then
-        echo 'export PATH="$PATH:/c/Program Files/dotnet"' >> "$HOME/.bash_profile"
+        echo 'export PATH="/c/Program Files/dotnet:$PATH"' >> "$HOME/.bash_profile"
         echo "Added .NET to PATH in .bash_profile"
       fi
     fi
     
-    export PATH="$PATH:/c/Program Files/dotnet" # update path to include the new installation if needed
+    export PATH="/c/Program Files/dotnet:$PATH" # update path to include the new installation if needed
     
     dotnet --version # verify installation
     declare exitCode=$?
