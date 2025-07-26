@@ -69,7 +69,7 @@ public class MazesFactory : IMazesFactory
             var exitpoint = (Point?) null;
             var lineIndex = 0;
             var entrypoint = (Point?) null;
-            var roadblocks = new HashSet<Point>();
+            var roadblocks = new HashSet<Point>(capacity: 16);
             var mazeWidthBasedOnFirstLine = 0;
             
             using var reader = new StreamReader(File.OpenRead(path), System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
