@@ -465,8 +465,8 @@ public partial class FormMazeRunnerTester : Form
                     _ccMazeCanvas.tlpMesh.ResumeDrawing();
                     _ccMazeCanvas.tlpMesh.ResumeLayout();
 
-                    if (label1 != null) label1.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
-                    if (label2 != null) label2.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                    label1?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                    label2?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
                 }
             }
         }
