@@ -61,7 +61,7 @@ public class MazesFactory : IMazesFactory
 
     static private Point ConvertLinearIndexToCoords(int linearIndex, int lineWidth) => new(x: linearIndex % lineWidth, y: linearIndex / lineWidth);
 
-    public async Task<IMaze> FromFileAsync(string path, bool suppressExceptions = true)
+    public async Task<IMaze> FromFileAsync(string filepath, bool suppressExceptions = true)
     {
         var result = (IMaze) null;
         try
@@ -72,7 +72,7 @@ public class MazesFactory : IMazesFactory
             var roadblocks = new HashSet<Point>(capacity: 16);
             var mazeWidthBasedOnFirstLine = 0;
             
-            using var reader = new StreamReader(File.OpenRead(path), System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            using var reader = new StreamReader(File.OpenRead(filepath), System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             
             for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
             {
