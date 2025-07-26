@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
-using MazeRunner.Contracts;
 using MazeRunner.Engines.Contracts;
 using MazeRunner.Engines.Contracts.Events;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 
 namespace MazeRunner.Engines.SimpleMazeRunner;

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MazeRunner.Contracts;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 
 // ReSharper disable AccessToModifiedClosure
@@ -72,7 +73,7 @@ public class MazesFactory : IMazesFactory
             var roadblocks = new HashSet<Point>(capacity: 16);
             var mazeWidthBasedOnFirstLine = 0;
             
-            using var reader = new StreamReader(File.OpenRead(filepath), System.Text.Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            using var reader = new StreamReader(File.OpenRead(filepath), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             
             for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
             {

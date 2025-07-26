@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
       <ProjectReference Include="..\MazeRunner.Engines.Contracts\MazeRunner.Engines.Contracts.csproj" />
+      <ProjectReference Include="..\MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>

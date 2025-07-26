@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 using MazeRunner.EnginesFactory.Contracts;
-using MazeRunner.Mazes;
+using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.Cli.Engine;
 

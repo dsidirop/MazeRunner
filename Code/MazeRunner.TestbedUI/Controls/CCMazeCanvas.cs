@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MazeRunner.Contracts;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 
 namespace MazeRunner.TestbedUI.Controls;

@@ -7,9 +7,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MazeRunner.Contracts;
 using MazeRunner.Engines.Contracts;
 using MazeRunner.EnginesFactory.Contracts;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 using Microsoft.Extensions.FileSystemGlobbing;
 

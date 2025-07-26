@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using FluentAssertions;
-using MazeRunner.Contracts;
 using MazeRunner.Mazes;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using MazeRunner.Contracts;
 using MazeRunner.Engines.Contracts;
+using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.EnginesFactory.Contracts;
 

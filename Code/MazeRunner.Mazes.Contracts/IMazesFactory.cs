@@ -1,8 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MazeRunner.Contracts;
 
-namespace MazeRunner.Mazes;
+namespace MazeRunner.Mazes.Contracts;
 
 public interface IMazesFactory
 {

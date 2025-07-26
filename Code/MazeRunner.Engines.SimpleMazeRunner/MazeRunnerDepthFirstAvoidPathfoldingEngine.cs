@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using MazeRunner.Contracts;
+using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.Engines.SimpleMazeRunner;
 

@@ -11,6 +11,10 @@
     <Project Path="MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj" Type="Classic C#" />
     <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="Classic C#" />
   </Folder>
+  <Folder Name="/Mazes/">
+    <Project Path="MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="Classic C#" />
+  </Folder>
   <Folder Name="/_Misc/">
     <File Path="..\.gitignore" />
     <File Path="..\LICENSE" />
@@ -30,7 +34,6 @@
     <Project Path="MazeRunner.Tests\MazeRunner.Tests.csproj" Type="Classic C#" />
   </Folder>
   <Project Path="MazeRunner.Contracts\MazeRunner.Contracts.csproj" Type="Classic C#" />
-  <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="Classic C#" />
   <Project Path="MazeRunner.Utils.Reactive\MazeRunner.Utils.Reactive.csproj" Type="Classic C#" />
   <Project Path="MazeRunner.Utils\MazeRunner.Utils.csproj" Type="Classic C#" />
 </Solution>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 
-namespace MazeRunner.Contracts;
+namespace MazeRunner.Mazes.Contracts;
 
 public interface IMaze
 {

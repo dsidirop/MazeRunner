@@ -1,4 +1,4 @@
-﻿namespace MazeRunner.Contracts;
+﻿namespace MazeRunner.Mazes.Contracts;
 
 public sealed class MazeSpecs
 {
