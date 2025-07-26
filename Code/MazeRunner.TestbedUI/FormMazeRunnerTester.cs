@@ -98,7 +98,7 @@ public partial class FormMazeRunnerTester : Form
 
             _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;    
         }
-        _enginesTestbench.AllBenchmarkingDone += EnginesTestbench_AllBenchmarkingDone_;
+        _enginesTestbench.AllBenchmarkingsDone += EnginesTestbench_AllBenchmarkingsDone_;
 
         OnComponentStateChanged(new ComponentStateChanged("form.onload")); //init ui
         return;
@@ -113,7 +113,7 @@ public partial class FormMazeRunnerTester : Form
             _mazeRunnersEnginesDataSource[ea_.Index].Selected = ea_.NewValue == CheckState.Checked;
         }
 
-        void EnginesTestbench_AllBenchmarkingDone_(object sender_, AllBenchmarkingDoneEventArgs ea_)
+        void EnginesTestbench_AllBenchmarkingsDone_(object sender_, AllBenchmarkingsDoneEventArgs ea_)
         {
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnCompleted();
@@ -277,7 +277,7 @@ public partial class FormMazeRunnerTester : Form
             AllLapsConcludedEventArgs                ea_ => ForLogging_OnAllLapsConcluded_(ea_), //               engine
             
             SpecificEngineTestsCompletedEventArgs    ea_ => ForLogging_SpecificEngineTestsCompleted_(ea_), //     benchmarker
-            AllBenchmarkingDoneEventArgs             ea_ => ForLogging_OnAllBenchmarkingDone_(ea_), //            benchmarker
+            AllBenchmarkingsDoneEventArgs             ea_ => ForLogging_OnAllBenchmarkingsDone_(ea_), //            benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
@@ -294,7 +294,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
 
-        bool ForLogging_OnAllBenchmarkingDone_(AllBenchmarkingDoneEventArgs _)
+        bool ForLogging_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
         {
             Post(PostCallback_);
             return true;
@@ -386,7 +386,7 @@ public partial class FormMazeRunnerTester : Form
             AllLapsConcludedEventArgs                ea_ => ForUI_OnAllLapsConcluded_(ea_), //                engine
             
             SpecificEngineTestsCompletedEventArgs    ea_ => ForUI_SpecificEngineTestsCompleted_(ea_), //      benchmarker
-            AllBenchmarkingDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingDone_(ea_), //             benchmarker
+            AllBenchmarkingsDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingsDone_(ea_), //             benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
@@ -398,7 +398,7 @@ public partial class FormMazeRunnerTester : Form
             return true;
         }
 
-        bool ForUI_OnAllBenchmarkingDone_(AllBenchmarkingDoneEventArgs _)
+        bool ForUI_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
         {
             Send(SendCallback_);
             return true;

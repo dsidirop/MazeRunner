@@ -10,7 +10,7 @@ public interface IEnginesTestbench
 {
     bool Running { get; }
 
-    event EventHandler<AllBenchmarkingDoneEventArgs> AllBenchmarkingDone;
+    event EventHandler<AllBenchmarkingsDoneEventArgs> AllBenchmarkingsDone;
     event EventHandler<BenchmarkingCommencingEventArgs> BenchmarkingCommencing;
     event EventHandler<SpecificEngineSingleLapStartingEventArgs> SpecificEngineSingleLapStarting;
     event EventHandler<SpecificEngineLapConcludedEventArgs> SpecificEngineLapConcluded;

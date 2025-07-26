@@ -17,37 +17,37 @@ public class EnginesTestbench : IEnginesTestbench
 
     static private int _benchmarkRuns;
 
-    private event EventHandler<AllBenchmarkingDoneEventArgs> _allDone;
-    public event EventHandler<AllBenchmarkingDoneEventArgs> AllBenchmarkingDone
+    private event EventHandler<AllBenchmarkingsDoneEventArgs> _allBenchmarkingsDone;
+    public event EventHandler<AllBenchmarkingsDoneEventArgs> AllBenchmarkingsDone
     {
         add
         {
-            _allDone -= value;
-            _allDone += value;
+            _allBenchmarkingsDone -= value;
+            _allBenchmarkingsDone += value;
         }
-        remove => _allDone -= value;
+        remove => _allBenchmarkingsDone -= value;
     }
 
-    private event EventHandler<BenchmarkingCommencingEventArgs> _commencing;
+    private event EventHandler<BenchmarkingCommencingEventArgs> _benchmarkingCommencing;
     public event EventHandler<BenchmarkingCommencingEventArgs> BenchmarkingCommencing
     {
         add
         {
-            _commencing -= value;
-            _commencing += value;
+            _benchmarkingCommencing -= value;
+            _benchmarkingCommencing += value;
         }
-        remove => _commencing -= value;
+        remove => _benchmarkingCommencing -= value;
     }
 
-    private event EventHandler<SpecificEngineSingleLapStartingEventArgs> _specificEngineLapStarting;
+    private event EventHandler<SpecificEngineSingleLapStartingEventArgs> _specificEngineSingleLapStarting;
     public event EventHandler<SpecificEngineSingleLapStartingEventArgs> SpecificEngineSingleLapStarting
     {
         add
         {
-            _specificEngineLapStarting -= value;
-            _specificEngineLapStarting += value;
+            _specificEngineSingleLapStarting -= value;
+            _specificEngineSingleLapStarting += value;
         }
-        remove => _specificEngineLapStarting -= value;
+        remove => _specificEngineSingleLapStarting -= value;
     }
 
     private event EventHandler<SpecificEngineLapConcludedEventArgs> _specificEngineLapConcluded;
@@ -133,7 +133,6 @@ public class EnginesTestbench : IEnginesTestbench
                     eng.Concluded += Engine_Concluded_;
                     for (var i = 0; i < repetitions; i++, eng.Reset())
                     {
-                        var foo = ct.IsCancellationRequested;
                         ct.ThrowIfCancellationRequested();
                         
                         currentLap = i;
@@ -212,19 +211,19 @@ public class EnginesTestbench : IEnginesTestbench
         }
         finally
         {
-            OnAllDone(new AllBenchmarkingDoneEventArgs(benchmarkId));
+            OnAllDone(new AllBenchmarkingsDoneEventArgs(benchmarkId));
         }
 
         //00  it is crucial to snapshot the best-path by means of tolist because the engine state gets reset from one lap to the next and with it the trajectory
         //    property gets wiped clean
     }
 
-    protected virtual void OnAllDone(in AllBenchmarkingDoneEventArgs ea)
+    protected virtual void OnAllDone(in AllBenchmarkingsDoneEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All benchmarks done");
 
         Running = false;
-        _allDone?.Invoke(this, ea);
+        _allBenchmarkingsDone?.Invoke(this, ea);
     }
 
     protected virtual void OnCommencing(in BenchmarkingCommencingEventArgs ea)
@@ -236,14 +235,14 @@ public class EnginesTestbench : IEnginesTestbench
                                  """);
 
         Running = true;
-        _commencing?.Invoke(this, ea);
+        _benchmarkingCommencing?.Invoke(this, ea);
     }
 
     protected virtual void OnLapStarting(in SpecificEngineSingleLapStartingEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Starting lap#{ea!.LapIndex} for engine '{ea!.Engine!.GetEngineName()}'");
 
-        _specificEngineLapStarting?.Invoke(this, ea);
+        _specificEngineSingleLapStarting?.Invoke(this, ea);
     }
 
     protected virtual void OnLapConcluded(in SpecificEngineLapConcludedEventArgs ea)
