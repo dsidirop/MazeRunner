@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
 using MazeRunner.EnginesFactory.Contracts;
+using MazeRunner.EnginesFactory.Contracts.Events;
 using MazeRunner.Mazes;
 using MazeRunner.TestbedUI.Helpers;
 using MazeRunner.Utils;

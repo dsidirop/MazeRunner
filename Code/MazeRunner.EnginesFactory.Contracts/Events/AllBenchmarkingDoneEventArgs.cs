@@ -1,6 +1,7 @@
 ﻿using System;
+using MazeRunner.Contracts.Events;
 
-namespace MazeRunner.Contracts.Events;
+namespace MazeRunner.EnginesFactory.Contracts.Events;
 
 [Serializable]
 public readonly struct AllBenchmarkingsDoneEventArgs : IMazeRunnerEventArgs

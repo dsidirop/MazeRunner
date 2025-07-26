@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Contracts;
-using MazeRunner.Contracts.Events;
+using MazeRunner.EnginesFactory.Contracts.Events;
 
 namespace MazeRunner.EnginesFactory.Contracts;
 

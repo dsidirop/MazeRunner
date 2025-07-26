@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MazeRunner.Cli.Engine.Exceptions;
 using MazeRunner.Cli.Enums;
-using MazeRunner.Contracts.Events;
+using MazeRunner.EnginesFactory.Contracts.Events;
 using MazeRunner.Utils;
 
 namespace MazeRunner.Cli.Engine;

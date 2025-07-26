@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using MazeRunner.Contracts;
+using MazeRunner.Contracts.Events;
 
-namespace MazeRunner.Contracts.Events;
+namespace MazeRunner.EnginesFactory.Contracts.Events;
 
 [Serializable]
 public readonly struct SpecificEngineTestsSuiteCompletedEventArgs : IMazeRunnerEventArgs
