@@ -50,37 +50,37 @@ public class EnginesTestbench : IEnginesTestbench
         remove => _specificEngineSingleLapStarting -= value;
     }
 
-    private event EventHandler<SpecificEngineLapConcludedEventArgs> _specificEngineLapConcluded;
-    public event EventHandler<SpecificEngineLapConcludedEventArgs> SpecificEngineLapConcluded
+    private event EventHandler<SpecificEngineSingleLapConcludedEventArgs> _SpecificEngineSingleLapConcluded;
+    public event EventHandler<SpecificEngineSingleLapConcludedEventArgs> SpecificEngineSingleLapConcluded
     {
         add
         {
-            _specificEngineLapConcluded -= value;
-            _specificEngineLapConcluded += value;
+            _SpecificEngineSingleLapConcluded -= value;
+            _SpecificEngineSingleLapConcluded += value;
         }
-        remove => _specificEngineLapConcluded -= value;
+        remove => _SpecificEngineSingleLapConcluded -= value;
     }
 
-    private event EventHandler<SpecificEngineTestsStartingEventArgs> _specificEngineTestsStarting;
-    public event EventHandler<SpecificEngineTestsStartingEventArgs> SpecificEngineTestsStarting
+    private event EventHandler<SpecificEngineTestsSuiteStartingEventArgs> _SpecificEngineTestsSuiteStarting;
+    public event EventHandler<SpecificEngineTestsSuiteStartingEventArgs> SpecificEngineTestsSuiteStarting
     {
         add
         {
-            _specificEngineTestsStarting -= value;
-            _specificEngineTestsStarting += value;
+            _SpecificEngineTestsSuiteStarting -= value;
+            _SpecificEngineTestsSuiteStarting += value;
         }
-        remove => _specificEngineTestsStarting -= value;
+        remove => _SpecificEngineTestsSuiteStarting -= value;
     }
 
-    private event EventHandler<SpecificEngineTestsCompletedEventArgs> _specificEngineTestsCompleted;
-    public event EventHandler<SpecificEngineTestsCompletedEventArgs> SpecificEngineTestsCompleted
+    private event EventHandler<SpecificEngineTestsSuiteCompletedEventArgs> _SpecificEngineTestsSuiteCompleted;
+    public event EventHandler<SpecificEngineTestsSuiteCompletedEventArgs> SpecificEngineTestsSuiteCompleted
     {
         add
         {
-            _specificEngineTestsCompleted -= value;
-            _specificEngineTestsCompleted += value;
+            _SpecificEngineTestsSuiteCompleted -= value;
+            _SpecificEngineTestsSuiteCompleted += value;
         }
-        remove => _specificEngineTestsCompleted -= value;
+        remove => _SpecificEngineTestsSuiteCompleted -= value;
     }
 
     public bool Running { get; private set; }
@@ -119,7 +119,7 @@ public class EnginesTestbench : IEnginesTestbench
             foreach (var eng in enginesToTest)
             {
                 failedEngine = eng;
-                OnSpecificEngineTestsStarting(new SpecificEngineTestsStartingEventArgs(benchmarkId, eng));
+                OnSpecificEngineTestsSuiteStarting(new SpecificEngineTestsSuiteStartingEventArgs(benchmarkId, eng));
 
                 var crashes = 0;
                 var pathLengths = new List<int>(repetitions);
@@ -148,7 +148,7 @@ public class EnginesTestbench : IEnginesTestbench
                 pathLengths.Sort();
                 timeDurations.Sort();
                     
-                OnSpecificEngineTestsCompleted(new SpecificEngineTestsCompletedEventArgs
+                OnSpecificEngineTestsSuiteCompleted(new SpecificEngineTestsSuiteCompletedEventArgs
                 (
                     engine: eng,
                     crashes: crashes,
@@ -192,7 +192,7 @@ public class EnginesTestbench : IEnginesTestbench
                             ? eng.Trajectory.ToArray().AsReadOnly() //0 tolist
                             : shortestPath;
 
-                        OnLapConcluded(new SpecificEngineLapConcludedEventArgs( //order
+                        OnLapConcluded(new SpecificEngineSingleLapConcludedEventArgs( //order
                             engine: eng,
                             status: ea_.Status,
                             lapIndex: ii++,
@@ -245,25 +245,25 @@ public class EnginesTestbench : IEnginesTestbench
         _specificEngineSingleLapStarting?.Invoke(this, ea);
     }
 
-    protected virtual void OnLapConcluded(in SpecificEngineLapConcludedEventArgs ea)
+    protected virtual void OnLapConcluded(in SpecificEngineSingleLapConcludedEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Concluded lap#{ea!.LapIndex} for engine '{ea!.Engine!.GetEngineName()}' with status: {ea!.Status} ({ea!.Duration!.TotalMilliseconds}ms)");
 
-        _specificEngineLapConcluded?.Invoke(this, ea);
+        _SpecificEngineSingleLapConcluded?.Invoke(this, ea);
     }
 
-    protected virtual void OnSpecificEngineTestsStarting(in SpecificEngineTestsStartingEventArgs ea)
+    protected virtual void OnSpecificEngineTestsSuiteStarting(in SpecificEngineTestsSuiteStartingEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Benchmarking engine '{ea!.Engine!.GetEngineName()}'");
 
-        _specificEngineTestsStarting?.Invoke(this, ea);
+        _SpecificEngineTestsSuiteStarting?.Invoke(this, ea);
     }
 
-    protected virtual void OnSpecificEngineTestsCompleted(in SpecificEngineTestsCompletedEventArgs ea)
+    protected virtual void OnSpecificEngineTestsSuiteCompleted(in SpecificEngineTestsSuiteCompletedEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All laps completed for engine '{ea!.Engine!.GetEngineName()}':\n\n{ea!.ToStringy(includeShortestPath: false)}");
 
-        _specificEngineTestsCompleted?.Invoke(this, ea);
+        _SpecificEngineTestsSuiteCompleted?.Invoke(this, ea);
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local    Unused_Method_Return_Value

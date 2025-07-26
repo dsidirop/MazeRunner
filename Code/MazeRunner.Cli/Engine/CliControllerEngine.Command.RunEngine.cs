@@ -39,17 +39,17 @@ public partial class CliControllerEngine
 
             try
             {
-                _enginesTestbench.SpecificEngineLapConcluded += EnginesTestbench_SpecificEngineLapConcluded_;
-                _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;
+                _enginesTestbench.SpecificEngineSingleLapConcluded += EnginesTestbench_SpecificEngineSingleLapConcluded_;
+                _enginesTestbench.SpecificEngineTestsSuiteCompleted += EnginesTestbench_SpecificEngineTestsSuiteCompleted_;
                 await _enginesTestbench.RunAsync(enginesToBenchmark, repetitions, ct);
             }
             finally
             {
-                _enginesTestbench.SpecificEngineLapConcluded -= EnginesTestbench_SpecificEngineLapConcluded_;
-                _enginesTestbench.SpecificEngineTestsCompleted -= EnginesTestbench_SpecificEngineTestsCompleted_;
+                _enginesTestbench.SpecificEngineSingleLapConcluded -= EnginesTestbench_SpecificEngineSingleLapConcluded_;
+                _enginesTestbench.SpecificEngineTestsSuiteCompleted -= EnginesTestbench_SpecificEngineTestsSuiteCompleted_;
             }
 
-            void EnginesTestbench_SpecificEngineLapConcluded_(object _, SpecificEngineLapConcludedEventArgs ea)
+            void EnginesTestbench_SpecificEngineSingleLapConcluded_(object _, SpecificEngineSingleLapConcludedEventArgs ea)
             {
                 if (!verbose) return;
 
@@ -75,7 +75,7 @@ public partial class CliControllerEngine
                 );
             }
 
-            void EnginesTestbench_SpecificEngineTestsCompleted_(object _, SpecificEngineTestsCompletedEventArgs ea)
+            void EnginesTestbench_SpecificEngineTestsSuiteCompleted_(object _, SpecificEngineTestsSuiteCompletedEventArgs ea)
             {
                 _standardOutput.WriteLine(
                     $"""

@@ -13,9 +13,9 @@ public interface IEnginesTestbench
     event EventHandler<AllBenchmarkingsDoneEventArgs> AllBenchmarkingsDone;
     event EventHandler<BenchmarkingCommencingEventArgs> BenchmarkingCommencing;
     event EventHandler<SpecificEngineSingleLapStartingEventArgs> SpecificEngineSingleLapStarting;
-    event EventHandler<SpecificEngineLapConcludedEventArgs> SpecificEngineLapConcluded;
-    event EventHandler<SpecificEngineTestsStartingEventArgs> SpecificEngineTestsStarting;
-    event EventHandler<SpecificEngineTestsCompletedEventArgs> SpecificEngineTestsCompleted;
+    event EventHandler<SpecificEngineSingleLapConcludedEventArgs> SpecificEngineSingleLapConcluded;
+    event EventHandler<SpecificEngineTestsSuiteStartingEventArgs> SpecificEngineTestsSuiteStarting;
+    event EventHandler<SpecificEngineTestsSuiteCompletedEventArgs> SpecificEngineTestsSuiteCompleted;
 
     Task RunAsync(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null);
 }

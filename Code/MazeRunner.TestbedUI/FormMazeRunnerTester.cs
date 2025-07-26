@@ -90,12 +90,12 @@ public partial class FormMazeRunnerTester : Form
 
         _enginesTestbench.BenchmarkingCommencing += EnginesTestbench_BenchmarkingCommencing_;
         {
-            _enginesTestbench.SpecificEngineTestsStarting += EnginesTestbench_SpecificEngineTestsStarting_;
+            _enginesTestbench.SpecificEngineTestsSuiteStarting += EnginesTestbench_SpecificEngineTestsSuiteStarting_;
         
             _enginesTestbench.SpecificEngineSingleLapStarting += EnginesTestbench_SpecificEngineSingleLapStarting_;
-            _enginesTestbench.SpecificEngineLapConcluded += EnginesTestbench_SpecificEngineLapConcluded_;
+            _enginesTestbench.SpecificEngineSingleLapConcluded += EnginesTestbench_SpecificEngineSingleLapConcluded_;
 
-            _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;    
+            _enginesTestbench.SpecificEngineTestsSuiteCompleted += EnginesTestbench_SpecificEngineTestsSuiteCompleted_;    
         }
         _enginesTestbench.AllBenchmarkingsDone += EnginesTestbench_AllBenchmarkingsDone_;
 
@@ -123,7 +123,7 @@ public partial class FormMazeRunnerTester : Form
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineTestsStarting_(object sender_, SpecificEngineTestsStartingEventArgs ea_)
+        void EnginesTestbench_SpecificEngineTestsSuiteStarting_(object sender_, SpecificEngineTestsSuiteStartingEventArgs ea_)
         {
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
@@ -133,12 +133,12 @@ public partial class FormMazeRunnerTester : Form
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineLapConcluded_(object sender_, SpecificEngineLapConcludedEventArgs ea_)
+        void EnginesTestbench_SpecificEngineSingleLapConcluded_(object sender_, SpecificEngineSingleLapConcludedEventArgs ea_)
         {
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
         
-        void EnginesTestbench_SpecificEngineTestsCompleted_(object sender_, SpecificEngineTestsCompletedEventArgs ea_)
+        void EnginesTestbench_SpecificEngineTestsSuiteCompleted_(object sender_, SpecificEngineTestsSuiteCompletedEventArgs ea_)
         {
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
         }
@@ -268,14 +268,14 @@ public partial class FormMazeRunnerTester : Form
         var __ = ea switch //@formatter:off
         {
             BenchmarkingCommencingEventArgs          ea_ => ForLogging_OnCommencing_(ea_), //                     benchmarker
-            SpecificEngineTestsStartingEventArgs     ea_ => ForLogging_OnSpecificEngineTestsStarting_(ea_), //    benchmarker
+            SpecificEngineTestsSuiteStartingEventArgs     ea_ => ForLogging_OnSpecificEngineTestsSuiteStarting_(ea_), //    benchmarker
             
             SpecificEngineSingleLapStartingEventArgs ea_ => ForLogging_OnSpecificEngineLapStarting_(ea_), //      benchmarker 
             StateChangedEventArgs                    ea_ => ForLogging_OnStateChanged_(ea_), //                   engine
-            SpecificEngineLapConcludedEventArgs      ea_ => ForLogging_OnSpecificEngineLapConcluded_(ea_), //     benchmarker
+            SpecificEngineSingleLapConcludedEventArgs      ea_ => ForLogging_OnSpecificEngineSingleLapConcluded_(ea_), //     benchmarker
             AllLapsConcludedEventArgs                ea_ => ForLogging_OnAllLapsConcluded_(ea_), //               engine
             
-            SpecificEngineTestsCompletedEventArgs    ea_ => ForLogging_SpecificEngineTestsCompleted_(ea_), //     benchmarker
+            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForLogging_SpecificEngineTestsSuiteCompleted_(ea_), //     benchmarker
             AllBenchmarkingsDoneEventArgs             ea_ => ForLogging_OnAllBenchmarkingsDone_(ea_), //            benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
@@ -304,7 +304,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        bool ForLogging_SpecificEngineTestsCompleted_(SpecificEngineTestsCompletedEventArgs ea_)
+        bool ForLogging_SpecificEngineTestsSuiteCompleted_(SpecificEngineTestsSuiteCompletedEventArgs ea_)
         {
             Post(PostCallback_);
             return true;
@@ -343,7 +343,7 @@ public partial class FormMazeRunnerTester : Form
             return true;
         }
 
-        bool ForLogging_OnSpecificEngineLapConcluded_(SpecificEngineLapConcludedEventArgs ea_)
+        bool ForLogging_OnSpecificEngineSingleLapConcluded_(SpecificEngineSingleLapConcludedEventArgs ea_)
         {
             Post(PostCallback_);
             return true;
@@ -354,7 +354,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        bool ForLogging_OnSpecificEngineTestsStarting_(SpecificEngineTestsStartingEventArgs ea_)
+        bool ForLogging_OnSpecificEngineTestsSuiteStarting_(SpecificEngineTestsSuiteStartingEventArgs ea_)
         {
             Post(PostCallback_);
             return true;
@@ -377,14 +377,14 @@ public partial class FormMazeRunnerTester : Form
         var __ = ea switch //@formatter:off
         {
             BenchmarkingCommencingEventArgs          ea_ => ForUI_OnCommencing_(ea_), //                      benchmarker
-            SpecificEngineTestsStartingEventArgs     ea_ => ForUI_OnSpecificEngineTestsStarting_(ea_), //     benchmarker
+            SpecificEngineTestsSuiteStartingEventArgs     ea_ => ForUI_OnSpecificEngineTestsSuiteStarting_(ea_), //     benchmarker
             
             SpecificEngineSingleLapStartingEventArgs ea_ => ForUI_OnSpecificEngineSingleLapStarting_(ea_), // benchmarker 
             StateChangedEventArgs                    ea_ => ForUI_OnStateChanged_(ea_), //                    engine
-            SpecificEngineLapConcludedEventArgs      ea_ => ForUI_OnSpecificEngineLapConcluded_(ea_), //      benchmarker
+            SpecificEngineSingleLapConcludedEventArgs      ea_ => ForUI_OnSpecificEngineSingleLapConcluded_(ea_), //      benchmarker
             AllLapsConcludedEventArgs                ea_ => ForUI_OnAllLapsConcluded_(ea_), //                engine
             
-            SpecificEngineTestsCompletedEventArgs    ea_ => ForUI_SpecificEngineTestsCompleted_(ea_), //      benchmarker
+            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForUI_SpecificEngineTestsSuiteCompleted_(ea_), //      benchmarker
             AllBenchmarkingsDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingsDone_(ea_), //             benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
@@ -408,7 +408,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
         
-        static bool ForUI_SpecificEngineTestsCompleted_(SpecificEngineTestsCompletedEventArgs ea_)
+        static bool ForUI_SpecificEngineTestsSuiteCompleted_(SpecificEngineTestsSuiteCompletedEventArgs ea_)
         {
             // nothing to do ui-wise
             return true;
@@ -470,13 +470,13 @@ public partial class FormMazeRunnerTester : Form
             }
         }
 
-        bool ForUI_OnSpecificEngineLapConcluded_(SpecificEngineLapConcludedEventArgs ea_)
+        bool ForUI_OnSpecificEngineSingleLapConcluded_(SpecificEngineSingleLapConcludedEventArgs ea_)
         {
             // nothing to do ui-wise
             return true;
         }
         
-        bool ForUI_OnSpecificEngineTestsStarting_(SpecificEngineTestsStartingEventArgs ea_)
+        bool ForUI_OnSpecificEngineTestsSuiteStarting_(SpecificEngineTestsSuiteStartingEventArgs ea_)
         {
             // nothing to do ui-wise
             return true;
