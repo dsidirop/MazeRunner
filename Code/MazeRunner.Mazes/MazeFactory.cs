@@ -90,29 +90,25 @@ public class MazesFactory : IMazesFactory
 
                 line.Each((c, columnIndex) =>
                 {
-                    if (c == '_')
+                    switch (c)
                     {
-                        //skip
-                    }
-                    else if (c == 'G')
-                    {
-                        if (exitpoint != null) throw new InvalidDataException("Maze has two Exit points");
-
-                        exitpoint = new Point(columnIndex, lineIndex);
-                    }
-                    else if (c == 'S')
-                    {
-                        if (entrypoint != null) throw new InvalidDataException("Maze has two Entry points");
-
-                        entrypoint = new Point(columnIndex, lineIndex);
-                    }
-                    else if (c == 'X')
-                    {
-                        roadblocks.Add(new Point(columnIndex, lineIndex));
-                    }
-                    else
-                    {
-                        throw new InvalidDataException($"Invalid character {c} at line {lineIndex + 1} column {columnIndex + 1}");
+                        case '_': //skip
+                            break;
+                        case 'G':
+                            exitpoint = exitpoint == null
+                                ? new Point(columnIndex, lineIndex)
+                                : throw new InvalidDataException("Maze has two Exit points");
+                            break;
+                        case 'S':
+                            entrypoint = entrypoint == null
+                                ? new Point(columnIndex, lineIndex)
+                                : throw new InvalidDataException("Maze has two Entry points");
+                            break;
+                        case 'X':
+                            roadblocks.Add(new Point(columnIndex, lineIndex));
+                            break;
+                        default:
+                            throw new InvalidDataException($"Invalid character {c} at line {lineIndex + 1} column {columnIndex + 1}");
                     }
                 });
             }
@@ -120,8 +116,13 @@ public class MazesFactory : IMazesFactory
             if (lineIndex == 0) throw new InvalidDataException("Empty");
             if (exitpoint == null) throw new InvalidDataException("No exitpoint specified");
             if (entrypoint == null) throw new InvalidDataException("No entrypoint specified");
-                
-            result = new Maze(new Size(mazeWidthBasedOnFirstLine, lineIndex), entrypoint: entrypoint.Value, exitpoint: exitpoint.Value, roadblocks: roadblocks);
+
+            result = new Maze(
+                size: new Size(mazeWidthBasedOnFirstLine, lineIndex),
+                exitpoint: exitpoint.Value,
+                entrypoint: entrypoint.Value,
+                roadblocks: roadblocks
+            );
         }
         catch (Exception)
         {
