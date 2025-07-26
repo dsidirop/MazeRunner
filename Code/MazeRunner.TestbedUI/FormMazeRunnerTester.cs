@@ -34,11 +34,11 @@ public partial class FormMazeRunnerTester : Form
     private readonly IEnginesTestbench _enginesTestbench;
     private readonly SynchronizationContext _syncContext;
     
-    private EventLoopScheduler _eventLoopScheduler1;
-    private EventLoopScheduler _eventLoopScheduler2;
+    private EventLoopScheduler _eventLoopSchedulerFor_UI;
+    private EventLoopScheduler _eventLoopSchedulerFor_Logging;
     
-    private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStream1;
-    private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStream2;
+    private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI;
+    private IDisposable _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging;
     private readonly BindingList<EngineEntry> _mazeRunnersEnginesDataSource;
     
     private Subject<(object Sender, IMazeRunnerEventArgs EventArgs)> _mazeRunnerBenchmarkingUpdatingEventsSubject;
@@ -65,11 +65,11 @@ public partial class FormMazeRunnerTester : Form
     protected override void Dispose(bool disposing)
     {
         _tokenSource?.Dispose();
-        _eventLoopScheduler1?.Dispose();
-        _eventLoopScheduler2?.Dispose();
+        _eventLoopSchedulerFor_UI?.Dispose();
+        _eventLoopSchedulerFor_Logging?.Dispose();
         _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
-        _subscriptionOnMazeRunnerBenchmarkingEventsStream1?.Dispose();
-        _subscriptionOnMazeRunnerBenchmarkingEventsStream2?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging?.Dispose();
 
         if (disposing && components != null)
         {
@@ -202,22 +202,25 @@ public partial class FormMazeRunnerTester : Form
                 .ToArray();
 
             _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
-            _subscriptionOnMazeRunnerBenchmarkingEventsStream1?.Dispose();
-            _subscriptionOnMazeRunnerBenchmarkingEventsStream2?.Dispose();
-            _eventLoopScheduler1?.Dispose();
-            _eventLoopScheduler2?.Dispose();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI?.Dispose();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging?.Dispose();
+            
+            _eventLoopSchedulerFor_UI?.Dispose();
+            _eventLoopSchedulerFor_Logging?.Dispose();
 
-            _eventLoopScheduler1 = new EventLoopScheduler();
-            _eventLoopScheduler2 = new EventLoopScheduler();
             _mazeRunnerBenchmarkingUpdatingEventsSubject = new Subject<(object Sender, IMazeRunnerEventArgs EventArgs)>();
-            _subscriptionOnMazeRunnerBenchmarkingEventsStream1 = _mazeRunnerBenchmarkingUpdatingEventsSubject
-                .ObserveOn(_eventLoopScheduler1)
+            
+            _eventLoopSchedulerFor_UI = new EventLoopScheduler();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI = _mazeRunnerBenchmarkingUpdatingEventsSubject
+                .ObserveOn(_eventLoopSchedulerFor_UI)
                 .SubscribeAndHandleAllExceptions(
                     onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(x.Sender, x.EventArgs),
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
                 );
-            _subscriptionOnMazeRunnerBenchmarkingEventsStream2 = _mazeRunnerBenchmarkingUpdatingEventsSubject
-                .ObserveOn(_eventLoopScheduler2)
+            
+            _eventLoopSchedulerFor_Logging = new EventLoopScheduler();
+            _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging = _mazeRunnerBenchmarkingUpdatingEventsSubject
+                .ObserveOn(_eventLoopSchedulerFor_Logging)
                 .SubscribeAndHandleAllExceptions(
                     onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(x.Sender, x.EventArgs),
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
@@ -258,10 +261,10 @@ public partial class FormMazeRunnerTester : Form
         txtLog.AppendTextAndScrollToBottom($@"{nl}Cancelled!");
                 
         _mazeRunnerBenchmarkingUpdatingEventsSubject?.Dispose();
-        _subscriptionOnMazeRunnerBenchmarkingEventsStream1?.Dispose();
-        _subscriptionOnMazeRunnerBenchmarkingEventsStream2?.Dispose();
-        _eventLoopScheduler1?.Dispose();
-        _eventLoopScheduler2?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI?.Dispose();
+        _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging?.Dispose();
+        _eventLoopSchedulerFor_UI?.Dispose();
+        _eventLoopSchedulerFor_Logging?.Dispose();
     }
 
     private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(object _, IMazeRunnerEventArgs ea)
@@ -274,7 +277,6 @@ public partial class FormMazeRunnerTester : Form
             SpecificEngineSingleLapStartingEventArgs      ea_ => ForLogging_OnSpecificEngineSingleLapStarting_(ea_), //     benchmarker 
             StateChangedEventArgs                         ea_ => ForLogging_OnStateChanged_(ea_), //                        engine
             SpecificEngineSingleLapConcludedEventArgs     ea_ => ForLogging_OnSpecificEngineSingleLapConcluded_(ea_), //    benchmarker
-            LapConcludedEventArgs                         ea_ => ForLogging_OnAllLapsConcluded_(ea_), //                    engine
             
             SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForLogging_OnSpecificEngineTestsSuiteCompleted_(ea_), //   benchmarker
             AllBenchmarkingsDoneEventArgs                 ea_ => ForLogging_OnAllBenchmarkingsDone_(ea_), //                benchmarker
@@ -282,17 +284,6 @@ public partial class FormMazeRunnerTester : Form
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
         return;
-
-        bool ForLogging_OnAllLapsConcluded_(LapConcludedEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
-            }
-        }
 
         bool ForLogging_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
         {
