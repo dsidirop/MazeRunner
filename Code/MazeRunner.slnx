@@ -4,7 +4,8 @@
     <Project Path="MazeRunner.TestbedUI\MazeRunner.TestbedUI.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/Engines/">
-    <Project Path="MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Engines.Contracts\MazeRunner.Engines.Contracts.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Engines.SimpleMazeRunner\MazeRunner.Engines.SimpleMazeRunner.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/_Misc/">
     <File Path="..\.gitignore" />

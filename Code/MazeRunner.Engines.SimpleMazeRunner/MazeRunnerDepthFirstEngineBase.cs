@@ -5,10 +5,11 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using MazeRunner.Contracts;
-using MazeRunner.Contracts.Events;
+using MazeRunner.Engines.Contracts;
+using MazeRunner.Engines.Contracts.Events;
 using MazeRunner.Utils;
 
-namespace MazeRunner.Engine.SimpleMazeRunner;
+namespace MazeRunner.Engines.SimpleMazeRunner;
 
 public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 {

@@ -14,6 +14,8 @@ using System.Threading;
 using System.Windows.Forms;
 using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
+using MazeRunner.Engines.Contracts;
+using MazeRunner.Engines.Contracts.Events;
 using MazeRunner.EnginesFactory.Contracts;
 using MazeRunner.EnginesFactory.Contracts.Events;
 using MazeRunner.Mazes;

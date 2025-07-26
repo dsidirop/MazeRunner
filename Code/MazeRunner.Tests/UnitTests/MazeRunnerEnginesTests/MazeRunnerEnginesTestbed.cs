@@ -4,7 +4,8 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using MazeRunner.Contracts;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.Contracts;
+using MazeRunner.Engines.SimpleMazeRunner;
 
 // ReSharper disable ObjectCreationAsStatement
 

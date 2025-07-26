@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
+using MazeRunner.Engines.Contracts;
 
 namespace MazeRunner.EnginesFactory.Contracts.Events;
 

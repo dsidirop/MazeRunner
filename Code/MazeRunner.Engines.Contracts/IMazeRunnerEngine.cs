@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
-using MazeRunner.Contracts.Events;
+using MazeRunner.Contracts;
+using MazeRunner.Engines.Contracts.Events;
 
-namespace MazeRunner.Contracts;
+namespace MazeRunner.Engines.Contracts;
 
 public interface IMazeRunnerEngine
 {

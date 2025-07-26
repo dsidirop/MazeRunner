@@ -34,7 +34,7 @@
         <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
 
         <!-- it is necessary to include this reference to force the project to spawn its dll under the output folder so that we can scan the engines it provides upon launching -->
-        <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
+        <ProjectReference Include="..\MazeRunner.Engines.SimpleMazeRunner\MazeRunner.Engines.SimpleMazeRunner.csproj" />
     </ItemGroup>
 
 </Project>

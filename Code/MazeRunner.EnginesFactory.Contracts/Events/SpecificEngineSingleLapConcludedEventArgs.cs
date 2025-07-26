@@ -1,6 +1,6 @@
 ﻿using System;
-using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
+using MazeRunner.Engines.Contracts;
 
 namespace MazeRunner.EnginesFactory.Contracts.Events;
 

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using MazeRunner.Contracts;
 
-namespace MazeRunner.Engine.SimpleMazeRunner;
+namespace MazeRunner.Engines.SimpleMazeRunner;
 
 public class MazeRunnerSimpleDepthFirstEngine : MazeRunnerDepthFirstEngineBase
 {

@@ -1,7 +1,7 @@
 using System;
 using FluentAssertions;
-using MazeRunner.Contracts;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.Contracts;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Tests.TestArtifacts;
 

@@ -7,10 +7,3 @@ public enum MazeHitTestEnum
     Exitpoint = 2,
     Entrypoint = 3
 }
-
-public enum ConclusionStatusTypeEnum
-{
-    Crashed = 0,
-    Stopped = 1,
-    Completed = 2
-}

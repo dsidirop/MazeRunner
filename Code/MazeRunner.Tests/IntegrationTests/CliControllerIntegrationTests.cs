@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MazeRunner.Cli.Engine;
 using MazeRunner.Cli.Enums;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Benchmark;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Properties;

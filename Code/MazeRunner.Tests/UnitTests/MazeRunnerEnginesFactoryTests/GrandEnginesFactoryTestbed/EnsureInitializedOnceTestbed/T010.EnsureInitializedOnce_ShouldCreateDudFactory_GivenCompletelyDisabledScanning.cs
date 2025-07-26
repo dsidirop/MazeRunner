@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Factory;
 
 namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesFactoryTests.GrandEnginesFactoryTestbed.EnsureInitializedOnceTestbed;
