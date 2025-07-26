@@ -110,6 +110,7 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
+        // ReSharper disable once GenericEnumeratorNotDisposed
         return new ProxyEnumerator(_orderedDictionary.GetEnumerator());
     }
 
@@ -135,7 +136,12 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
 
         public void Dispose()
         {
-            _enumerator = default(IDictionaryEnumerator);
+            if (_enumerator is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+            
+            _enumerator = null;
         }
 
         public bool MoveNext()
@@ -152,7 +158,7 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
         {
             get
             {
-                var current = (DictionaryEntry)_enumerator.Current;
+                var current = (DictionaryEntry)_enumerator.Current!;
                 return new KeyValuePair<TKey, TValue>((TKey)current.Key, (TValue)current.Value);
             }
         }
