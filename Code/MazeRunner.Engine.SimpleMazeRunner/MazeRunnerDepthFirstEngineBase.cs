@@ -69,8 +69,8 @@ public abstract class MazeRunnerDepthFirstEngineBase : IMazeRunnerEngine
 
         _maze = maze ?? throw new ArgumentNullException(nameof(maze));
         _avoidPathfolding = avoidPathfolding;
-        _invalidatedSquares = new HashSet<Point>();
-        _currentTrajectorySquares = new ReorderableDictionary<Point, Point>(); //0
+        _invalidatedSquares = new HashSet<Point>(capacity: Math.Min(256, (maze.Size.Width * maze.Size.Height - maze.RoadblocksCount) / 5));
+        _currentTrajectorySquares = new ReorderableDictionary<Point, Point>(capacity: 64); //0
     }
     //0 current-trajectory-squares is based on a reorderable-dictionary so that the insertion order will be available at all times  A simple dictionary wouldnt
     //  cut it because according to ms documentation plain old dictionaries give no guarantees in terms of reporting their items based on their insertion order

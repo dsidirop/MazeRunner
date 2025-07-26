@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,7 +11,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MazeRunner.Contracts;
 using MazeRunner.Contracts.Events;
@@ -148,12 +147,12 @@ public partial class FormMazeRunnerTester : Form
         //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
     }
 
-    static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>
+    static public readonly FrozenDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>(3)
     {
         { ConclusionStatusTypeEnum.Stopped, "✋" },
         { ConclusionStatusTypeEnum.Crashed, "⚠️" },
         { ConclusionStatusTypeEnum.Completed, "✅️" },
-    }.AsReadOnly();
+    }.ToFrozenDictionary();
 
     // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
     private void OnComponentStateChanged(ComponentStateChanged ea)
@@ -507,7 +506,7 @@ public partial class FormMazeRunnerTester : Form
         // we thus reinstantiate the token-source inside btnstart_click
     }
 
-    private async Task saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var filepath = "";
 
@@ -551,7 +550,7 @@ public partial class FormMazeRunnerTester : Form
         }
     }
 
-    private async Task loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var filepath = "";
         try

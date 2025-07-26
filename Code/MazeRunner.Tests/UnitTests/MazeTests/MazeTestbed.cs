@@ -144,7 +144,7 @@ public class MazeTestbed
     {
         // Arrange
         var entrypoint = new Point(-1, -1);
-        var roadblocks = new HashSet<Point>();
+        var roadblocks = new HashSet<Point>(8);
 
         // Act
         var action = new Action(() => { new Maze(new Size(2, 1), entrypoint, new Point(x: 1, y: 0), roadblocks); });
@@ -159,7 +159,7 @@ public class MazeTestbed
     {
         // Arrange
         var exitpoint = new Point(-1, -1);
-        var roadblocks = new HashSet<Point>();
+        var roadblocks = new HashSet<Point>(8);
 
         // Act
         var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, exitpoint, roadblocks); });
@@ -174,7 +174,7 @@ public class MazeTestbed
     {
         // Arrange
         var entrypoint = Point.Empty;
-        var roadblocks = new HashSet<Point> {entrypoint};
+        var roadblocks = new HashSet<Point>(2) {entrypoint};
 
         // Act
         var action = new Action(() => { new Maze(new Size(2, 1), entrypoint, new Point(x: 1, y: 0), roadblocks); });
@@ -189,7 +189,7 @@ public class MazeTestbed
     {
         // Arrange
         var exitpoint = new Point(x: 1, y: 0);
-        var roadblocks = new HashSet<Point> { exitpoint };
+        var roadblocks = new HashSet<Point>(2) { exitpoint };
 
         // Act
         var action = new Action(() => { new Maze(new Size(2, 1), Point.Empty, exitpoint, roadblocks); });
@@ -227,7 +227,7 @@ public class MazeTestbed
         var size = new Size(width: 6, height: 6);
         var exitpoint = new Point(x: 4, y: 4);
         var entrypoint = new Point(x: 2, y: 2);
-        var roadblocks = new HashSet<Point> { new(x: 0, y: 0), new(x: 1, y: 1), new(x: 3, y: 3) };
+        var roadblocks = new HashSet<Point>(2) { new(x: 0, y: 0), new(x: 1, y: 1), new(x: 3, y: 3) };
 
         // Act
         var maze = new Maze(size, entrypoint, exitpoint, roadblocks) as IMaze;
