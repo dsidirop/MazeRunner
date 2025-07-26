@@ -73,15 +73,10 @@ public class MazesFactory : IMazesFactory
             var mazeWidthBasedOnFirstLine = 0;
             using (var reader = new StreamReader(File.OpenRead(path)))
             {
-                for (;!reader.EndOfStream; lineIndex++)
+                for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
                 {
-                    var line = await reader.ReadLineAsync();
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        if (reader.EndOfStream) break;
-
+                    if (string.IsNullOrWhiteSpace(line))
                         throw new InvalidDataException($"Line {lineIndex + 1} is empty (only the very last line is allowed to be empty)");
-                    }
 
                     if (mazeWidthBasedOnFirstLine == 0)
                     {
