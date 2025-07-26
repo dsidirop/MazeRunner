@@ -10,27 +10,8 @@ namespace MazeRunner.Utils;
 [Serializable]
 public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISerializable, IDictionary
 {
-    private ICollection _orderedDictionaryAsICollection;
-    private ICollection OrderedDictionaryAsICollection
-    {
-        get
-        {
-            if (_orderedDictionaryAsICollection != null) return _orderedDictionaryAsICollection;
-
-            return _orderedDictionaryAsICollection = _orderedDictionary;
-        }
-    }
-
-    private IDictionary _orderedDictionaryAsIDictionary;
-    private IDictionary OrderedDictionaryAsIDictionary
-    {
-        get
-        {
-            if (_orderedDictionaryAsIDictionary != null) return _orderedDictionaryAsIDictionary;
-
-            return _orderedDictionaryAsIDictionary = _orderedDictionary;
-        }
-    }
+    private ICollection OrderedDictionaryAsICollection => field ??= _orderedDictionary;
+    private IDictionary OrderedDictionaryAsIDictionary => field ??= _orderedDictionary;
 
     private readonly IEqualityComparer _comparer;
     private readonly OrderedDictionary _orderedDictionary;
