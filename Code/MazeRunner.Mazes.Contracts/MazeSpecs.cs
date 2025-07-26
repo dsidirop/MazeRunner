@@ -1,8 +1,8 @@
 ﻿namespace MazeRunner.Mazes.Contracts;
 
-public sealed class MazeSpecs
+public readonly record struct MazeSpecs
 {
-    public int Width;
-    public int Height;
-    public double RoadblockDensity;
+    public int Width { get; init; }
+    public int Height { get; init; }
+    public double RoadblockDensity { get; init; }
 }
