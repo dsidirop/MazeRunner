@@ -19,7 +19,7 @@ static internal class Program
             standardOutput: Console.Out
         );
 
-        try
+        try //todo   turn this into a separate service that can be injected into the engine
         {
             Console.CancelKeyPress += Console_CancelKeyComboPressed_;
 

@@ -11,8 +11,13 @@
     <Project Path="MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj" Type="Classic C#" />
     <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="Classic C#" />
   </Folder>
+  <Folder Name="/Injectors/">
+    <Project Path="MazeRunner.Injectors.Autofac\MazeRunner.Injectors.Autofac.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Injectors.Contracts\MazeRunner.Injectors.Contracts.csproj" Type="Classic C#" />
+  </Folder>
   <Folder Name="/Mazes/">
     <Project Path="MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Mazes.Injections\MazeRunner.Mazes.Injections.csproj" Type="Classic C#" />
     <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/Utils/">

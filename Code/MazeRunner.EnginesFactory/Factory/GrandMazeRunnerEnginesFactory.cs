@@ -21,11 +21,11 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
 
     public readonly Lazy<(bool InitializationSuccessful, FrozenDictionary<string, Type> MazeRunnerEnginesRegistry)> LazyCore;
     
-    protected readonly EnginesFactoryOptions Options = new();
+    protected readonly GrandMazeRunnerEnginesFactoryOptions Options = new();
 
     public IReadOnlyCollection<string> EnginesNames => LazyCore.Value.MazeRunnerEnginesRegistry.Keys;
 
-    internal GrandMazeRunnerEnginesFactory(EnginesFactoryOptions? options = null) //made internal so that it will be accessible through tests
+    internal GrandMazeRunnerEnginesFactory(GrandMazeRunnerEnginesFactoryOptions? options = null) //made internal so that it will be accessible through tests
     {
         Options = (options ?? Options).Validate(); //order
         
@@ -59,7 +59,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
     {
         if (factory.Options is {IsFilesystemAssemblyScanningEnabled: false, IsDomainAssembliesScanningEnabled: false}) //order
         {
-            factory.Tracer.TraceInformation("[EFS.TSSAAD.010] Assembly scanning has been completely disabled - the grand-factory will be left intentionally dud.");
+            factory.Tracer.TraceInformation("[GMREF.TSSAAD.010] Assembly scanning has been completely disabled - the grand-factory will be left intentionally dud.");
             return (InitializationSucceeded: true, SubfactoriesRegistry: FrozenDictionary<string, Type>.Empty);
         }
 
@@ -101,7 +101,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
         catch (Exception ex)
         {
             factory.Tracer.TraceInformation(
-                $"[EFS.TSSAAD.010] [🐞 BUG 🐞] [RECOVERED] Failed to scan for subfactories of type " +
+                $"[GMREF.TSSAAD.010] [🐞 BUG 🐞] [RECOVERED] Failed to scan for subfactories of type " +
                 $"'{nameof(IMazeRunnerEngine)}' across all dlls of this app. Report this incident!\n\n{ex}"
             );
 
@@ -119,7 +119,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             }
             catch (Exception ex)
             {
-                factory.Tracer.TraceInformation($"[EFS.TSSAAD.CTET.010] [🐞 BUG 🐞] [RECOVERED] Failed to collect exported types from assembly '{assembly_.FullName}'\n\n{ex}");
+                factory.Tracer.TraceInformation($"[GMREF.TSSAAD.CTET.010] [🐞 BUG 🐞] [RECOVERED] Failed to collect exported types from assembly '{assembly_.FullName}'\n\n{ex}");
                 return [];
             }
         }
@@ -143,8 +143,8 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
                     RecurseSubdirectories = false, //00
                 };
 
-                var whitelistedFiles = ScanDirectoryUsingGlob_(productInstallationFolderpath, factory.Options.WhitelistedAssembliesFilesGlobPattern.NullIfDud() ?? "*", fileEnumerationOptions);
-                var blacklistedFiles = ScanDirectoryUsingGlob_(productInstallationFolderpath, factory.Options.BlacklistedAssembliesFileGlobPattern, fileEnumerationOptions);
+                var whitelistedFiles = ScanDirectoryForAssemblyFilesUsingGlob_(productInstallationFolderpath, factory.Options.WhitelistedAssembliesFilesGlobPattern.NullIfDud() ?? "*", fileEnumerationOptions);
+                var blacklistedFiles = ScanDirectoryForAssemblyFilesUsingGlob_(productInstallationFolderpath, factory.Options.BlacklistedAssembliesFileGlobPattern, fileEnumerationOptions);
 
                 return whitelistedFiles
                     .Except(blacklistedFiles)
@@ -156,21 +156,18 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             catch (Exception ex)
             {
                 factory.Tracer.TraceInformation(
-                    $"[EFS.TSSAAD.TGDFTSFF.010] [🐟 THIS LOOKS FISHY 🐟] [RECOVERED] Failed to get assembly files from the product " +
+                    $"[GMREF.TSSAAD.TGDFTSFF.010] [🐟 THIS LOOKS FISHY 🐟] [RECOVERED] Failed to get assembly files from the product " +
                     $"installation folderpath '{productInstallationFolderpath}' (in platforms such as iOS this is to be expected though)\n\n{ex}"
                 );
                 return [];
             }
 
-            static IEnumerable<string> ScanDirectoryUsingGlob_(string productInstallationFolderpath_, string globFilePatternWithSemicolons_, EnumerationOptions fileEnumerationOptions_)
+            static IEnumerable<string> ScanDirectoryForAssemblyFilesUsingGlob_(string productInstallationFolderpath_, string globFilePatternWithSemicolons_, EnumerationOptions fileEnumerationOptions_)
             {
-                foreach (var pattern in globFilePatternWithSemicolons_.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()))
-                {
-                    foreach (var f in Directory.GetFiles(productInstallationFolderpath_, pattern, fileEnumerationOptions_))
-                    {
-                        yield return f;
-                    }
-                }
+                return globFilePatternWithSemicolons_
+                    .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(globPattern => globPattern.Trim())
+                    .SelectMany(globPattern => Directory.GetFiles(productInstallationFolderpath_, globPattern, fileEnumerationOptions_)); //files
             }
 
             //00   we dont want to recurse subdirectories here
@@ -185,7 +182,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             catch (Exception ex)
             {
                 factory.Tracer.TraceInformation(
-                    $"[EFS.TSSAAD.TGPIF.010] [🐟 THIS LOOKS FISHY 🐟] [RECOVERED] Failed to determine the " +
+                    $"[GMREF.TSSAAD.TGPIF.010] [🐟 THIS LOOKS FISHY 🐟] [RECOVERED] Failed to determine the " +
                     $"product installation folderpath (in platforms such as iOS this is to be expected though)\n\n{ex}"
                 );
                 return "";
@@ -204,7 +201,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             catch (Exception ex)
             {
                 factory.Tracer.TraceInformation(
-                    $"[EFS.TSSAAD.MCCISCF.010] [🐟 THIS LOOKS FISHY 🐟] Failed to analyze type '{x.FullName}' " +
+                    $"[GMREF.TSSAAD.MCCISCF.010] [🐟 THIS LOOKS FISHY 🐟] Failed to analyze type '{x.FullName}' " +
                     $"to see if it matches '{nameof(IMazeRunnerEngine)}'. Report this incident!\n\n{ex}"
                 );
                 return false;
@@ -220,7 +217,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             catch (Exception ex)
             {
                 factory.Tracer.TraceInformation(
-                    $"[EFS.TSSAAD.TLAF.010] [🐟 THIS LOOKS FISHY 🐟] Failed to load assembly '{filepath_}' to scan " +
+                    $"[GMREF.TSSAAD.TLAF.010] [🐟 THIS LOOKS FISHY 🐟] Failed to load assembly '{filepath_}' to scan " +
                     $"the subfactories it provides (in platforms such as iOS this is to be expected though)\n\n{ex}"
                 );
                 return null;
@@ -261,7 +258,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             }
             catch (Exception ex)
             {
-                factory.Tracer.TraceInformation($"[EFS.TSSAAD.TGCDPA.010] [🐟 THIS LOOKS FISHY 🐟] Failed to get the current domain preloaded assemblies\n\n{ex}");
+                factory.Tracer.TraceInformation($"[GMREF.TSSAAD.TGCDPA.010] [🐟 THIS LOOKS FISHY 🐟] Failed to get the current domain preloaded assemblies\n\n{ex}");
                 return [];
             }
 
@@ -272,9 +269,5 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             //    3. [performance] dynamic assemblies are often numerous and scanning them can be costly
             //    4. [predictability] our factory discovery mechanism should be deterministic while dynamic assemblies can vary between runs
         }
-
-        //0 play it safe in terms of ensuring threadsafe init
-        //1 scan subfactories dynamically from all dlls that are named after the given pattern   if someone wants to add his own subfactory he can just
-        //  drop his dll into the directory with the rest of the dlls as long as the platform supports it   bear in mind that ios doesnt support this kind of stuff
     }
 }

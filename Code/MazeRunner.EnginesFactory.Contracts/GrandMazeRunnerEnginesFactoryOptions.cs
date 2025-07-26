@@ -1,6 +1,6 @@
-﻿namespace MazeRunner.EnginesFactory.Factory;
+﻿namespace MazeRunner.EnginesFactory.Contracts;
 
-public class EnginesFactoryOptions
+public class GrandMazeRunnerEnginesFactoryOptions
 {
     /// <summary>Specifies whether the GrandEnginesFactory should scan the current AppDomain for preloaded assemblies.</summary>
     public bool IsDomainAssembliesScanningEnabled { get; set; } = true;
@@ -37,7 +37,7 @@ public class EnginesFactoryOptions
     public string BlacklistedAssembliesFileGlobPattern { get; set; } = "*test.dll;*tests.dll";
 
 
-    public EnginesFactoryOptions Validate()
+    public GrandMazeRunnerEnginesFactoryOptions Validate()
     {
         //if (string.IsNullOrWhiteSpace(AssemblyFileFilterWhitelistPattern)) throw //dont   it can be empty
         //if (string.IsNullOrWhiteSpace(AssemblyFileFilterBlacklistPattern)) throw //dont   it can be empty

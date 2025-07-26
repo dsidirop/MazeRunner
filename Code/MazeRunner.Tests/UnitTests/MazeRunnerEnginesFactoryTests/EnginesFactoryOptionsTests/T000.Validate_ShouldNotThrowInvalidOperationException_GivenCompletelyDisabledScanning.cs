@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using MazeRunner.EnginesFactory.Contracts;
 using MazeRunner.EnginesFactory.Factory;
 
 namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesFactoryTests.EnginesFactoryOptionsTests;
@@ -10,7 +11,7 @@ public partial class Testbed
     public void Validate_ShouldNotThrowInvalidOperationException_GivenCompletelyDisabledScanning()
     {
         // Arrange
-        var options = new EnginesFactoryOptions {IsFilesystemAssemblyScanningEnabled = false, IsDomainAssembliesScanningEnabled = false};
+        var options = new GrandMazeRunnerEnginesFactoryOptions {IsFilesystemAssemblyScanningEnabled = false, IsDomainAssembliesScanningEnabled = false};
 
         // Act
         var work = new Action(() => options.Validate());
