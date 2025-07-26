@@ -509,68 +509,78 @@ public partial class FormMazeRunnerTester : Form
     private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var filepath = "";
-        using (var saveFileDialog = new SaveFileDialog())
-        {
-            saveFileDialog.Title = @"Save Maze as";
-            saveFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
-            saveFileDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{_ccMazeCanvas.Maze.Size.Height:D5}x{_ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
-            saveFileDialog.AddExtension = true;
-            saveFileDialog.ValidateNames = true;
-            saveFileDialog.CheckPathExists = true;
-            saveFileDialog.OverwritePrompt = true;
-            saveFileDialog.InitialDirectory = DesktopDirectory;
-            if (saveFileDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            filepath = saveFileDialog.FileName;
+        try
+        {
+            using var saveFileConfigurationDialog = new SaveFileDialog();
+            
+            saveFileConfigurationDialog.Title = @"Save Maze as";
+            saveFileConfigurationDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
+            saveFileConfigurationDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{_ccMazeCanvas.Maze.Size.Height:D5}x{_ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
+            saveFileConfigurationDialog.AddExtension = true;
+            saveFileConfigurationDialog.ValidateNames = true;
+            saveFileConfigurationDialog.CheckPathExists = true;
+            saveFileConfigurationDialog.OverwritePrompt = true;
+            saveFileConfigurationDialog.InitialDirectory = DesktopDirectory;
+            if (saveFileConfigurationDialog.ShowDialog(this) != DialogResult.OK) return;
+
+            filepath = saveFileConfigurationDialog.FileName;
+        }
+        catch (Exception ex)
+        {
+            ShowMessageSafe("Failed to show file-save dialog.", "Error", ex: ex);
+            return;
         }
 
         try
         {
             File.WriteAllText(filepath, _ccMazeCanvas.Maze.ToAsciiMap());
-            using (var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation())
-            {
-                formFileGeneratedSuccessfully.Text = @"Maze Saved Successfully";
-                formFileGeneratedSuccessfully.FilePath = filepath;
-                formFileGeneratedSuccessfully.FileGeneratedSuccessfullyMessage = @"Operation completed successfully";
-                formFileGeneratedSuccessfully.ShowDialog(this);
-            }
+
+            using var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation();
+            
+            formFileGeneratedSuccessfully.Text = @"Maze Saved Successfully";
+            formFileGeneratedSuccessfully.FilePath = filepath;
+            formFileGeneratedSuccessfully.FileGeneratedSuccessfullyMessage = @"Operation completed successfully";
+            formFileGeneratedSuccessfully.ShowDialog(this);
         }
         catch (Exception ex)
         {
             ShowMessageSafe($"Failed save maze file to:{nl2}{filepath}{nl2}Please select a different location.", @"Error saving to disk", ex: ex);
+            return;
         }
     }
 
     private async void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
+        var filepath = "";
         try
         {
-            var filepath = "";
-            using (var openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Title = @"Select existing backup file";
-                openFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
-                openFileDialog.ValidateNames = true;
-                openFileDialog.CheckPathExists = true;
-                openFileDialog.CheckFileExists = true;
-                openFileDialog.InitialDirectory = DesktopDirectory;
-                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
+            using var openFileDialog = new OpenFileDialog();
 
-                filepath = openFileDialog.FileName;
-            }
+            openFileDialog.Title = @"Select existing backup file";
+            openFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
+            openFileDialog.ValidateNames = true;
+            openFileDialog.CheckPathExists = true;
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.InitialDirectory = DesktopDirectory;
+            if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            try
-            {
-                _ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
-            }
-            catch (Exception ex)
-            {
-                ShowMessageSafe("Failed to restore backup copy", "Error reading from disk", ex: ex);
-            }
+            filepath = openFileDialog.FileName;
         }
         catch (Exception ex)
         {
             ShowMessageSafe(ex.Message, @"Mazefile Loading Failed", ex: ex);
+            return;
+        }
+        
+        try
+        {
+            _ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
+        }
+        catch (Exception ex)
+        {
+            ShowMessageSafe("Failed to restore backup copy", "Error reading from disk", ex: ex);
+            return;
         }
     }
 
@@ -583,15 +593,15 @@ public partial class FormMazeRunnerTester : Form
     private void generateRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var mazespecs = _ccMazeCanvas.Maze.GetMazeSpecs();
-        using (var generateMazeDialog = new FormGenerateNewRandomMaze())
-        {
-            generateMazeDialog.MazeWidth = mazespecs.Width;
-            generateMazeDialog.MazeHeight = mazespecs.Height;
-            generateMazeDialog.MazeDensity = mazespecs.RoadblockDensity;
-            if (generateMazeDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
-        }
+        using var generateMazeDialog = new FormGenerateNewRandomMaze();
+        
+        generateMazeDialog.MazeWidth = mazespecs.Width;
+        generateMazeDialog.MazeHeight = mazespecs.Height;
+        generateMazeDialog.MazeDensity = mazespecs.RoadblockDensity;
+        if (generateMazeDialog.ShowDialog(this) != DialogResult.OK) return;
+
+        _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
     }
 
     private void Post(SendOrPostCallback callback, object data = null) => _syncContext.Post(callback, data);

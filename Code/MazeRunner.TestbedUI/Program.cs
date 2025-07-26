@@ -33,11 +33,10 @@ static internal class Program
         {
             var oex = ea.Exception;
             if (oex is OperationCanceledException) return; //stop button
-                
-            using (var form = new FormUnhandledException(oex))
-            {
-                form.ShowDialog();
-            }
+
+            using var form = new FormUnhandledException(oex);
+            
+            form.ShowDialog();
         }
     }
 }
