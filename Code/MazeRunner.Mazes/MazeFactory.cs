@@ -71,50 +71,50 @@ public class MazesFactory : IMazesFactory
             var entrypoint = (Point?) null;
             var roadblocks = new HashSet<Point>();
             var mazeWidthBasedOnFirstLine = 0;
-            using (var reader = new StreamReader(File.OpenRead(path)))
+            
+            using var reader = new StreamReader(File.OpenRead(path));
+            
+            for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
             {
-                for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
+                if (string.IsNullOrWhiteSpace(line))
+                    throw new InvalidDataException($"Line {lineIndex + 1} is empty (only the very last line is allowed to be empty)");
+
+                if (mazeWidthBasedOnFirstLine == 0)
                 {
-                    if (string.IsNullOrWhiteSpace(line))
-                        throw new InvalidDataException($"Line {lineIndex + 1} is empty (only the very last line is allowed to be empty)");
-
-                    if (mazeWidthBasedOnFirstLine == 0)
-                    {
-                        mazeWidthBasedOnFirstLine = line.Length;
-                    }
-                    else if (mazeWidthBasedOnFirstLine != line.Length)
-                    {
-                        throw new InvalidDataException($"Line {lineIndex + 1} has different number of columns ({line.Length}) than the first line (which has {mazeWidthBasedOnFirstLine})");
-                    }
-
-                    line.Each((c, columnIndex) =>
-                    {
-                        if (c == '_')
-                        {
-                            //skip
-                        }
-                        else if (c == 'G')
-                        {
-                            if (exitpoint != null) throw new InvalidDataException("Maze has two Exit points");
-
-                            exitpoint = new Point(columnIndex, lineIndex);
-                        }
-                        else if (c == 'S')
-                        {
-                            if (entrypoint != null) throw new InvalidDataException("Maze has two Entry points");
-
-                            entrypoint = new Point(columnIndex, lineIndex);
-                        }
-                        else if (c == 'X')
-                        {
-                            roadblocks.Add(new Point(columnIndex, lineIndex));
-                        }
-                        else
-                        {
-                            throw new InvalidDataException($"Invalid character {c} at line {lineIndex + 1} column {columnIndex + 1}");
-                        }
-                    });
+                    mazeWidthBasedOnFirstLine = line.Length;
                 }
+                else if (mazeWidthBasedOnFirstLine != line.Length)
+                {
+                    throw new InvalidDataException($"Line {lineIndex + 1} has different number of columns ({line.Length}) than the first line (which has {mazeWidthBasedOnFirstLine})");
+                }
+
+                line.Each((c, columnIndex) =>
+                {
+                    if (c == '_')
+                    {
+                        //skip
+                    }
+                    else if (c == 'G')
+                    {
+                        if (exitpoint != null) throw new InvalidDataException("Maze has two Exit points");
+
+                        exitpoint = new Point(columnIndex, lineIndex);
+                    }
+                    else if (c == 'S')
+                    {
+                        if (entrypoint != null) throw new InvalidDataException("Maze has two Entry points");
+
+                        entrypoint = new Point(columnIndex, lineIndex);
+                    }
+                    else if (c == 'X')
+                    {
+                        roadblocks.Add(new Point(columnIndex, lineIndex));
+                    }
+                    else
+                    {
+                        throw new InvalidDataException($"Invalid character {c} at line {lineIndex + 1} column {columnIndex + 1}");
+                    }
+                });
             }
 
             if (lineIndex == 0) throw new InvalidDataException("Empty");
