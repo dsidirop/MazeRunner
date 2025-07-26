@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <LangVersion>13</LangVersion>
-        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
 
         <Nullable>disable</Nullable>
         <IsTestProject>true</IsTestProject>
@@ -54,6 +54,10 @@
         <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj" />
         <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" />
         <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="UnitTests\MazeRunnerEnginesFactoryTests\" />
     </ItemGroup>
 
 </Project>

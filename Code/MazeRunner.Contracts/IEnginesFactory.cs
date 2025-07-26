@@ -6,7 +6,7 @@ public interface IEnginesFactory
 {
     IReadOnlyCollection<string> EnginesNames { get; }
 
-    void EnsureInit();
+    bool EnsureInitializedOnce();
     
     IMazeRunnerEngine Spawn(string enginename, IMaze maze);
 }

@@ -2,7 +2,6 @@
 #pragma warning disable CA5394 //disable warning about random not being cryptographically secure
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;

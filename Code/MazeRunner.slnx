@@ -10,7 +10,7 @@
     <File Path="..\.gitignore" />
     <File Path="..\LICENSE" />
     <File Path="..\README.md" />
-    <File Path="..\global.json" />
+    <File Path="global.json" />
   </Folder>
   <Folder Name="/_Misc/Ci/">
     <File Path="..\Ci\MazeRunner.GenerateSignAndUploadSbom.sh" />

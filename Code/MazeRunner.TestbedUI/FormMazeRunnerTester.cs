@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -97,7 +97,7 @@ public partial class FormMazeRunnerTester : Form
 
             _enginesTestbench.SpecificEngineTestsCompleted += EnginesTestbench_SpecificEngineTestsCompleted_;    
         }
-        _enginesTestbench.AllBenchmarkingDone += EnginesTestbench_AllBenchmarkingDone_;
+        _enginesTestbench.AllBenchmarkingsDone += EnginesTestbench_AllBenchmarkingsDone_;
 
         OnComponentStateChanged(new ComponentStateChanged("form.onload")); //init ui
         return;
@@ -112,7 +112,7 @@ public partial class FormMazeRunnerTester : Form
             _mazeRunnersEnginesDataSource[ea_.Index].Selected = ea_.NewValue == CheckState.Checked;
         }
 
-        void EnginesTestbench_AllBenchmarkingDone_(object sender_, AllBenchmarkingDoneEventArgs ea_)
+        void EnginesTestbench_AllBenchmarkingsDone_(object sender_, AllBenchmarkingsDoneEventArgs ea_)
         {
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnNext((sender_, ea_));
             _mazeRunnerBenchmarkingUpdatingEventsSubject.OnCompleted();
@@ -147,12 +147,12 @@ public partial class FormMazeRunnerTester : Form
         //  time-consuming thus stalling the display of the form   by delegating the initialization process to a subthread we make the display of the form snappier in this regard
     }
 
-    static public readonly ReadOnlyDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>
+    static public readonly FrozenDictionary<ConclusionStatusTypeEnum, string> ConclusionToSymbol = new Dictionary<ConclusionStatusTypeEnum, string>(3)
     {
         { ConclusionStatusTypeEnum.Stopped, "✋" },
         { ConclusionStatusTypeEnum.Crashed, "⚠️" },
         { ConclusionStatusTypeEnum.Completed, "✅️" },
-    }.AsReadOnly();
+    }.ToFrozenDictionary();
 
     // ReSharper disable once UnusedParameter.Local   componentstatechanged is there clearly for debugging purposes nothing more
     private void OnComponentStateChanged(ComponentStateChanged ea)
@@ -276,7 +276,7 @@ public partial class FormMazeRunnerTester : Form
             AllLapsConcludedEventArgs                ea_ => ForLogging_OnAllLapsConcluded_(ea_), //               engine
             
             SpecificEngineTestsCompletedEventArgs    ea_ => ForLogging_SpecificEngineTestsCompleted_(ea_), //     benchmarker
-            AllBenchmarkingDoneEventArgs             ea_ => ForLogging_OnAllBenchmarkingDone_(ea_), //            benchmarker
+            AllBenchmarkingsDoneEventArgs             ea_ => ForLogging_OnAllBenchmarkingsDone_(ea_), //            benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
@@ -293,7 +293,7 @@ public partial class FormMazeRunnerTester : Form
             }
         }
 
-        bool ForLogging_OnAllBenchmarkingDone_(AllBenchmarkingDoneEventArgs _)
+        bool ForLogging_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
         {
             Post(PostCallback_);
             return true;
@@ -385,7 +385,7 @@ public partial class FormMazeRunnerTester : Form
             AllLapsConcludedEventArgs                ea_ => ForUI_OnAllLapsConcluded_(ea_), //                engine
             
             SpecificEngineTestsCompletedEventArgs    ea_ => ForUI_SpecificEngineTestsCompleted_(ea_), //      benchmarker
-            AllBenchmarkingDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingDone_(ea_), //             benchmarker
+            AllBenchmarkingsDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingsDone_(ea_), //             benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
@@ -397,7 +397,7 @@ public partial class FormMazeRunnerTester : Form
             return true;
         }
 
-        bool ForUI_OnAllBenchmarkingDone_(AllBenchmarkingDoneEventArgs _)
+        bool ForUI_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
         {
             Send(SendCallback_);
             return true;
@@ -464,8 +464,8 @@ public partial class FormMazeRunnerTester : Form
                     _ccMazeCanvas.tlpMesh.ResumeDrawing();
                     _ccMazeCanvas.tlpMesh.ResumeLayout();
 
-                    if (label1 != null) label1.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
-                    if (label2 != null) label2.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                    label1?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+                    label2?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
                 }
             }
         }
@@ -506,71 +506,81 @@ public partial class FormMazeRunnerTester : Form
         // we thus reinstantiate the token-source inside btnstart_click
     }
 
-    private void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
+    private async void saveMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var filepath = "";
-        using (var saveFileDialog = new SaveFileDialog())
-        {
-            saveFileDialog.Title = @"Save Maze as";
-            saveFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
-            saveFileDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{_ccMazeCanvas.Maze.Size.Height:D5}x{_ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
-            saveFileDialog.AddExtension = true;
-            saveFileDialog.ValidateNames = true;
-            saveFileDialog.CheckPathExists = true;
-            saveFileDialog.OverwritePrompt = true;
-            saveFileDialog.InitialDirectory = DesktopDirectory;
-            if (saveFileDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            filepath = saveFileDialog.FileName;
+        try
+        {
+            using var saveFileConfigurationDialog = new SaveFileDialog();
+            
+            saveFileConfigurationDialog.Title = @"Save Maze as";
+            saveFileConfigurationDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}";
+            saveFileConfigurationDialog.FileName = $"mazemap_{DateTime.Now:yyyyMMddHHmmss}_{_ccMazeCanvas.Maze.Size.Height:D5}x{_ccMazeCanvas.Maze.Size.Width:D5}{MazefileExtension}";
+            saveFileConfigurationDialog.AddExtension = true;
+            saveFileConfigurationDialog.ValidateNames = true;
+            saveFileConfigurationDialog.CheckPathExists = true;
+            saveFileConfigurationDialog.OverwritePrompt = true;
+            saveFileConfigurationDialog.InitialDirectory = DesktopDirectory;
+            if (saveFileConfigurationDialog.ShowDialog(this) != DialogResult.OK) return;
+
+            filepath = saveFileConfigurationDialog.FileName;
+        }
+        catch (Exception ex)
+        {
+            ShowMessageSafe("Failed to show file-save dialog.", "Error", ex: ex);
+            return;
         }
 
         try
         {
-            File.WriteAllText(filepath, _ccMazeCanvas.Maze.ToAsciiMap());
-            using (var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation())
-            {
-                formFileGeneratedSuccessfully.Text = @"Maze Saved Successfully";
-                formFileGeneratedSuccessfully.FilePath = filepath;
-                formFileGeneratedSuccessfully.FileGeneratedSuccessfullyMessage = @"Operation completed successfully";
-                formFileGeneratedSuccessfully.ShowDialog(this);
-            }
+            await File.WriteAllTextAsync(filepath, _ccMazeCanvas.Maze.ToAsciiMap());
+
+            using var formFileGeneratedSuccessfully = new FormNotificationAboutFileOperation();
+            
+            formFileGeneratedSuccessfully.Text = @"Maze Saved Successfully";
+            formFileGeneratedSuccessfully.FilePath = filepath;
+            formFileGeneratedSuccessfully.FileGeneratedSuccessfullyMessage = @"Operation completed successfully";
+            formFileGeneratedSuccessfully.ShowDialog(this);
         }
         catch (Exception ex)
         {
             ShowMessageSafe($"Failed save maze file to:{nl2}{filepath}{nl2}Please select a different location.", @"Error saving to disk", ex: ex);
+            return;
         }
     }
 
     private async void loadMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
+        var filepath = "";
         try
         {
-            var filepath = "";
-            using (var openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Title = @"Select existing backup file";
-                openFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
-                openFileDialog.ValidateNames = true;
-                openFileDialog.CheckPathExists = true;
-                openFileDialog.CheckFileExists = true;
-                openFileDialog.InitialDirectory = DesktopDirectory;
-                if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
+            using var openFileDialog = new OpenFileDialog();
 
-                filepath = openFileDialog.FileName;
-            }
+            openFileDialog.Title = @"Select existing backup file";
+            openFileDialog.Filter = $@"Maze Files (*{MazefileExtension})|*{MazefileExtension}|All Files(*.*)|*.*";
+            openFileDialog.ValidateNames = true;
+            openFileDialog.CheckPathExists = true;
+            openFileDialog.CheckFileExists = true;
+            openFileDialog.InitialDirectory = DesktopDirectory;
+            if (openFileDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            try
-            {
-                _ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
-            }
-            catch (Exception ex)
-            {
-                ShowMessageSafe("Failed to restore backup copy", "Error reading from disk", ex: ex);
-            }
+            filepath = openFileDialog.FileName;
         }
         catch (Exception ex)
         {
             ShowMessageSafe(ex.Message, @"Mazefile Loading Failed", ex: ex);
+            return;
+        }
+        
+        try
+        {
+            _ccMazeCanvas.Maze = await _mazesFactory.FromFileAsync(filepath);
+        }
+        catch (Exception ex)
+        {
+            ShowMessageSafe("Failed to restore backup copy", "Error reading from disk", ex: ex);
+            return;
         }
     }
 
@@ -583,15 +593,15 @@ public partial class FormMazeRunnerTester : Form
     private void generateRandomMazeToolStripMenuItem_Click(object sender, EventArgs ea)
     {
         var mazespecs = _ccMazeCanvas.Maze.GetMazeSpecs();
-        using (var generateMazeDialog = new FormGenerateNewRandomMaze())
-        {
-            generateMazeDialog.MazeWidth = mazespecs.Width;
-            generateMazeDialog.MazeHeight = mazespecs.Height;
-            generateMazeDialog.MazeDensity = mazespecs.RoadblockDensity;
-            if (generateMazeDialog.ShowDialog(this) != DialogResult.OK) return;
 
-            _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
-        }
+        using var generateMazeDialog = new FormGenerateNewRandomMaze();
+        
+        generateMazeDialog.MazeWidth = mazespecs.Width;
+        generateMazeDialog.MazeHeight = mazespecs.Height;
+        generateMazeDialog.MazeDensity = mazespecs.RoadblockDensity;
+        if (generateMazeDialog.ShowDialog(this) != DialogResult.OK) return;
+
+        _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
     }
 
     private void Post(SendOrPostCallback callback, object data = null) => _syncContext.Post(callback, data);

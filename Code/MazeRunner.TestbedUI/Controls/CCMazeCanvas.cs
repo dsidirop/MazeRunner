@@ -17,19 +17,17 @@ public partial class CCMazeCanvas : UserControl
     private RowStyle StandardRowStyle => new(SizeType.Absolute, height: CellEdgeLength);
     private ColumnStyle StandardColumnStyle => new(SizeType.Absolute, width: CellEdgeLength);
 
-    private IMaze _maze;
-
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IMaze Maze
     {
+        get;
         set
         {
-            if (_maze == value) return;
+            if (field == value) return;
 
-            _maze = value; //order
+            field = value; //order
             Reinitialize(); //order
         }
-        get => _maze;
     }
 
     public CCMazeCanvas()
@@ -52,7 +50,7 @@ public partial class CCMazeCanvas : UserControl
 
     public Label CustomizeCell(Point cellCoords, Color backcolor, string textToAppend = null)
     {
-        if (!_maze.Contains(cellCoords)) throw new ArgumentOutOfRangeException(nameof(cellCoords));
+        if (!Maze.Contains(cellCoords)) throw new ArgumentOutOfRangeException(nameof(cellCoords));
 
         //tlpMesh.SuspendDrawing() //todo  experiment with this technique to speed up the drawing process
 
@@ -67,7 +65,7 @@ public partial class CCMazeCanvas : UserControl
         else
         {
             // label.Font = FontForSimpleCells;
-            label.BackColor = _maze.HitTest(cellCoords) switch
+            label.BackColor = Maze.HitTest(cellCoords) switch
             {
                 MazeHitTestEnum.Free => backcolor,
                 _ => label.BackColor // roadblocks, entrance and exit point get to keep their colors
@@ -97,14 +95,14 @@ public partial class CCMazeCanvas : UserControl
             tlpMesh.SuspendDrawing().SuspendLayout(); //0 suspenddrawing
             Controls.Remove(tlpMesh);
 
-            if (tlpMesh.ColumnStyles.Count > _maze.Size.Width || tlpMesh.RowStyles.Count > _maze.Size.Height)
+            if (tlpMesh.ColumnStyles.Count > Maze.Size.Width || tlpMesh.RowStyles.Count > Maze.Size.Height)
             {
                 tlpMesh.Controls.Clear(); //the only quick and safe way to drop labels in squares which are bound to be cut off
             }
 
-            while (tlpMesh.ColumnStyles.Count != _maze.Size.Width)
+            while (tlpMesh.ColumnStyles.Count != Maze.Size.Width)
             {
-                if (tlpMesh.ColumnStyles.Count < _maze.Size.Width)
+                if (tlpMesh.ColumnStyles.Count < Maze.Size.Width)
                 {
                     tlpMesh.ColumnStyles.Add(StandardColumnStyle);
                 }
@@ -114,11 +112,11 @@ public partial class CCMazeCanvas : UserControl
                 }
             }
 
-            tlpMesh.ColumnCount = _maze.Size.Width;
+            tlpMesh.ColumnCount = Maze.Size.Width;
 
-            while (tlpMesh.RowStyles.Count != _maze.Size.Height)
+            while (tlpMesh.RowStyles.Count != Maze.Size.Height)
             {
-                if (tlpMesh.RowStyles.Count < _maze.Size.Height)
+                if (tlpMesh.RowStyles.Count < Maze.Size.Height)
                 {
                     tlpMesh.RowStyles.Add(StandardRowStyle);
                 }
@@ -128,7 +126,7 @@ public partial class CCMazeCanvas : UserControl
                 }
             }
 
-            tlpMesh.RowCount = _maze.Size.Height;
+            tlpMesh.RowCount = Maze.Size.Height;
 
             ResetCellsToDefaultColors();
         }
@@ -142,16 +140,16 @@ public partial class CCMazeCanvas : UserControl
 
     public void ResetCellsToDefaultColors()
     {
-        if (_maze == null) return;
+        if (Maze == null) return;
 
         try
         {
             tlpMesh.SuspendDrawing();
-            for (var row = 0; row < _maze.Size.Height; row++)
+            for (var row = 0; row < Maze.Size.Height; row++)
             {
-                for (var column = 0; column < _maze.Size.Width; column++)
+                for (var column = 0; column < Maze.Size.Width; column++)
                 {
-                    var hittest = _maze.HitTest(new Point(column, row));
+                    var hittest = Maze.HitTest(new Point(column, row));
 
                     var preexistingLabel = tlpMesh.GetControlFromPosition(column, row);
                     if (hittest == MazeHitTestEnum.Free)
