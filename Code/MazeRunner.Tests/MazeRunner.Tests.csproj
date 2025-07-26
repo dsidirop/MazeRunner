@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <LangVersion>13</LangVersion>
-        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
 
         <Nullable>disable</Nullable>
         <IsTestProject>true</IsTestProject>
@@ -30,10 +30,10 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
 
         <PackageReference Include="NUnit" Version="4.3.2" />
-        <PackageReference Include="NUnit.Analyzers" Version="4.7.0">
+        <PackageReference Include="NUnit.Analyzers" Version="4.9.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
