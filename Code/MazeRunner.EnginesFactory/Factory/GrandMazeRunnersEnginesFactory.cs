@@ -31,9 +31,6 @@ public class GrandMazeRunnersEnginesFactory : IGrandMazeRunnersEnginesFactory
         
         LazyCore = new(() => TryScanAllAssembliesForSubfactories(this));
     }
-
-    static public GrandMazeRunnersEnginesFactory I => LazyInstance.Value; //todo   remove this once we have proper DI in place
-    static private readonly Lazy<GrandMazeRunnersEnginesFactory> LazyInstance = new(() => new GrandMazeRunnersEnginesFactory()); //todo   remove this once we have proper DI in place
     
     public IMazeRunnerEngine Spawn(string enginename, IMaze maze) //todo integration tests
     {

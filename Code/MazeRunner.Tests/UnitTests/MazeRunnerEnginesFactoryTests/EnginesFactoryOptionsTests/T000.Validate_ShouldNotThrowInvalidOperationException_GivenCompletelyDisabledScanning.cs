@@ -1,7 +1,6 @@
 using System;
 using FluentAssertions;
 using MazeRunner.EnginesFactory.Contracts;
-using MazeRunner.EnginesFactory.Factory;
 
 namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesFactoryTests.EnginesFactoryOptionsTests;
 
