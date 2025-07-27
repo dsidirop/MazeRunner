@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using MazeRunner.Cli.Engine;
-using MazeRunner.EnginesFactory.Contracts;
 using MazeRunner.Injectors.Autofac;
-using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.Cli;
 
@@ -15,14 +13,7 @@ static internal class Program
         await using var injectorContainer = new AutofacInjectorScannerService().TryScanAllAssembliesForInjectionsConfigs().Build();
         await using var injectorContainerScope = injectorContainer.BeginLifetimeScope();
 
-        var cliControllerEngine = new CliControllerEngine(
-            mazesFactory: injectorContainerScope.Resolve<IMazesFactory>(), //singleton
-            enginesFactory: injectorContainerScope.Resolve<IGrandMazeRunnersEnginesFactory>(),
-            enginesTestbench: injectorContainerScope.Resolve<IEnginesTestbench>(),
-
-            standardError: Console.Error,
-            standardOutput: Console.Out
-        );
+        var cliControllerEngine = injectorContainerScope.Resolve<ICliControllerEngine>();
 
         try //todo   turn this into a separate service that can be injected into the engine
         {

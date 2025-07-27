@@ -5,7 +5,7 @@ using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.Cli.Engine;
 
-public partial class CliControllerEngine
+public partial class CliControllerEngine : ICliControllerEngine
 {
     public bool HasCancellationBeenAlreadyRequestedOnce { get; private set; }
     
