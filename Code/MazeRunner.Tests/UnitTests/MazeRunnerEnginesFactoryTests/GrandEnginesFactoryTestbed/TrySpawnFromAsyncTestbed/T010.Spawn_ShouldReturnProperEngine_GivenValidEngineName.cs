@@ -1,7 +1,7 @@
 using System;
 using FluentAssertions;
-using MazeRunner.Contracts;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.Contracts;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Tests.TestArtifacts;
 
@@ -16,7 +16,7 @@ public partial class Testbed
         _ = new MazeRunnerSimpleDepthFirstEngine(Artifacts.Minimal_1X3_S_G); //keep this here to ensure the associated assembly is loaded!
         
         var result = (IMazeRunnerEngine) null;
-        var factory = new GrandMazeRunnerEnginesFactory(new()
+        var factory = new GrandMazeRunnersEnginesFactory(new()
         {
             IsDomainAssembliesScanningEnabled = true,
             IsFilesystemAssemblyScanningEnabled = true,

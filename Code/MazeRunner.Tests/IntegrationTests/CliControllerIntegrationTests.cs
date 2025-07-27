@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MazeRunner.Cli.Engine;
 using MazeRunner.Cli.Enums;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Benchmark;
+using MazeRunner.EnginesFactory.Factory;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Properties;
 using MazeRunner.Utils;
@@ -100,7 +101,13 @@ public class ControllerIntegrationTests
         var standardOutput = new StringWriter();
 
         // Act
-        var action = new Func<Task>(async () => exitcode = await new CliControllerEngine(EnginesFactory.Factory.GrandMazeRunnerEnginesFactory.I, new MazesFactory(), new EnginesTestbench(), standardOutput, standardError).ProcessCliArgsAsync(commandLineParams));
+        var action = new Func<Task>(async () => exitcode = await new CliControllerEngine(
+            mazesFactory: new MazesFactory(),
+            enginesFactory: new GrandMazeRunnersEnginesFactory(),
+            enginesTestbench: new EnginesTestbench(),
+            standardError: standardError,
+            standardOutput: standardOutput
+        ).ProcessCliArgsAsync(commandLineParams));
 
         // Assert
         await action.Should().NotThrowAsync();

@@ -1,25 +1,25 @@
 ﻿using System.IO;
 using System.Threading;
-using MazeRunner.Contracts;
-using MazeRunner.Mazes;
+using MazeRunner.EnginesFactory.Contracts;
+using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.Cli.Engine;
 
-public partial class CliControllerEngine
+public partial class CliControllerEngine : ICliControllerEngine
 {
     public bool HasCancellationBeenAlreadyRequestedOnce { get; private set; }
     
     private readonly TextWriter _standardError;
     private readonly TextWriter _standardOutput;
     private readonly IMazesFactory _mazesFactory;
-    private readonly IEnginesFactory _enginesFactory;
     private readonly IEnginesTestbench _enginesTestbench;
+    private readonly IGrandMazeRunnersEnginesFactory _enginesFactory;
     private readonly CancellationTokenSource _masterCancellationTokenSource;
 
     public CliControllerEngine(
-        IEnginesFactory enginesFactory,
         IMazesFactory mazesFactory,
         IEnginesTestbench enginesTestbench,
+        IGrandMazeRunnersEnginesFactory enginesFactory,
         TextWriter standardOutput,
         TextWriter standardError,
         CancellationToken? cancellationToken = null

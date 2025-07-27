@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <LangVersion>preview</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
+        
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+
+        <Version>1.0.0</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+
+        <FileVersion>$(Version).0</FileVersion>
+        <AssemblyVersion>$(Version).0</AssemblyVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
+      <ProjectReference Include="..\MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" />
+      <ProjectReference Include="..\MazeRunner.Utils\MazeRunner.Utils.csproj" />
+    </ItemGroup>
+
+</Project>

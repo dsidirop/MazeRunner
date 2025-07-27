@@ -61,12 +61,18 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MazeRunner.Injectors.Autofac\MazeRunner.Injectors.Autofac.csproj" />
+        <ProjectReference Include="..\MazeRunner.Injectors.Contracts\MazeRunner.Injectors.Contracts.csproj" />
         <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj"/>
         <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
         
         <!-- it is necessary to include this reference to force the project to spawn its dll under the output folder so that we can scan the engines it provides upon launching -->
-        <ProjectReference Include="..\MazeRunner.Engine.SimpleMazeRunner\MazeRunner.Engine.SimpleMazeRunner.csproj"/>
         <ProjectReference Include="..\MazeRunner.Utils.Reactive\MazeRunner.Utils.Reactive.csproj" />
+        <ProjectReference Include="..\MazeRunner.Engines.SimpleMazeRunner\MazeRunner.Engines.SimpleMazeRunner.csproj" />
+
+        <!-- INJECTORS REGISTRIES -->
+        <ProjectReference Include="..\MazeRunner.Mazes.Injections\MazeRunner.Mazes.Injections.csproj"/>
+        <ProjectReference Include="..\MazeRunner.EnginesFactory.Injections\MazeRunner.EnginesFactory.Injections.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

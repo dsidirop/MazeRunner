@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using MazeRunner.Contracts;
+using MazeRunner.Mazes.Contracts;
 using Moq;
 
 namespace MazeRunner.Tests.TestArtifacts;

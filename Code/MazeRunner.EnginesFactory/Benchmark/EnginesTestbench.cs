@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MazeRunner.Contracts;
-using MazeRunner.Contracts.Events;
+using MazeRunner.Engines.Contracts;
+using MazeRunner.Engines.Contracts.Events;
+using MazeRunner.EnginesFactory.Contracts;
+using MazeRunner.EnginesFactory.Contracts.Events;
 using MazeRunner.Utils;
 
 namespace MazeRunner.EnginesFactory.Benchmark;
@@ -50,37 +52,37 @@ public class EnginesTestbench : IEnginesTestbench
         remove => _specificEngineSingleLapStarting -= value;
     }
 
-    private event EventHandler<SpecificEngineLapConcludedEventArgs> _specificEngineLapConcluded;
-    public event EventHandler<SpecificEngineLapConcludedEventArgs> SpecificEngineLapConcluded
+    private event EventHandler<SpecificEngineSingleLapConcludedEventArgs> _specificEngineSingleLapConcluded;
+    public event EventHandler<SpecificEngineSingleLapConcludedEventArgs> SpecificEngineSingleLapConcluded
     {
         add
         {
-            _specificEngineLapConcluded -= value;
-            _specificEngineLapConcluded += value;
+            _specificEngineSingleLapConcluded -= value;
+            _specificEngineSingleLapConcluded += value;
         }
-        remove => _specificEngineLapConcluded -= value;
+        remove => _specificEngineSingleLapConcluded -= value;
     }
 
-    private event EventHandler<SpecificEngineTestsStartingEventArgs> _specificEngineTestsStarting;
-    public event EventHandler<SpecificEngineTestsStartingEventArgs> SpecificEngineTestsStarting
+    private event EventHandler<SpecificEngineTestsSuiteStartingEventArgs> _specificEngineTestsSuiteStarting;
+    public event EventHandler<SpecificEngineTestsSuiteStartingEventArgs> SpecificEngineTestsSuiteStarting
     {
         add
         {
-            _specificEngineTestsStarting -= value;
-            _specificEngineTestsStarting += value;
+            _specificEngineTestsSuiteStarting -= value;
+            _specificEngineTestsSuiteStarting += value;
         }
-        remove => _specificEngineTestsStarting -= value;
+        remove => _specificEngineTestsSuiteStarting -= value;
     }
 
-    private event EventHandler<SpecificEngineTestsCompletedEventArgs> _specificEngineTestsCompleted;
-    public event EventHandler<SpecificEngineTestsCompletedEventArgs> SpecificEngineTestsCompleted
+    private event EventHandler<SpecificEngineTestsSuiteCompletedEventArgs> _specificEngineTestsSuiteCompleted;
+    public event EventHandler<SpecificEngineTestsSuiteCompletedEventArgs> SpecificEngineTestsSuiteCompleted
     {
         add
         {
-            _specificEngineTestsCompleted -= value;
-            _specificEngineTestsCompleted += value;
+            _specificEngineTestsSuiteCompleted -= value;
+            _specificEngineTestsSuiteCompleted += value;
         }
-        remove => _specificEngineTestsCompleted -= value;
+        remove => _specificEngineTestsSuiteCompleted -= value;
     }
 
     public bool Running { get; private set; }
@@ -97,9 +99,9 @@ public class EnginesTestbench : IEnginesTestbench
         //00  best to run this on a background task to ensure that we dont overload the UI thread
     }
 
-    private void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int repetitions, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
+    private void Run(IReadOnlyCollection<IMazeRunnerEngine> enginesToTest, int lapsCount, CancellationToken? cancellationToken = null) //0 ireadonlycollection https://msdn.microsoft.com/en-us/library/hh881542
     {
-        if (repetitions <= 0) throw new ArgumentOutOfRangeException(nameof(repetitions));
+        if (lapsCount <= 0) throw new ArgumentOutOfRangeException(nameof(lapsCount));
         if (enginesToTest?.Any(x => x == null) ?? true) throw new ArgumentNullException(nameof(enginesToTest));
 
         var ct = cancellationToken ?? CancellationToken.None;
@@ -113,25 +115,25 @@ public class EnginesTestbench : IEnginesTestbench
             OnCommencing(new BenchmarkingCommencingEventArgs(
                 engines: enginesToTest,
                 benchmarkId: benchmarkId,
-                lapsPerEngine: repetitions
+                lapsPerEngine: lapsCount
             ));
 
             foreach (var eng in enginesToTest)
             {
                 failedEngine = eng;
-                OnSpecificEngineTestsStarting(new SpecificEngineTestsStartingEventArgs(benchmarkId, eng));
+                OnSpecificEngineTestsSuiteStarting(new SpecificEngineTestsSuiteStartingEventArgs(benchmarkId, eng));
 
                 var crashes = 0;
-                var pathLengths = new List<int>(repetitions);
+                var pathLengths = new List<int>(lapsCount);
                 var shortestPath = (IReadOnlyCollection<Point>) null;
-                var timeDurations = new List<TimeSpan>(repetitions);
+                var timeDurations = new List<TimeSpan>(lapsCount);
 
                 var ii = 0;
                 try
                 {
-                    eng.Starting += Engine_Starting_;
-                    eng.Concluded += Engine_Concluded_;
-                    for (var i = 0; i < repetitions; i++, eng.Reset())
+                    eng.LapStarting += Engine_LapStarting_;
+                    eng.LapConcluded += Engine_LapConcluded_;
+                    for (var i = 0; i < lapsCount; i++, eng.Reset())
                     {
                         ct.ThrowIfCancellationRequested();
                         
@@ -141,19 +143,19 @@ public class EnginesTestbench : IEnginesTestbench
                 }
                 finally
                 {
-                    eng.Starting -= Engine_Starting_;
-                    eng.Concluded -= Engine_Concluded_;
+                    eng.LapStarting -= Engine_LapStarting_;
+                    eng.LapConcluded -= Engine_LapConcluded_;
                 }
 
                 pathLengths.Sort();
                 timeDurations.Sort();
                     
-                OnSpecificEngineTestsCompleted(new SpecificEngineTestsCompletedEventArgs
+                OnSpecificEngineTestsSuiteCompleted(new SpecificEngineTestsSuiteCompletedEventArgs
                 (
                     engine: eng,
                     crashes: crashes,
                     benchmarkId: benchmarkId,
-                    repetitions: repetitions,
+                    repetitions: lapsCount,
 #pragma warning disable CA1508
                     shortestPath: shortestPath ?? [],
 #pragma warning restore CA1508
@@ -166,13 +168,13 @@ public class EnginesTestbench : IEnginesTestbench
                 ));
                 continue;
 
-                void Engine_Starting_(object _, EventArgs __)
+                void Engine_LapStarting_(object _, LapStartingEventArgs __)
                 {
                     stopWatch.Restart();
                     OnLapStarting(new SpecificEngineSingleLapStartingEventArgs(benchmarkId, lapIndex: ii, eng));
                 }
                 
-                void Engine_Concluded_(object _, AllLapsConcludedEventArgs ea_)
+                void Engine_LapConcluded_(object _, LapConcludedEventArgs ea_)
                 {
                     try
                     {
@@ -192,7 +194,7 @@ public class EnginesTestbench : IEnginesTestbench
                             ? eng.Trajectory.ToArray().AsReadOnly() //0 tolist
                             : shortestPath;
 
-                        OnLapConcluded(new SpecificEngineLapConcludedEventArgs( //order
+                        OnLapConcluded(new SpecificEngineSingleLapConcludedEventArgs( //order
                             engine: eng,
                             status: ea_.Status,
                             lapIndex: ii++,
@@ -245,25 +247,25 @@ public class EnginesTestbench : IEnginesTestbench
         _specificEngineSingleLapStarting?.Invoke(this, ea);
     }
 
-    protected virtual void OnLapConcluded(in SpecificEngineLapConcludedEventArgs ea)
+    protected virtual void OnLapConcluded(in SpecificEngineSingleLapConcludedEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Concluded lap#{ea!.LapIndex} for engine '{ea!.Engine!.GetEngineName()}' with status: {ea!.Status} ({ea!.Duration!.TotalMilliseconds}ms)");
 
-        _specificEngineLapConcluded?.Invoke(this, ea);
+        _specificEngineSingleLapConcluded?.Invoke(this, ea);
     }
 
-    protected virtual void OnSpecificEngineTestsStarting(in SpecificEngineTestsStartingEventArgs ea)
+    protected virtual void OnSpecificEngineTestsSuiteStarting(in SpecificEngineTestsSuiteStartingEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] Benchmarking engine '{ea!.Engine!.GetEngineName()}'");
 
-        _specificEngineTestsStarting?.Invoke(this, ea);
+        _specificEngineTestsSuiteStarting?.Invoke(this, ea);
     }
 
-    protected virtual void OnSpecificEngineTestsCompleted(in SpecificEngineTestsCompletedEventArgs ea)
+    protected virtual void OnSpecificEngineTestsSuiteCompleted(in SpecificEngineTestsSuiteCompletedEventArgs ea)
     {
         Tracer.TraceInformation($"[#{ea!.BenchmarkId}] All laps completed for engine '{ea!.Engine!.GetEngineName()}':\n\n{ea!.ToStringy(includeShortestPath: false)}");
 
-        _specificEngineTestsCompleted?.Invoke(this, ea);
+        _specificEngineTestsSuiteCompleted?.Invoke(this, ea);
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local    Unused_Method_Return_Value

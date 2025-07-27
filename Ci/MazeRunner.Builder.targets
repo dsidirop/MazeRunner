@@ -72,7 +72,7 @@
         <MazeRunner_ProjectFile_Mazes            >$([System.IO.Path]::Combine( $(MazeRunner_SourceRootDirectory_Folderpath),  `MazeRunner.Mazes`,                    `MazeRunner.Mazes.csproj`                   ))</MazeRunner_ProjectFile_Mazes>
         <MazeRunner_ProjectFile_Utils            >$([System.IO.Path]::Combine( $(MazeRunner_SourceRootDirectory_Folderpath),  `MazeRunner.Utils`,                    `MazeRunner.Utils.csproj`                   ))</MazeRunner_ProjectFile_Utils>
         <MazeRunner_ProjectFile_EnginesFactory   >$([System.IO.Path]::Combine( $(MazeRunner_SourceRootDirectory_Folderpath),  `MazeRunner.EnginesFactory`,           `MazeRunner.EnginesFactory.csproj`          ))</MazeRunner_ProjectFile_EnginesFactory>
-        <MazeRunner_ProjectFile_SimpleMazeRunner >$([System.IO.Path]::Combine( $(MazeRunner_SourceRootDirectory_Folderpath),  `MazeRunner.Engine.SimpleMazeRunner`,  `MazeRunner.Engine.SimpleMazeRunner.csproj` ))</MazeRunner_ProjectFile_SimpleMazeRunner>
+        <MazeRunner_ProjectFile_SimpleMazeRunner >$([System.IO.Path]::Combine( $(MazeRunner_SourceRootDirectory_Folderpath),  `MazeRunner.Engines.SimpleMazeRunner`,  `MazeRunner.Engines.SimpleMazeRunner.csproj` ))</MazeRunner_ProjectFile_SimpleMazeRunner>
 
         <MazeRunner_ProjectFile_Tests            >$([System.IO.Path]::Combine( $(MazeRunner_SourceRootDirectory_Folderpath),  `MazeRunner.Tests`,                    `MazeRunner.Tests.csproj`                   ))</MazeRunner_ProjectFile_Tests>
         <!-- @formatter:on -->

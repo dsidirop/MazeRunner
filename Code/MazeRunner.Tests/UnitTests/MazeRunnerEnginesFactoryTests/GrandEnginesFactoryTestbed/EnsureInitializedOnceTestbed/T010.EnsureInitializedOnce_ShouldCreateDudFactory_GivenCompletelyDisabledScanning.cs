@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.EnginesFactory.Factory;
 
 namespace MazeRunner.Tests.UnitTests.MazeRunnerEnginesFactoryTests.GrandEnginesFactoryTestbed.EnsureInitializedOnceTestbed;
@@ -17,7 +17,7 @@ public partial class Testbed
         // Arrange
 
         var success = false;
-        var factory = new GrandMazeRunnerEnginesFactory(new()
+        var factory = new GrandMazeRunnersEnginesFactory(new()
         {
             IsDomainAssembliesScanningEnabled = isDomainAssembliesScanningEnabled,
             IsFilesystemAssemblyScanningEnabled = isFilesystemAssemblyScanningEnabled,
