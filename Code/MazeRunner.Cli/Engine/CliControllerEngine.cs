@@ -12,14 +12,14 @@ public partial class CliControllerEngine
     private readonly TextWriter _standardError;
     private readonly TextWriter _standardOutput;
     private readonly IMazesFactory _mazesFactory;
-    private readonly IEnginesFactory _enginesFactory;
     private readonly IEnginesTestbench _enginesTestbench;
+    private readonly IGrandMazeRunnersEnginesFactory _enginesFactory;
     private readonly CancellationTokenSource _masterCancellationTokenSource;
 
     public CliControllerEngine(
-        IEnginesFactory enginesFactory,
         IMazesFactory mazesFactory,
         IEnginesTestbench enginesTestbench,
+        IGrandMazeRunnersEnginesFactory enginesFactory,
         TextWriter standardOutput,
         TextWriter standardError,
         CancellationToken? cancellationToken = null

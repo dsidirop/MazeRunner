@@ -11,7 +11,7 @@ public partial class Testbed
     public void Spawn_ShouldThrowOutOfRangeException_GivenNonExistentEngine()
     {
         // Arrange
-        var factory = new GrandMazeRunnerEnginesFactory(new()
+        var factory = new GrandMazeRunnersEnginesFactory(new()
         {
             IsDomainAssembliesScanningEnabled = false, // we disable all scanning
             IsFilesystemAssemblyScanningEnabled = false, // to force a dud factory

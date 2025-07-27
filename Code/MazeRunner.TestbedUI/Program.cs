@@ -15,13 +15,13 @@ static internal class Program
     [STAThread]
     static private void Main()
     {
-        Task.Run(EnginesFactory.Factory.GrandMazeRunnerEnginesFactory.I.EnsureInitializedOnce); //0 async init
+        Task.Run(EnginesFactory.Factory.GrandMazeRunnersEnginesFactory.I.EnsureInitializedOnce); //0 async init
 
         Application.ThreadException += new ThreadExceptionHandler().Application_ThreadException; //recoverable errors from forms
 
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new FormMazeRunnerTester(EnginesFactory.Factory.GrandMazeRunnerEnginesFactory.I, new MazesFactory(), new EnginesTestbench()));
+        Application.Run(new FormMazeRunnerTester(EnginesFactory.Factory.GrandMazeRunnersEnginesFactory.I, new MazesFactory(), new EnginesTestbench()));
             
         //0 as a small optimization we force the factory to load and scan assemblies asynchronously so that the form may have the enginenames
         //  readily available a bit down the road without stalling

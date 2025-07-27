@@ -15,9 +15,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MazeRunner.Utils\MazeRunner.Utils.csproj"/>
-        <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj"/>
-        <ProjectReference Include="..\MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj"/>
+        <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
+        <ProjectReference Include="..\MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="8.3.0"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.0"/>
     </ItemGroup>
 
 </Project>

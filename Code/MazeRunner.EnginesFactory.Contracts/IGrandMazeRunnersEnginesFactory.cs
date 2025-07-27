@@ -4,7 +4,7 @@ using MazeRunner.Mazes.Contracts;
 
 namespace MazeRunner.EnginesFactory.Contracts;
 
-public interface IEnginesFactory
+public interface IGrandMazeRunnersEnginesFactory
 {
     IReadOnlyCollection<string> EnginesNames { get; }
 

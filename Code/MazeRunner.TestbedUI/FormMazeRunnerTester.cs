@@ -32,7 +32,7 @@ public partial class FormMazeRunnerTester : Form
     private CancellationTokenSource _tokenSource;
 
     private readonly IMazesFactory _mazesFactory;
-    private readonly IEnginesFactory _enginesFactory;
+    private readonly IGrandMazeRunnersEnginesFactory _enginesFactory;
     private readonly IEnginesTestbench _enginesTestbench;
     private readonly SynchronizationContext _syncContext;
     
@@ -45,7 +45,7 @@ public partial class FormMazeRunnerTester : Form
     
     private Subject<(object Sender, IMazeRunnerEventArgs EventArgs)> _mazeRunnerBenchmarkingUpdatingEventsSubject;
 
-    public FormMazeRunnerTester(IEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesTestbench)
+    public FormMazeRunnerTester(IGrandMazeRunnersEnginesFactory enginesFactory, IMazesFactory mazesFactory, IEnginesTestbench enginesTestbench)
     {
         InitializeComponent();
 

@@ -9,6 +9,7 @@
   </Folder>
   <Folder Name="/EnginesFactory/">
     <Project Path="MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.EnginesFactory.Injections\MazeRunner.EnginesFactory.Injections.csproj" Type="Classic C#" />
     <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/Injectors/">

@@ -17,7 +17,7 @@ public partial class Testbed
         // Arrange
 
         var success = false;
-        var factory = new GrandMazeRunnerEnginesFactory(new()
+        var factory = new GrandMazeRunnersEnginesFactory(new()
         {
             IsDomainAssembliesScanningEnabled = isDomainAssembliesScanningEnabled,
             IsFilesystemAssemblyScanningEnabled = isFilesystemAssemblyScanningEnabled,

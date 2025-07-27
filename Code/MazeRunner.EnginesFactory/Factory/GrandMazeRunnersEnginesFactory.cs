@@ -15,9 +15,9 @@ using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace MazeRunner.EnginesFactory.Factory;
 
-public class GrandMazeRunnerEnginesFactory : IEnginesFactory
+public class GrandMazeRunnersEnginesFactory : IGrandMazeRunnersEnginesFactory
 {
-    public readonly TraceSource Tracer = new(nameof(GrandMazeRunnerEnginesFactory), SourceLevels.Off);
+    public readonly TraceSource Tracer = new(nameof(GrandMazeRunnersEnginesFactory), SourceLevels.Off);
 
     public readonly Lazy<(bool InitializationSuccessful, FrozenDictionary<string, Type> MazeRunnerEnginesRegistry)> LazyCore;
     
@@ -25,15 +25,15 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
 
     public IReadOnlyCollection<string> EnginesNames => LazyCore.Value.MazeRunnerEnginesRegistry.Keys;
 
-    internal GrandMazeRunnerEnginesFactory(GrandMazeRunnerEnginesFactoryOptions? options = null) //made internal so that it will be accessible through tests
+    public GrandMazeRunnersEnginesFactory(GrandMazeRunnerEnginesFactoryOptions? options = null)
     {
         Options = (options ?? Options).Validate(); //order
         
         LazyCore = new(() => TryScanAllAssembliesForSubfactories(this));
     }
 
-    static public GrandMazeRunnerEnginesFactory I => LazyInstance.Value; //todo   remove this once we have proper DI in place
-    static private readonly Lazy<GrandMazeRunnerEnginesFactory> LazyInstance = new(() => new GrandMazeRunnerEnginesFactory()); //todo   remove this once we have proper DI in place
+    static public GrandMazeRunnersEnginesFactory I => LazyInstance.Value; //todo   remove this once we have proper DI in place
+    static private readonly Lazy<GrandMazeRunnersEnginesFactory> LazyInstance = new(() => new GrandMazeRunnersEnginesFactory()); //todo   remove this once we have proper DI in place
     
     public IMazeRunnerEngine Spawn(string enginename, IMaze maze) //todo integration tests
     {
@@ -55,7 +55,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
         return LazyCore.Value.InitializationSuccessful;
     }
 
-    static private (bool InitializationSucceeded, FrozenDictionary<string, Type> SubfactoriesRegistry) TryScanAllAssembliesForSubfactories(GrandMazeRunnerEnginesFactory factory) //0
+    static private (bool InitializationSucceeded, FrozenDictionary<string, Type> SubfactoriesRegistry) TryScanAllAssembliesForSubfactories(GrandMazeRunnersEnginesFactory factory) //0
     {
         if (factory.Options is {IsFilesystemAssemblyScanningEnabled: false, IsDomainAssembliesScanningEnabled: false}) //order
         {
@@ -80,7 +80,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
 
             factory.Tracer.TraceInformation(
                 $"""
-                 {nameof(GrandMazeRunnerEnginesFactory)} initialization is complete. Analyzed {currentDomainPreloadedAssemblies.Length + assembliesFromTheInstallationFolders.Length} assemblies in total:
+                 {nameof(GrandMazeRunnersEnginesFactory)} initialization is complete. Analyzed {currentDomainPreloadedAssemblies.Length + assembliesFromTheInstallationFolders.Length} assemblies in total:
 
                  - Current Domain Preloaded Assemblies (count={currentDomainPreloadedAssemblies.Length}):
 
@@ -111,7 +111,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             );
         }
 
-        static IEnumerable<Type> TryCollectAllExportedTypes_(GrandMazeRunnerEnginesFactory factory, Assembly assembly_)
+        static IEnumerable<Type> TryCollectAllExportedTypes_(GrandMazeRunnersEnginesFactory factory, Assembly assembly_)
         {
             try
             {
@@ -124,7 +124,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             }
         }
 
-        static Assembly[] TryGetDesiredAssembliesFromFilesystem_(GrandMazeRunnerEnginesFactory factory)
+        static Assembly[] TryGetDesiredAssembliesFromFilesystem_(GrandMazeRunnersEnginesFactory factory)
         {
             if (!factory.Options.IsFilesystemAssemblyScanningEnabled) //order
                 return []; //if the scanning is disabled we return an empty array
@@ -173,7 +173,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             //00   we dont want to recurse subdirectories here
         }
 
-        static string TryGetProductInstallationFolderpath_(GrandMazeRunnerEnginesFactory factory)
+        static string TryGetProductInstallationFolderpath_(GrandMazeRunnersEnginesFactory factory)
         {
             try
             {
@@ -189,12 +189,12 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             }
         }
 
-        static bool TryMatchConcreteClassesOfIMazeRunnerEngine_(GrandMazeRunnerEnginesFactory factory, Type x)
+        static bool TryMatchConcreteClassesOfIMazeRunnerEngine_(GrandMazeRunnersEnginesFactory factory, Type x)
         {
             try
             {
                 return x is {IsClass: true, IsAbstract: false}
-                       && x != typeof(GrandMazeRunnerEnginesFactory) //vital   we dont want the grand-factory itself to be included in the subfactories!
+                       && x != typeof(GrandMazeRunnersEnginesFactory) //vital   we dont want the grand-factory itself to be included in the subfactories!
                        && x.GetInterfaces().Contains(typeof(IMazeRunnerEngine))
                        && !string.IsNullOrWhiteSpace(x.AssemblyQualifiedName);
             }
@@ -208,7 +208,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             }
         }
 
-        static Assembly? TryLoadAssemblyFile_(GrandMazeRunnerEnginesFactory factory, string filepath_)
+        static Assembly? TryLoadAssemblyFile_(GrandMazeRunnersEnginesFactory factory, string filepath_)
         {
             try
             {
@@ -224,7 +224,7 @@ public class GrandMazeRunnerEnginesFactory : IEnginesFactory
             }
         }
 
-        static Assembly[] TryGetCurrentDomainPreloadedAssemblies_(GrandMazeRunnerEnginesFactory factory)
+        static Assembly[] TryGetCurrentDomainPreloadedAssemblies_(GrandMazeRunnersEnginesFactory factory)
         {
             if (!factory.Options.IsDomainAssembliesScanningEnabled) //order
                 return []; //if the scanning is disabled we return an empty array
