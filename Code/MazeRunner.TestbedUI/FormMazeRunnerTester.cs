@@ -216,14 +216,14 @@ public partial class FormMazeRunnerTester : Form
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_UI = _mazeRunnerBenchmarkingUpdatingEventsSubject
                 .ObserveOn(_subscriptionSchedulerFor_UI)
                 .SubscribeAndHandleAllExceptions(
-                    onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(x.Sender, x.EventArgs),
+                    onNext: MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI,
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
                 );
             
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging = _mazeRunnerBenchmarkingUpdatingEventsSubject
                 .ObserveOn(_subscriptionSchedulerFor_Logging)
                 .SubscribeAndHandleAllExceptions(
-                    onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForUILogging(x.Sender, x.EventArgs),
+                    onNext: MazeRunnerBenchmarkingUpdatingEventsStream_NextForUILogging,
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
                 );
 
@@ -276,25 +276,67 @@ public partial class FormMazeRunnerTester : Form
     private void ForUILoggingPostCallback_OnSpecificEngineTestsSuiteStarting_(object ea_) => txtLog.AppendTextAndScrollToBottom($@"{nl2}**** Commencing tests on Engine '{((SpecificEngineTestsSuiteStartingEventArgs) ea_).Engine.GetEngineName()}'. Completed Laps: ");
     private void ForUILoggingPostCallback_OnSpecificEngineTestsSuiteCompleted_(object ea_) => txtLog.AppendTextAndScrollToBottom($"{nl2}{((SpecificEngineTestsSuiteCompletedEventArgs) ea_).ToStringy(includeShortestPath: true)}{nl}");
     
-    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUILogging(object sender, IMazeRunnerEventArgs ea)
+    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUILogging((object Sender, IMazeRunnerEventArgs EventArgs) x)
     {
-        _ = ea switch //@formatter:off
+        _ = x.EventArgs switch //@formatter:off
         {
             BenchmarkingCommencingEventArgs               ea_ => Post(ForUILoggingPostCallback_OnCommencing_,                        data: ea_), //      benchmarker
             SpecificEngineTestsSuiteStartingEventArgs     ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineTestsSuiteStarting_,  data: ea_), //      benchmarker
 
             SpecificEngineSingleLapStartingEventArgs      ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineSingleLapStarting_,   data: ea_), //      benchmarker 
-            StateChangedEventArgs                         _   => true, //                                                                                engine
+            StateChangedEventArgs                             => true, //                                                                                engine
             SpecificEngineSingleLapConcludedEventArgs     ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineSingleLapConcluded_,  data: ea_), //      benchmarker
 
             SpecificEngineTestsSuiteCompletedEventArgs    ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineTestsSuiteCompleted_, data: ea_), //      benchmarker
-            AllBenchmarkingsDoneEventArgs                 _   => Post(ForUILoggingPostCallback_OnAllBenchmarkingsDone_), //                              benchmarker
+            AllBenchmarkingsDoneEventArgs                     => Post(ForUILoggingPostCallback_OnAllBenchmarkingsDone_), //                              benchmarker
 
-            _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
+            _ => throw new NotImplementedException($"Whoops missing handler for event type: {x.EventArgs.GetType().Name}") //@formatter:on
         };
     }
+    
+    private void ForUI_OnCommencing_(object _) => OnComponentStateChanged(new ComponentStateChanged("testbench.launching"));
+    private void ForUI_OnAllBenchmarkingsDone_(object _) => OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
+    private void ForUI_OnSpecificEngineSingleLapStarting_(object _) => _ccMazeCanvas.ResetCellsToDefaultColors();
+    
+    private bool ForUI_OnStateChanged_(StateChangedEventArgs eaa)
+    {
+        if (!_isMazeTooLarge)
+        {
+            Send(ForUI_OnStateChanged_SendCallback_, eaa);
+        }
 
-    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(object sender, IMazeRunnerEventArgs ea)
+        if (!_isDelayTooSmall)
+        {
+            Thread.Sleep((int) nudMovementDelay.Value); //must be done on the consumption thread to enforce the slow-down
+        }
+
+        return true;
+    }
+
+    private void ForUI_OnStateChanged_SendCallback_(object obj)
+    {
+        var eaa = (StateChangedEventArgs) obj;
+        var label1 = (Label) null;
+        var label2 = (Label) null;
+        try
+        {
+            _ccMazeCanvas.tlpMesh.SuspendLayout();
+            _ccMazeCanvas.tlpMesh.SuspendDrawing();
+
+            if (eaa.NewTip != null) label1 = _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
+            if (eaa.OldTip != null) label2 = _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
+        }
+        finally
+        {
+            _ccMazeCanvas.tlpMesh.ResumeDrawing();
+            _ccMazeCanvas.tlpMesh.ResumeLayout();
+
+            label1?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+            label2?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
+        }
+    }
+
+    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI((object Sender, IMazeRunnerEventArgs EventArgs) x)
     {
         if (_tokenSource.IsCancellationRequested)
         {
@@ -302,113 +344,22 @@ public partial class FormMazeRunnerTester : Form
             return;
         }
         
-        _ = ea switch //@formatter:off
+        _ = x.EventArgs switch //@formatter:off
         {
-            BenchmarkingCommencingEventArgs               ea_ => ForUI_OnCommencing_(ea_), //                       benchmarker
-            SpecificEngineTestsSuiteStartingEventArgs     ea_ => ForUI_OnSpecificEngineTestsSuiteStarting_(ea_), // benchmarker
+            BenchmarkingCommencingEventArgs               ea_ => Send(ForUI_OnCommencing_, ea_), //                       benchmarker
+            SpecificEngineTestsSuiteStartingEventArgs         => true, //                                                 benchmarker
             
-            SpecificEngineSingleLapStartingEventArgs      ea_ => ForUI_OnSpecificEngineSingleLapStarting_(ea_), //  benchmarker 
-            StateChangedEventArgs                         ea_ => ForUI_OnStateChanged_(ea_), //                     engine
-            SpecificEngineSingleLapConcludedEventArgs     ea_ => ForUI_OnSpecificEngineSingleLapConcluded_(ea_), // benchmarker
-            LapConcludedEventArgs                         ea_ => ForUI_OnAllLapsConcluded_(ea_), //                 engine
+            SpecificEngineSingleLapStartingEventArgs      ea_ => Send(ForUI_OnSpecificEngineSingleLapStarting_, ea_), //  benchmarker 
+            StateChangedEventArgs                         ea_ => ForUI_OnStateChanged_(ea_), //                           engine
+            SpecificEngineSingleLapConcludedEventArgs         => true, //                                                 benchmarker
+            LapConcludedEventArgs                             => true, //                                                 engine
             
-            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForUI_specificEngineTestsSuiteCompleted_(ea_), //  benchmarker
-            AllBenchmarkingsDoneEventArgs                 ea_ => ForUI_OnAllBenchmarkingsDone_(ea_), //             benchmarker
+            SpecificEngineTestsSuiteCompletedEventArgs        => true, //                                                 benchmarker
+            AllBenchmarkingsDoneEventArgs                 ea_ => Send(ForUI_OnAllBenchmarkingsDone_, ea_), //             benchmarker
             
-            _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
+            _ => throw new NotImplementedException($"Whoops missing handler for event type: {x.EventArgs.GetType().Name}") //@formatter:on
         };
         return;
-
-        static bool ForUI_OnAllLapsConcluded_(LapConcludedEventArgs ea_)
-        {
-            // nothing to do ui-wise
-            return true;
-        }
-
-        bool ForUI_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
-        {
-            Send(SendCallback_);
-            return true;
-
-            void SendCallback_(object _)
-            {
-                OnComponentStateChanged(new ComponentStateChanged("testbench.alldone"));
-            }
-        }
-        
-        static bool ForUI_specificEngineTestsSuiteCompleted_(SpecificEngineTestsSuiteCompletedEventArgs ea_)
-        {
-            // nothing to do ui-wise
-            return true;
-        }
-        
-        bool ForUI_OnCommencing_(BenchmarkingCommencingEventArgs ea_)
-        {
-            Send(SendCallback_);
-            return true;
-            
-            void SendCallback_(object state)
-            {
-                OnComponentStateChanged(new ComponentStateChanged("testbench.launching"));
-            }
-        }
-        
-        bool ForUI_OnSpecificEngineSingleLapStarting_(SpecificEngineSingleLapStartingEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-
-            void PostCallback_(object _)
-            {
-                _ccMazeCanvas.ResetCellsToDefaultColors();
-            }
-        }
-        
-        bool ForUI_OnStateChanged_(StateChangedEventArgs eaa)
-        {
-            if (!_isMazeTooLarge)
-            {
-                Send(SendCallback_);
-            }
-            
-            if (!_isDelayTooSmall) Thread.Sleep((int)nudMovementDelay.Value); //must be done on the consumption thread to enforce the slow-down
-
-            return true;
-                
-            void SendCallback_(object _)
-            {
-                var label1 = (Label) null;
-                var label2 = (Label) null;
-                try
-                {
-                    _ccMazeCanvas.tlpMesh.SuspendLayout();
-                    _ccMazeCanvas.tlpMesh.SuspendDrawing();
-
-                    if (eaa.NewTip != null) label1 = _ccMazeCanvas.CustomizeCell(eaa.NewTip.Value, NewTipPositionColor, eaa.StepIndex.ToString());
-                    if (eaa.OldTip != null) label2 = _ccMazeCanvas.CustomizeCell(eaa.OldTip.Value, eaa.IsProgressNotBacktracking ? TrajectorySquareColor : InvalidatedSquareColor);
-                }
-                finally
-                {
-                    _ccMazeCanvas.tlpMesh.ResumeDrawing();
-                    _ccMazeCanvas.tlpMesh.ResumeLayout();
-
-                    label1?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
-                    label2?.Visible = true; //to avoid flickering we set the label to visible only after the layout is resumed
-                }
-            }
-        }
-
-        bool ForUI_OnSpecificEngineSingleLapConcluded_(SpecificEngineSingleLapConcludedEventArgs ea_)
-        {
-            // nothing to do ui-wise
-            return true;
-        }
-        
-        bool ForUI_OnSpecificEngineTestsSuiteStarting_(SpecificEngineTestsSuiteStartingEventArgs ea_)
-        {
-            // nothing to do ui-wise
-            return true;
-        }
     }
 
     static void MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored(Exception ex_, bool _)
@@ -538,9 +489,10 @@ public partial class FormMazeRunnerTester : Form
         return true;
     }
 
-    private void Send(SendOrPostCallback callback, object data = null)
+    private bool Send(SendOrPostCallback callback, object data = null)
     {
         _syncContext.Send(callback, data);
+        return true;
     }
 
     protected DialogResult ShowMessageSafe(
