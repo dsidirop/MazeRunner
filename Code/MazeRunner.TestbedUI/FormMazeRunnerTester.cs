@@ -223,7 +223,7 @@ public partial class FormMazeRunnerTester : Form
             _subscriptionOnMazeRunnerBenchmarkingEventsStreamFor_Logging = _mazeRunnerBenchmarkingUpdatingEventsSubject
                 .ObserveOn(_subscriptionSchedulerFor_Logging)
                 .SubscribeAndHandleAllExceptions(
-                    onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(x.Sender, x.EventArgs),
+                    onNext: x => MazeRunnerBenchmarkingUpdatingEventsStream_NextForUILogging(x.Sender, x.EventArgs),
                     onError: MazeRunnerBenchmarkingUpdatesSubjectSubscriber_Errored
                 );
 
@@ -269,98 +269,32 @@ public partial class FormMazeRunnerTester : Form
         // _subscriptionSchedulerFor_Logging?.Dispose();   //nah  no need to dispose   the schedulers are reusable
     }
 
-    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForLogging(object _, IMazeRunnerEventArgs ea)
+    private void ForUILoggingPostCallback_OnCommencing_(object ea_) => txtLog.AppendTextAndScrollToBottom($@"{nl2}** Commencing tests on {((BenchmarkingCommencingEventArgs) ea_).Engines.Count} engines with {((BenchmarkingCommencingEventArgs) ea_).LapsPerEngine} laps per engine ... ");
+    private void ForUILoggingPostCallback_OnAllBenchmarkingsDone_(object _) => txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
+    private void ForUILoggingPostCallback_OnSpecificEngineSingleLapStarting_(object ea_) => txtLog.AppendTextAndScrollToBottom($@"{((SpecificEngineSingleLapStartingEventArgs) ea_).LapIndex + 1}"); //consider logging on a different subscriber with a separate scheduler
+    private void ForUILoggingPostCallback_OnSpecificEngineSingleLapConcluded_(object ea_) => txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[((SpecificEngineSingleLapConcludedEventArgs) ea_).Status]}  ");
+    private void ForUILoggingPostCallback_OnSpecificEngineTestsSuiteStarting_(object ea_) => txtLog.AppendTextAndScrollToBottom($@"{nl2}**** Commencing tests on Engine '{((SpecificEngineTestsSuiteStartingEventArgs) ea_).Engine.GetEngineName()}'. Completed Laps: ");
+    private void ForUILoggingPostCallback_OnSpecificEngineTestsSuiteCompleted_(object ea_) => txtLog.AppendTextAndScrollToBottom($"{nl2}{((SpecificEngineTestsSuiteCompletedEventArgs) ea_).ToStringy(includeShortestPath: true)}{nl}");
+    
+    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUILogging(object sender, IMazeRunnerEventArgs ea)
     {
-        var __ = ea switch //@formatter:off
+        _ = ea switch //@formatter:off
         {
-            BenchmarkingCommencingEventArgs               ea_ => ForLogging_OnCommencing_(ea_), //                          benchmarker
-            SpecificEngineTestsSuiteStartingEventArgs     ea_ => ForLogging_OnSpecificEngineTestsSuiteStarting_(ea_), //    benchmarker
-            
-            SpecificEngineSingleLapStartingEventArgs      ea_ => ForLogging_OnSpecificEngineSingleLapStarting_(ea_), //     benchmarker 
-            StateChangedEventArgs                         ea_ => ForLogging_OnStateChanged_(ea_), //                        engine
-            SpecificEngineSingleLapConcludedEventArgs     ea_ => ForLogging_OnSpecificEngineSingleLapConcluded_(ea_), //    benchmarker
-            
-            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForLogging_OnSpecificEngineTestsSuiteCompleted_(ea_), //   benchmarker
-            AllBenchmarkingsDoneEventArgs                 ea_ => ForLogging_OnAllBenchmarkingsDone_(ea_), //                benchmarker
-            
+            BenchmarkingCommencingEventArgs               ea_ => Post(ForUILoggingPostCallback_OnCommencing_,                        data: ea_), //      benchmarker
+            SpecificEngineTestsSuiteStartingEventArgs     ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineTestsSuiteStarting_,  data: ea_), //      benchmarker
+
+            SpecificEngineSingleLapStartingEventArgs      ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineSingleLapStarting_,   data: ea_), //      benchmarker 
+            StateChangedEventArgs                         _   => true, //                                                                                engine
+            SpecificEngineSingleLapConcludedEventArgs     ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineSingleLapConcluded_,  data: ea_), //      benchmarker
+
+            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => Post(ForUILoggingPostCallback_OnSpecificEngineTestsSuiteCompleted_, data: ea_), //      benchmarker
+            AllBenchmarkingsDoneEventArgs                 _   => Post(ForUILoggingPostCallback_OnAllBenchmarkingsDone_), //                              benchmarker
+
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
-        return;
-
-        bool ForLogging_OnAllBenchmarkingsDone_(AllBenchmarkingsDoneEventArgs _)
-        {
-            Post(PostCallback_);
-            return true;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{nl}------------ All Done ----------");
-            }
-        }
-        
-        bool ForLogging_OnSpecificEngineTestsSuiteCompleted_(SpecificEngineTestsSuiteCompletedEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-            
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($"{nl2}{ea_.ToStringy(includeShortestPath: true)}{nl}");
-            }
-        }
-        
-        bool ForLogging_OnCommencing_(BenchmarkingCommencingEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-            
-            void PostCallback_(object _)
-            {
-                txtLog.Text += $@"{nl2}** Commencing tests on {ea_.Engines.Count} engines with {ea_.LapsPerEngine} laps per engine ... ";
-            }
-        }
-        
-        bool ForLogging_OnSpecificEngineSingleLapStarting_(SpecificEngineSingleLapStartingEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{ea_.LapIndex + 1}"); //consider logging on a different subscriber with a separate scheduler
-            }
-        }
-
-        static bool ForLogging_OnStateChanged_(StateChangedEventArgs eaa)
-        {
-            //nothing to do logging-wise
-            return true;
-        }
-
-        bool ForLogging_OnSpecificEngineSingleLapConcluded_(SpecificEngineSingleLapConcludedEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-
-            void PostCallback_(object _)
-            {
-                txtLog.AppendTextAndScrollToBottom($@"{ConclusionToSymbol[ea_.Status]}  ");
-            }
-        }
-        
-        bool ForLogging_OnSpecificEngineTestsSuiteStarting_(SpecificEngineTestsSuiteStartingEventArgs ea_)
-        {
-            Post(PostCallback_);
-            return true;
-
-            void PostCallback_(object state)
-            {
-                txtLog.Text += $@"{nl2}**** Commencing tests on Engine '{ea_.Engine.GetEngineName()}'. Completed Laps: ";
-            }
-        }
     }
 
-    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(object _, IMazeRunnerEventArgs ea)
+    private void MazeRunnerBenchmarkingUpdatingEventsStream_NextForUI(object sender, IMazeRunnerEventArgs ea)
     {
         if (_tokenSource.IsCancellationRequested)
         {
@@ -368,18 +302,18 @@ public partial class FormMazeRunnerTester : Form
             return;
         }
         
-        var __ = ea switch //@formatter:off
+        _ = ea switch //@formatter:off
         {
-            BenchmarkingCommencingEventArgs          ea_ => ForUI_OnCommencing_(ea_), //                      benchmarker
-            SpecificEngineTestsSuiteStartingEventArgs     ea_ => ForUI_OnSpecificEngineTestsSuiteStarting_(ea_), //     benchmarker
+            BenchmarkingCommencingEventArgs               ea_ => ForUI_OnCommencing_(ea_), //                       benchmarker
+            SpecificEngineTestsSuiteStartingEventArgs     ea_ => ForUI_OnSpecificEngineTestsSuiteStarting_(ea_), // benchmarker
             
-            SpecificEngineSingleLapStartingEventArgs ea_ => ForUI_OnSpecificEngineSingleLapStarting_(ea_), // benchmarker 
-            StateChangedEventArgs                    ea_ => ForUI_OnStateChanged_(ea_), //                    engine
-            SpecificEngineSingleLapConcludedEventArgs      ea_ => ForUI_OnSpecificEngineSingleLapConcluded_(ea_), //      benchmarker
-            LapConcludedEventArgs                ea_ => ForUI_OnAllLapsConcluded_(ea_), //                engine
+            SpecificEngineSingleLapStartingEventArgs      ea_ => ForUI_OnSpecificEngineSingleLapStarting_(ea_), //  benchmarker 
+            StateChangedEventArgs                         ea_ => ForUI_OnStateChanged_(ea_), //                     engine
+            SpecificEngineSingleLapConcludedEventArgs     ea_ => ForUI_OnSpecificEngineSingleLapConcluded_(ea_), // benchmarker
+            LapConcludedEventArgs                         ea_ => ForUI_OnAllLapsConcluded_(ea_), //                 engine
             
-            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForUI_specificEngineTestsSuiteCompleted_(ea_), //      benchmarker
-            AllBenchmarkingsDoneEventArgs             ea_ => ForUI_OnAllBenchmarkingsDone_(ea_), //             benchmarker
+            SpecificEngineTestsSuiteCompletedEventArgs    ea_ => ForUI_specificEngineTestsSuiteCompleted_(ea_), //  benchmarker
+            AllBenchmarkingsDoneEventArgs                 ea_ => ForUI_OnAllBenchmarkingsDone_(ea_), //             benchmarker
             
             _ => throw new NotImplementedException($"Whoops missing handler for event type: {ea.GetType().Name}") //@formatter:on
         };
@@ -598,8 +532,16 @@ public partial class FormMazeRunnerTester : Form
         _ccMazeCanvas.Maze = _mazesFactory.SpawnRandom(generateMazeDialog.MazeWidth, generateMazeDialog.MazeHeight, generateMazeDialog.MazeDensity);
     }
 
-    private void Post(SendOrPostCallback callback, object data = null) => _syncContext.Post(callback, data);
-    private void Send(SendOrPostCallback callback, object data = null) => _syncContext.Send(callback, data);
+    private bool Post(SendOrPostCallback callback, object data = null)
+    {
+        _syncContext.Post(callback, data);
+        return true;
+    }
+
+    private void Send(SendOrPostCallback callback, object data = null)
+    {
+        _syncContext.Send(callback, data);
+    }
 
     protected DialogResult ShowMessageSafe(
         string text,
