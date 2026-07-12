@@ -118,8 +118,8 @@
 
         <!-- its useful to allow specifying the version through the command line for testing and development purposes on localdev -->
         <Exec Condition=" '$(MazeRunner_Version_Full)' == '' "
+              Command=" sh '$(MazeRunner_Version_Script_Filepath)' $(_MazeRunner_Version_Script_Parameters) 2>&amp;1 | grep . | tail -n 1 "
               EchoOff="true"
-              Command=" bash '$(MazeRunner_Version_Script_Filepath)' $(_MazeRunner_Version_Script_Parameters) "
               ConsoleToMSBuild="true"
               WorkingDirectory="$(MazeRunner_RootDirectory_Folderpath)">
             <Output TaskParameter="ConsoleOutput" PropertyName="MazeRunner_Version_Full"/>
