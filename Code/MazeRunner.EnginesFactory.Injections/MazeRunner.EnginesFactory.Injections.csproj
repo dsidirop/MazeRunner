@@ -1,27 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <LangVersion>preview</LangVersion>
-        <TargetFramework>net10.0</TargetFramework>
-
-        <Nullable>disable</Nullable>
-        <ImplicitUsings>disable</ImplicitUsings>
-
-        <Version>1.0.0</Version>
-        <PackageVersion>$(Version)</PackageVersion>
-
-        <FileVersion>$(Version).0</FileVersion>
-        <AssemblyVersion>$(Version).0</AssemblyVersion>
-    </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj"/>
         <ProjectReference Include="..\MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="8.3.0"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2025.2.0"/>
+        <PackageReference Include="Autofac"/>
+        <PackageReference Include="JetBrains.Annotations"/>
     </ItemGroup>
 
 </Project>
