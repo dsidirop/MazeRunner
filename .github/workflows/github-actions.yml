@@ -14,7 +14,8 @@ env:
   MR_GITHUB_NUGET_FEED_URL: "https://nuget.pkg.github.com/dsidirop/index.json"
   MR_GITHUB_NUGET_FEED_USERNAME: ${{      secrets.MR_GITHUB_NUGET_FEED_USERNAME  }}
 
-  DOTNET_TARGET_WORKLOAD_VERSION: "10.0.100-preview.5.25306.3" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
+  # the workload version is pinned via 'Code/global.json' (sdk.workloadVersion)  dont upgrade it lightheartedly
+  # the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
 
 
 on:
@@ -25,7 +26,7 @@ on:
     branches:
       - '**' #        '*' matches zero or more characters but does not match the `/` character    '**' matches zero or more of any character
 
-  pull_request: # we need to build on pull requests so that we can generate and upload the sbom before merging onto main/develop branches
+  pull_request: #     we need to build on pull requests so that we can generate and upload the sbom before merging onto main/develop branches
     branches:
       - '**'
 
@@ -55,7 +56,6 @@ jobs:
           chmod  +x  "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci/MazeRunner.SetupBuildEnvironment.sh"         \
                 &&                                                                                            \
                      "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci/MazeRunner.SetupBuildEnvironment.sh"         \
-                             "${{env.DOTNET_TARGET_WORKLOAD_VERSION}}"                                        \
                              "${{env.MR_GITHUB_NUGET_FEED_URL}}"                                              \
                              "${{env.MR_GITHUB_NUGET_FEED_USERNAME}}"                                         \
                              "${{env.MR_GITHUB_ACCESS_TOKEN}}"                                                \

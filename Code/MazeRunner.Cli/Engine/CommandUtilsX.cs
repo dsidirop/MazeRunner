@@ -13,7 +13,7 @@ static internal class CommandUtilsX
         => engineNames.Equals("all", StringComparison.InvariantCultureIgnoreCase) ? enginesFactory.EnginesNames : engineNames.Split([","], StringSplitOptions.RemoveEmptyEntries);
 
     static internal string FindParameter(this string[] args, string parameter)
-        => Array.FindLast(args, a => parameter.EndsWith('=') ? a.StartsWith($"--{parameter}", StringComparison.InvariantCultureIgnoreCase) : a.Equals($"--{parameter}", StringComparison.InvariantCultureIgnoreCase));
+        => Array.FindLast(args, a => parameter.EndsWith('=', StringComparison.InvariantCultureIgnoreCase) ? a.StartsWith($"--{parameter}", StringComparison.InvariantCultureIgnoreCase) : a.Equals($"--{parameter}", StringComparison.InvariantCultureIgnoreCase));
 
     static internal int TryGetParameterValueInt(this string parameter)
     {
