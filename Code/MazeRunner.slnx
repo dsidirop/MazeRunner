@@ -1,34 +1,40 @@
 ﻿<Solution>
   <Folder Name="/Controllers/">
-    <Project Path="MazeRunner.Cli\MazeRunner.Cli.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.TestbedUI\MazeRunner.TestbedUI.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Cli\MazeRunner.Cli.csproj" Type="C#" />
+    <Project Path="MazeRunner.TestbedUI\MazeRunner.TestbedUI.csproj" Type="C#" />
   </Folder>
   <Folder Name="/Engines/">
-    <Project Path="MazeRunner.Engines.Contracts\MazeRunner.Engines.Contracts.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.Engines.SimpleMazeRunner\MazeRunner.Engines.SimpleMazeRunner.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Engines.Contracts\MazeRunner.Engines.Contracts.csproj" Type="C#" />
+    <Project Path="MazeRunner.Engines.SimpleMazeRunner\MazeRunner.Engines.SimpleMazeRunner.csproj" Type="C#" />
   </Folder>
   <Folder Name="/EnginesFactory/">
-    <Project Path="MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.EnginesFactory.Injections\MazeRunner.EnginesFactory.Injections.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.EnginesFactory.Contracts\MazeRunner.EnginesFactory.Contracts.csproj" Type="C#" />
+    <Project Path="MazeRunner.EnginesFactory.Injections\MazeRunner.EnginesFactory.Injections.csproj" Type="C#" />
+    <Project Path="MazeRunner.EnginesFactory\MazeRunner.EnginesFactory.csproj" Type="C#" />
   </Folder>
   <Folder Name="/Injectors/">
-    <Project Path="MazeRunner.Injectors.Autofac\MazeRunner.Injectors.Autofac.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.Injectors.Contracts\MazeRunner.Injectors.Contracts.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Injectors.Autofac\MazeRunner.Injectors.Autofac.csproj" Type="C#" />
+    <Project Path="MazeRunner.Injectors.Contracts\MazeRunner.Injectors.Contracts.csproj" Type="C#" />
   </Folder>
   <Folder Name="/Mazes/">
-    <Project Path="MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.Mazes.Injections\MazeRunner.Mazes.Injections.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" Type="C#" />
+    <Project Path="MazeRunner.Mazes.Injections\MazeRunner.Mazes.Injections.csproj" Type="C#" />
+    <Project Path="MazeRunner.Mazes\MazeRunner.Mazes.csproj" Type="C#" />
   </Folder>
   <Folder Name="/Utils/">
-    <Project Path="MazeRunner.Utils.Reactive\MazeRunner.Utils.Reactive.csproj" Type="Classic C#" />
-    <Project Path="MazeRunner.Utils\MazeRunner.Utils.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Utils.Reactive\MazeRunner.Utils.Reactive.csproj" Type="C#" />
+    <Project Path="MazeRunner.Utils\MazeRunner.Utils.csproj" Type="C#" />
   </Folder>
   <Folder Name="/_Misc/">
+    <File Path="..\.aiexclude" />
+    <File Path="..\.aiignore" />
+    <File Path="..\.cursorignore" />
+    <File Path="..\.gitattributes" />
     <File Path="..\.gitignore" />
     <File Path="..\LICENSE" />
     <File Path="..\README.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <File Path="global.json" />
   </Folder>
   <Folder Name="/_Misc/Ci/">
@@ -41,7 +47,7 @@
     <File Path="..\.github\dependabot.yml" />
   </Folder>
   <Folder Name="/_Testbeds/">
-    <Project Path="MazeRunner.Tests\MazeRunner.Tests.csproj" Type="Classic C#" />
+    <Project Path="MazeRunner.Tests\MazeRunner.Tests.csproj" Type="C#" />
   </Folder>
-  <Project Path="MazeRunner.Contracts\MazeRunner.Contracts.csproj" Type="Classic C#" />
+  <Project Path="MazeRunner.Contracts\MazeRunner.Contracts.csproj" Type="C#" />
 </Solution>

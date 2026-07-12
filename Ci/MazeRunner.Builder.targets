@@ -171,13 +171,13 @@
         <PropertyGroup>
             <!-- @formatter:off -->
             <_DotnetTestCommand> </_DotnetTestCommand>
-            <_DotnetTestCommand>$(_DotnetTestCommand) dotnet  test                                                                 </_DotnetTestCommand>
+            <_DotnetTestCommand>$(_DotnetTestCommand) dotnet  test                                                       </_DotnetTestCommand>
             <_DotnetTestCommand>$(_DotnetTestCommand)    &quot;$(MazeRunner_ProjectFile_Tests)&quot;                               </_DotnetTestCommand>
             <_DotnetTestCommand>$(_DotnetTestCommand)    --logger            &quot;trx;LogFileName=TEST-MazeRunner.Tests.xml&quot; </_DotnetTestCommand>
             <_DotnetTestCommand>$(_DotnetTestCommand)    --verbosity         &quot;normal&quot;                                    </_DotnetTestCommand>
             <_DotnetTestCommand>$(_DotnetTestCommand)    --configuration     &quot;$(Configuration)&quot;                          </_DotnetTestCommand>
             <_DotnetTestCommand>$(_DotnetTestCommand)    --results-directory &quot;$(MazeRunner_Test_Results_Folderpath)&quot;     </_DotnetTestCommand>
-            <_DotnetTestCommand>$(_DotnetTestCommand)    -m:1                                                                      </_DotnetTestCommand>
+            <_DotnetTestCommand>$(_DotnetTestCommand)    -m:1                                                            </_DotnetTestCommand>
             <!-- @formatter:on -->
         </PropertyGroup>
 
