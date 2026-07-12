@@ -111,15 +111,15 @@ if git branch -r | grep -q "^\s*$(escape_regex_string "$remote_name/develop")$";
 fi
 
 # Check if git branch -r contains main or master
-if git branch -r | grep -q "^\s*$(escape_regex_string "$remote_name/main-legacy")$"; then
-    master_branch="main-legacy"
+if git branch -r | grep -q "^\s*$(escape_regex_string "$remote_name/main")$"; then
+    master_branch="main"
     info "master_branch=$master_branch (git branch -r)"
-elif git branch -r | grep -q "^\s*$(escape_regex_string "$remote_name/master-legacy")$"; then
-    master_branch="master-legacy"
+elif git branch -r | grep -q "^\s*$(escape_regex_string "$remote_name/master")$"; then
+    master_branch="master"
     info "master_branch=$master_branch (git branch -r)"
-else
-    error "Branch main or master not found in remote repository"
-    exit 11
+#else
+#    error "Branch main or master not found in remote repository"
+#    exit 11
 fi
 
 ######################
