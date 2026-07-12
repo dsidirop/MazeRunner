@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
+      <ProjectReference Include="..\MazeRunner.Mazes.Contracts\MazeRunner.Mazes.Contracts.csproj" />
+      <ProjectReference Include="..\MazeRunner.Mazes\MazeRunner.Mazes.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" />
+      <PackageReference Include="JetBrains.Annotations" />
+    </ItemGroup>
+
+</Project>

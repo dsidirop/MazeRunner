@@ -1,0 +1,69 @@
+# An .aiignore file follows the same syntax as a .gitignore file.
+# .gitignore documentation: https://git-scm.com/docs/gitignore
+# Junie will ask for explicit approval before view or edit the file or file within a directory listed in .aiignore.
+# Only files contents is protected, Junie is still allowed to view file names even if they are listed in .aiignore.
+# Be aware that the files you included in .aiignore can still be accessed by Junie in two cases:
+# - If Brave Mode is turned on.
+# - If a command has been added to the Allowlist — Junie will not ask for confirmation, even if it accesses - files and folders listed in .aiignore.
+
+# Potential danger zones
+**/.ssh/**
+*.env
+*.env.*
+.env.local
+.env.*.local
+*.pfx
+*.pem
+*.key
+*.p12
+*.cer
+*.crt
+*.mobileprovision
+*.keystore
+*.jks
+**/secrets/**
+**/certs/**
+**/certificates/**
+**/credentials/**
+Laerdal.Ble/Constants/LaerdalConstants.cs
+
+# Mobile platform sensitive files
+**/google-services.json
+**/GoogleService-Info.plist
+
+# NuGet / Package manager credentials
+**/NuGet.Config
+**/.nuget/
+**/nuget.config
+
+# App settings that may contain secrets
+**/appsettings*.json
+**/launchSettings.json
+**/local.settings.json
+
+# IDE and tooling
+**/.idea/**
+**/.vs/**
+**/*.user
+
+# Signing & provisioning
+**/Entitlements.plist
+**/Provisioning/**
+**/signing/**
+
+# Logs that may contain sensitive output
+*.log
+**/logs/**
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Misc
+.idea
+.settings/
+npm-debug.log
+.env

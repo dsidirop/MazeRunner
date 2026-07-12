@@ -33,7 +33,7 @@ Quickstart (Command Line Flavor):
 
 	3. Open a command prompt:
 
-           cd   Code/MazeRunner.Cli/bin/Debug/net9.0
+           cd   Code/MazeRunner.Cli/bin/Debug/net11.0
 
 	4. Generate a maze via (you may edit by hand the generated mazefile once you run this command):
 
@@ -114,9 +114,15 @@ Just make sure to replace 'C:\path\to\your\Desktop' with your preferred output d
 		  
 # External Dependencies
 
-	- Moq
-	- NUnit
-	- Castle.Core
-	- FluentAssertions
+App:
+
+- Autofac (DI)
+
+Testbeds:
+
+- Moq
+- NUnit
+- Castle.Core
+- FluentAssertions
 
 All these libraries are needed for unit testing except the last one which is there to ensure that the solution will build just fine even in platforms that do not have the latest and greatest C# 6.0 compiler installed (typically build servers that lack the latest version of visual studio).

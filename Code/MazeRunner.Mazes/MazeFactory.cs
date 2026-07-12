@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MazeRunner.Contracts;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 
 // ReSharper disable AccessToModifiedClosure
@@ -61,7 +62,7 @@ public class MazesFactory : IMazesFactory
 
     static private Point ConvertLinearIndexToCoords(int linearIndex, int lineWidth) => new(x: linearIndex % lineWidth, y: linearIndex / lineWidth);
 
-    public async Task<IMaze> FromFileAsync(string path, bool suppressExceptions = true)
+    public async Task<IMaze> FromFileAsync(string filepath, bool suppressExceptions = true)
     {
         var result = (IMaze) null;
         try
@@ -69,64 +70,60 @@ public class MazesFactory : IMazesFactory
             var exitpoint = (Point?) null;
             var lineIndex = 0;
             var entrypoint = (Point?) null;
-            var roadblocks = new HashSet<Point>();
+            var roadblocks = new HashSet<Point>(capacity: 16);
             var mazeWidthBasedOnFirstLine = 0;
-            using (var reader = new StreamReader(File.OpenRead(path)))
+            
+            using var reader = new StreamReader(File.OpenRead(filepath), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            
+            for (var line = (string) null; (line = await reader.ReadLineAsync()) != null; lineIndex++)
             {
-                for (;!reader.EndOfStream; lineIndex++)
+                if (string.IsNullOrWhiteSpace(line))
+                    throw new InvalidDataException($"Line {lineIndex + 1} is empty (only the very last line is allowed to be empty)");
+
+                if (mazeWidthBasedOnFirstLine == 0)
                 {
-                    var line = await reader.ReadLineAsync();
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        if (reader.EndOfStream) break;
-
-                        throw new InvalidDataException($"Line {lineIndex + 1} is empty (only the very last line is allowed to be empty)");
-                    }
-
-                    if (mazeWidthBasedOnFirstLine == 0)
-                    {
-                        mazeWidthBasedOnFirstLine = line.Length;
-                    }
-                    else if (mazeWidthBasedOnFirstLine != line.Length)
-                    {
-                        throw new InvalidDataException($"Line {lineIndex + 1} has different number of columns ({line.Length}) than the first line (which has {mazeWidthBasedOnFirstLine})");
-                    }
-
-                    line.Each((c, columnIndex) =>
-                    {
-                        if (c == '_')
-                        {
-                            //skip
-                        }
-                        else if (c == 'G')
-                        {
-                            if (exitpoint != null) throw new InvalidDataException("Maze has two Exit points");
-
-                            exitpoint = new Point(columnIndex, lineIndex);
-                        }
-                        else if (c == 'S')
-                        {
-                            if (entrypoint != null) throw new InvalidDataException("Maze has two Entry points");
-
-                            entrypoint = new Point(columnIndex, lineIndex);
-                        }
-                        else if (c == 'X')
-                        {
-                            roadblocks.Add(new Point(columnIndex, lineIndex));
-                        }
-                        else
-                        {
-                            throw new InvalidDataException($"Invalid character {c} at line {lineIndex + 1} column {columnIndex + 1}");
-                        }
-                    });
+                    mazeWidthBasedOnFirstLine = line.Length;
                 }
+                else if (mazeWidthBasedOnFirstLine != line.Length)
+                {
+                    throw new InvalidDataException($"Line {lineIndex + 1} has different number of columns ({line.Length}) than the first line (which has {mazeWidthBasedOnFirstLine})");
+                }
+
+                line.Each((c, columnIndex) =>
+                {
+                    switch (c)
+                    {
+                        case '_': //skip
+                            break;
+                        case 'G':
+                            exitpoint = exitpoint == null
+                                ? new Point(columnIndex, lineIndex)
+                                : throw new InvalidDataException("Maze has two Exit points");
+                            break;
+                        case 'S':
+                            entrypoint = entrypoint == null
+                                ? new Point(columnIndex, lineIndex)
+                                : throw new InvalidDataException("Maze has two Entry points");
+                            break;
+                        case 'X':
+                            roadblocks.Add(new Point(columnIndex, lineIndex));
+                            break;
+                        default:
+                            throw new InvalidDataException($"Invalid character {c} at line {lineIndex + 1} column {columnIndex + 1}");
+                    }
+                });
             }
 
             if (lineIndex == 0) throw new InvalidDataException("Empty");
             if (exitpoint == null) throw new InvalidDataException("No exitpoint specified");
             if (entrypoint == null) throw new InvalidDataException("No entrypoint specified");
-                
-            result = new Maze(new Size(mazeWidthBasedOnFirstLine, lineIndex), entrypoint: entrypoint.Value, exitpoint: exitpoint.Value, roadblocks: roadblocks);
+
+            result = new Maze(
+                size: new Size(mazeWidthBasedOnFirstLine, lineIndex),
+                exitpoint: exitpoint.Value,
+                entrypoint: entrypoint.Value,
+                roadblocks: roadblocks
+            );
         }
         catch (Exception)
         {

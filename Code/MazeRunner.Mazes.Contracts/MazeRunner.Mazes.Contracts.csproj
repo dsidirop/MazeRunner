@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\MazeRunner.Contracts\MazeRunner.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

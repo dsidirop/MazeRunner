@@ -3,10 +3,9 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using MazeRunner.Engine.SimpleMazeRunner;
+using MazeRunner.Engines.SimpleMazeRunner;
 using MazeRunner.Mazes;
 using MazeRunner.Tests.Properties;
-using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement
 

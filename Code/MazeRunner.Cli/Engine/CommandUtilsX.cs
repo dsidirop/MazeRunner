@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using MazeRunner.Cli.Engine.Exceptions;
-using MazeRunner.Contracts;
+using MazeRunner.EnginesFactory.Contracts;
 
 namespace MazeRunner.Cli.Engine;
 
 static internal class CommandUtilsX
 {
-    static internal IReadOnlyCollection<string> ParseEngineNames(this string engineNames, IEnginesFactory enginesFactory)
+    static internal IReadOnlyCollection<string> ParseEngineNames(this string engineNames, IGrandMazeRunnersEnginesFactory enginesFactory)
         => engineNames.Equals("all", StringComparison.InvariantCultureIgnoreCase) ? enginesFactory.EnginesNames : engineNames.Split([","], StringSplitOptions.RemoveEmptyEntries);
 
     static internal string FindParameter(this string[] args, string parameter)
-        => Array.FindLast(args, a => parameter.EndsWith('=') ? a.StartsWith($"--{parameter}", StringComparison.InvariantCultureIgnoreCase) : a.Equals($"--{parameter}", StringComparison.InvariantCultureIgnoreCase));
+        => Array.FindLast(args, a => parameter.EndsWith('=', StringComparison.InvariantCultureIgnoreCase) ? a.StartsWith($"--{parameter}", StringComparison.InvariantCultureIgnoreCase) : a.Equals($"--{parameter}", StringComparison.InvariantCultureIgnoreCase));
 
     static internal int TryGetParameterValueInt(this string parameter)
     {

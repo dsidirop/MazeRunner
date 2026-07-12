@@ -4,9 +4,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MazeRunner.EnginesFactory.Benchmark;
-using MazeRunner.EnginesFactory.Factory;
-using MazeRunner.Mazes;
+using Autofac;
+using MazeRunner.EnginesFactory.Contracts;
+using MazeRunner.Injectors.Autofac;
 using MazeRunner.TestbedUI.Helpers;
 
 namespace MazeRunner.TestbedUI;
@@ -14,17 +14,20 @@ namespace MazeRunner.TestbedUI;
 static internal class Program
 {
     [STAThread]
-    static private void Main()
+    static private async Task Main()
     {
-        Task.Run(EnginesFactorySingleton.I.EnsureInit); //0 async init
+        await using var injectorContainer = new AutofacInjectorScannerService().TryScanAllAssembliesForInjectionsConfigs().Build();
+        await using var injectorContainerScope = injectorContainer.BeginLifetimeScope();
+        
+        _ = Task.Run(injectorContainerScope.Resolve<IGrandMazeRunnersEnginesFactory>().EnsureInitializedOnce); //0 async init
 
         Application.ThreadException += new ThreadExceptionHandler().Application_ThreadException; //recoverable errors from forms
 
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new FormMazeRunnerTester(EnginesFactorySingleton.I, new MazesFactory(), new EnginesTestbench()));
-            
-        //0 as a small optimization we force the factory to load and scan assemblies asynchronously so that the form may have the enginenames
+        Application.Run(injectorContainerScope.Resolve<FormMazeRunnerTester>());
+
+        //0 as a small optimization we force the factory to load and scan assemblies asynchronously so that the form may have the engine-names
         //  readily available a bit down the road without stalling
     }
 
@@ -34,11 +37,10 @@ static internal class Program
         {
             var oex = ea.Exception;
             if (oex is OperationCanceledException) return; //stop button
-                
-            using (var form = new FormUnhandledException(oex))
-            {
-                form.ShowDialog();
-            }
+
+            using var form = new FormUnhandledException(oex);
+            
+            form.ShowDialog();
         }
     }
 }

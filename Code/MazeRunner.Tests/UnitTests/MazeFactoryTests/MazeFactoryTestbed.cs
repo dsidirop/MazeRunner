@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
-using MazeRunner.Contracts;
+using MazeRunner.Mazes.Contracts;
 using MazeRunner.Utils;
 
 // ReSharper disable ObjectCreationAsStatement

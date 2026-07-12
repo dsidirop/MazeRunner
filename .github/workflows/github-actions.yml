@@ -14,7 +14,8 @@ env:
   MR_GITHUB_NUGET_FEED_URL: "https://nuget.pkg.github.com/dsidirop/index.json"
   MR_GITHUB_NUGET_FEED_USERNAME: ${{      secrets.MR_GITHUB_NUGET_FEED_USERNAME  }}
 
-  DOTNET_TARGET_WORKLOAD_VERSION: "9.0.200" # dont upgrade this lightheartedly   the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
+  # the workload version is pinned via 'Code/global.json' (sdk.workloadVersion)  dont upgrade it lightheartedly
+  # the workload snapshot implicitly defines which versions of Android/iOS/MacCatalyst SDKs are supported
 
 
 on:
@@ -25,7 +26,7 @@ on:
     branches:
       - '**' #        '*' matches zero or more characters but does not match the `/` character    '**' matches zero or more of any character
 
-  pull_request: # we need to build on pull requests so that we can generate and upload the sbom before merging onto main/develop branches
+  pull_request: #     we need to build on pull requests so that we can generate and upload the sbom before merging onto main/develop branches
     branches:
       - '**'
 
@@ -44,7 +45,7 @@ jobs:
     steps:
 
       - name: '🔽 Checkout'
-        uses: 'actions/checkout@v4'
+        uses: 'actions/checkout@v6'
         with:
           fetch-tags: true # https://github.com/actions/checkout/issues/1471#issuecomment-1771231294
           fetch-depth: 0
@@ -55,7 +56,6 @@ jobs:
           chmod  +x  "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci/MazeRunner.SetupBuildEnvironment.sh"         \
                 &&                                                                                            \
                      "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci/MazeRunner.SetupBuildEnvironment.sh"         \
-                             "${{env.DOTNET_TARGET_WORKLOAD_VERSION}}"                                        \
                              "${{env.MR_GITHUB_NUGET_FEED_URL}}"                                              \
                              "${{env.MR_GITHUB_NUGET_FEED_USERNAME}}"                                         \
                              "${{env.MR_GITHUB_ACCESS_TOKEN}}"                                                \
@@ -64,22 +64,22 @@ jobs:
       - name: '🏗 📦 Build, Pack & Announce New Release (if appropriate)'
         shell: 'bash'
         run: |
-          cd    "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci"                                                                                 \
-                     &&                                                                                                                      \
-          dotnet                                                                                                                             \
-             msbuild                                                                                                                         \
-             "MazeRunner.Builder.targets"                                                                                                    \
-             -m:1                                                                                                                            \
-                                                                                                                                             \
-                                                        -p:PackageOutputPath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"             \
-                                                                                                                                             \
-                                                    -p:MazeRunner_Source_Branch="${{env.MR_SOURCE_BRANCH}}"                                  \
-                                                  -p:MazeRunner_Repository_Path="${{env.MR_REPOSITORY_PATH}}"                                \
-                                              -p:MazeRunner_Github_Access_Token="${{env.MR_GITHUB_ACCESS_TOKEN}}"                            \
-                                          -p:MazeRunner_Test_Results_Folderpath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/TestResults"
+          cd    "${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Ci"                                                          \
+                     &&                                                                                               \
+          dotnet                                                                                                      \
+             msbuild                                                                                                  \
+             "MazeRunner.Builder.targets"                                                                             \
+             -m:1                                                                                                     \
+                                                                                                                      \
+                                    -p:PackageOutputPath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts"          \
+                                                                                                                      \
+                             -p:MazeRunner_Source_Branch="${{env.MR_SOURCE_BRANCH}}"                                  \
+                           -p:MazeRunner_Repository_Path="${{env.MR_REPOSITORY_PATH}}"                                \
+                       -p:MazeRunner_Github_Access_Token="${{env.MR_GITHUB_ACCESS_TOKEN}}"                            \
+                   -p:MazeRunner_Test_Results_Folderpath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/TestResults"
 
       - name: '⬆️ Upload Artifacts' # to share with other workflows   https://stackoverflow.com/a/77663335/863651
-        uses: 'actions/upload-artifact@v4'
+        uses: 'actions/upload-artifact@v6'
         with:
           name: 'Artifacts'
           path: '${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/**/*'

@@ -1,0 +1,18 @@
+﻿using System.Diagnostics;
+using MazeRunner.Mazes.Contracts;
+
+namespace MazeRunner.Engines.SimpleMazeRunner;
+
+public class MazeRunnerSimpleDepthFirstEngine : MazeRunnerDepthFirstEngineBase
+{
+    static public readonly TraceSource Tracer = new(nameof(MazeRunnerSimpleDepthFirstEngine), SourceLevels.Off);
+
+    public MazeRunnerSimpleDepthFirstEngine(IMaze maze) : base(maze, avoidPathfolding: false, tracer: Tracer)
+    {
+    }
+
+    public override string GetEngineName()
+    {
+        return nameof(MazeRunnerSimpleDepthFirstEngine);
+    }
+}

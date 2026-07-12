@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 using MazeRunner.Cli.Engine;
-using MazeRunner.EnginesFactory.Benchmark;
-using MazeRunner.EnginesFactory.Factory;
-using MazeRunner.Mazes;
+using MazeRunner.Injectors.Autofac;
 
 namespace MazeRunner.Cli;
 
@@ -11,16 +10,12 @@ static internal class Program
 {
     static public async Task<int> Main(string[] args)
     {
-        var cliControllerEngine = new CliControllerEngine(
-            mazesFactory: new MazesFactory(),
-            enginesFactory: EnginesFactorySingleton.I,
-            enginesTestbench: new EnginesTestbench(),
+        await using var injectorContainer = new AutofacInjectorScannerService().TryScanAllAssembliesForInjectionsConfigs().Build();
+        await using var injectorContainerScope = injectorContainer.BeginLifetimeScope();
 
-            standardError: Console.Error,
-            standardOutput: Console.Out
-        );
+        var cliControllerEngine = injectorContainerScope.Resolve<ICliControllerEngine>();
 
-        try
+        try //todo   turn this into a separate service that can be injected into the engine
         {
             Console.CancelKeyPress += Console_CancelKeyComboPressed_;
 

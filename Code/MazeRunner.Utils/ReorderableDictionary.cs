@@ -10,27 +10,8 @@ namespace MazeRunner.Utils;
 [Serializable]
 public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISerializable, IDictionary
 {
-    private ICollection _orderedDictionaryAsICollection;
-    private ICollection OrderedDictionaryAsICollection
-    {
-        get
-        {
-            if (_orderedDictionaryAsICollection != null) return _orderedDictionaryAsICollection;
-
-            return _orderedDictionaryAsICollection = _orderedDictionary;
-        }
-    }
-
-    private IDictionary _orderedDictionaryAsIDictionary;
-    private IDictionary OrderedDictionaryAsIDictionary
-    {
-        get
-        {
-            if (_orderedDictionaryAsIDictionary != null) return _orderedDictionaryAsIDictionary;
-
-            return _orderedDictionaryAsIDictionary = _orderedDictionary;
-        }
-    }
+    private ICollection OrderedDictionaryAsICollection => field ??= _orderedDictionary;
+    private IDictionary OrderedDictionaryAsIDictionary => field ??= _orderedDictionary;
 
     private readonly IEqualityComparer _comparer;
     private readonly OrderedDictionary _orderedDictionary;
@@ -129,6 +110,7 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
+        // ReSharper disable once GenericEnumeratorNotDisposed
         return new ProxyEnumerator(_orderedDictionary.GetEnumerator());
     }
 
@@ -154,7 +136,12 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
 
         public void Dispose()
         {
-            _enumerator = default(IDictionaryEnumerator);
+            if (_enumerator is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+            
+            _enumerator = null;
         }
 
         public bool MoveNext()
@@ -171,7 +158,7 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
         {
             get
             {
-                var current = (DictionaryEntry)_enumerator.Current;
+                var current = (DictionaryEntry)_enumerator.Current!;
                 return new KeyValuePair<TKey, TValue>((TKey)current.Key, (TValue)current.Value);
             }
         }
@@ -205,7 +192,21 @@ public class ReorderableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IS
     }
 
     IDictionaryEnumerator IDictionary.GetEnumerator() => OrderedDictionaryAsIDictionary.GetEnumerator();
-    public bool Contains(KeyValuePair<TKey, TValue> item) => OrderedDictionaryAsIDictionary.Contains(item.Key) && ((TValue)OrderedDictionaryAsIDictionary[item.Key]).Equals(item.Value);
+
+    public bool Contains(KeyValuePair<TKey, TValue> item)
+    {
+        if (!OrderedDictionaryAsIDictionary.Contains(item.Key))
+            return false;
+
+        var value = OrderedDictionaryAsIDictionary[item.Key];
+        if (value == null && item.Value == null)
+            return true;
+        
+        if (value == null && item.Value != null || value != null && item.Value == null)
+            return false;
+        
+        return ((TValue) value)!.Equals(item.Value);
+    }
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
