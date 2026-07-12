@@ -107,8 +107,8 @@
             <MazeRunner_Develop_Branch_Name Condition=" '$(MazeRunner_Develop_Branch_Name)' == '' ">develop</MazeRunner_Develop_Branch_Name>
 
             <!-- @formatter:off -->
-            <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   -o                 '$(MazeRunner_Version_Details_Filepath)' </_MazeRunner_Version_Script_Parameters>
-            <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --major            '$(MazeRunner_Version_Major)'            </_MazeRunner_Version_Script_Parameters>
+            <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --output-txt       '$(MazeRunner_Version_Details_Filepath)' </_MazeRunner_Version_Script_Parameters>
+            <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --major-version    '$(MazeRunner_Version_Major)'            </_MazeRunner_Version_Script_Parameters>
             <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --master-branch    '$(MazeRunner_Master_Branch_Name)'       </_MazeRunner_Version_Script_Parameters>
             <_MazeRunner_Version_Script_Parameters>$(_MazeRunner_Version_Script_Parameters)   --develop-branch   '$(MazeRunner_Develop_Branch_Name)'      </_MazeRunner_Version_Script_Parameters>
             <!-- @formatter:on  -->
