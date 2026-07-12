@@ -13,6 +13,8 @@
 
         <FileVersion>$(Version).0</FileVersion>
         <AssemblyVersion>$(Version).0</AssemblyVersion>
+
+        <NoWarn>$(NoWarn);NU1507</NoWarn>
     </PropertyGroup>
 
 </Project>
