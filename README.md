@@ -33,7 +33,7 @@ Quickstart (Command Line Flavor):
 
 	3. Open a command prompt:
 
-           cd   Code/MazeRunner.Cli/bin/Debug/net10.0
+           cd   Code/MazeRunner.Cli/bin/Debug/net11.0
 
 	4. Generate a maze via (you may edit by hand the generated mazefile once you run this command):
 
