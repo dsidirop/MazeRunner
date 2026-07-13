@@ -79,7 +79,7 @@ jobs:
                    -p:MazeRunner_Test_Results_Folderpath="${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/TestResults"
 
       - name: '⬆️ Upload Artifacts' # to share with other workflows   https://stackoverflow.com/a/77663335/863651
-        uses: 'actions/upload-artifact@v6'
+        uses: 'actions/upload-artifact@v7'
         with:
           name: 'Artifacts'
           path: '${{env.MR_BUILD_REPOSITORY_FOLDERPATH}}/Artifacts/**/*'
